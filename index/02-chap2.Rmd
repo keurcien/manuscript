@@ -74,13 +74,13 @@ To compare the performance of different PCA-based summary statistics, we simulat
 
 (ref:ndf-fig1-cap) Repartition of the 1% top-ranked SNPs for each PCA-based statistic under a divergence model with two types of adaptive constraints. Thicker and colored lineages correspond to lineages where adaptation took place. The squared loadings with PC1 $\rho_{j1}^2$ pick a large proportion of SNPs involved in selection in population $A$ whereas the squared loadings with PC2 $\rho_{j2}^2$ pick SNPs involved in selection in population $B_1$. This difference is reflected in the different repartition of the top-ranked SNPs for the communality $h^2$ and the statistic ${h^{\prime}}^2$.
 
-```{r ndf-fig1, results='asis', fig.cap='(ref:ndf-fig1-cap)', out.width='300px'}
+```{r ndf-fig1, results='asis', fig.cap='(ref:ndf-fig1-cap)'}
 include_graphics("figure/ndf-fig1.png")
 ```
 
 (ref:ndf-fig2-cap) Repartition of the 1% top-ranked SNPs of each PCA-based statistic under a divergence model with four types of adaptive constraints. Thicker and colored lineages correspond to lineages where adaptation occurred. The different types of SNPs picked by the squared loadings $\rho_{j1}^2$ and $\rho_{j2}^2$ are also found when comparing the communality $h^2$ and the statistic ${h^{\prime}}^2$.
 
-```{r ndf-fig2, results='asis', fig.cap='(ref:ndf-fig2-cap)', out.width='300px'}
+```{r ndf-fig2, results='asis', fig.cap='(ref:ndf-fig2-cap)'}
 include_graphics("figure/ndf-fig2.png")
 ```
 
@@ -108,7 +108,7 @@ Since we are interested in selective pressures that occurred during the human di
 
 (ref:ndf-fig3-cap) PCA with $K = 2$ applied to the 1000 Genomes data. The sampled populations are the following: British in England and Scotland (GBR), Utah residents with Northern and Western European ancestry (CEU), Finnish in Finland (FIN), Iberian populations in Spain (IBS), Toscani in Italy (TSI), Han Chinese in Bejing (CHB), Southern Han Chinese (CHS), Japanese in Tokyo (JPT), Luhya in Kenya (LWK), Yoruba in Nigeria (YRI).
 
-```{r ndf-fig3, results='asis', fig.cap='(ref:ndf-fig3-cap)', out.width='300px'}
+```{r ndf-fig3, results='asis', fig.cap='(ref:ndf-fig3-cap)'}
 include_graphics("figure/ndf-fig3.png")
 ```
 
@@ -118,13 +118,13 @@ The two Manhattan plots based on the squared loadings for PC1 and PC2 are displa
 
 (ref:ndf-fig4-cap) Manhattan plot for the 1000 Genomes data of the squared loadings $\rho_{j1}^2$ with the first principal component. For sake of presentation, only the top-ranked SNPs (top 0.1%) are displayed and the 100 top-ranked SNPs are colored in red.
 
-```{r ndf-fig4, results='asis', fig.cap='(ref:ndf-fig4-cap)', out.width='300px'}
+```{r ndf-fig4, results='asis', fig.cap='(ref:ndf-fig4-cap)'}
 include_graphics("figure/ndf-fig4.png")
 ```
 
 (ref:ndf-fig5-cap) Manhattan plot for the 1000 Genomes data of the squared loadings $\rho_{j2}^2$ with the second principal component. For sake of presentation, only the top-ranked SNPs (top 0.1%) are displayed and the 100 top-ranked SNPs are colored in red.
 
-```{r ndf-fig5, results='asis', fig.cap='(ref:ndf-fig5-cap)', out.width='300px'}
+```{r ndf-fig5, results='asis', fig.cap='(ref:ndf-fig5-cap)'}
 include_graphics("figure/ndf-fig5.png")
 ```
 
@@ -196,17 +196,17 @@ Note: Enrichment significant at the 1% (resp. 5%) level are indicated with \*\* 
 
 The promise of a fine characterization of natural selection in humans fostered the development of new analytical methods for detecting candidate genomic regions [@vitti2013detecting]. Population-differentiation based methods such as genome scans based on $F_{ST}$ look for marked differences in allele frequencies between population [@holsinger2009genetics]. Here, we show that the communality statistic $h^2$, which measures the proportion of variance of a SNP that is explained by the first $K$ principal components, provides a similar list of outliers than the $F_{ST}$ statistic when there are $K + 1$ populations. In addition, the communality statistic $h^2$ based on PCA can be viewed as an extension of $F_{ST}$ because it does not require to define populations in advance and can even be applied in the absence of well-defined populations.
 
-To provide an example of genome scans based on PCA when there are no clusters of populations, we additionally consider the POPRES data consisting of 447,245 SNPSs typed for 1,385 European individuals 5@nelson2008population]. The scree plot indicates that there are $K = 2$ relevant clusters (supplementary fig. S3, Supplementary Material online). The first principal component corresponds to a Southeast–Northwest gradient and the second one discriminates individuals from Southern Europe along a East–West gradient [@novembre2008genes; @jay2012anisotropic] (fig. \@ref(fig:ndf-fig6)). Considering the 100 SNPs most correlated with the first PC, we find that 75 SNPs are in the lactase region, 18 SNPs are in the HLA region, 5 SNPs are in the ADH1C gene, 1 SNP is in HERC2, and another is close to the LOC283177 gene (fig. \@ref(tab:ndf-fig6)). When considering the 100 SNPs most correlated with the second PC, we find less clustering than for PC1 with more peaks (supplementary fig. S13, Supplementary Material online). The regions that contain the largest number of SNPs in the top 100 SNPs are the HLA region (41 SNPs) and a region close to the NEK10 gene (10 SNPs), which is a gene potentially involved in breast cancer [@ahmed2009newly]. The genome scan retrieves well-known signals of adaption in humans that are related to lactase persistence (LCT) [@bersaglieri2004genetic], immunity (HLA), alcohol metabolism (ADH1C) [@han2007evidence], and pigmentation (HERC2) [@wilde2014direct]. The analysis of the POPRES data shows that genome scan based on PCA can be applied when there is a clinal or continuous pattern of population structure without well-defined clusters of individuals.
+To provide an example of genome scans based on PCA when there are no clusters of populations, we additionally consider the POPRES data consisting of 447,245 SNPSs typed for 1,385 European individuals [@nelson2008population]. The scree plot indicates that there are $K = 2$ relevant clusters (supplementary fig. S3, Supplementary Material online). The first principal component corresponds to a Southeast–Northwest gradient and the second one discriminates individuals from Southern Europe along a East–West gradient [@novembre2008genes; @jay2012anisotropic] (fig. \@ref(fig:ndf-fig6)). Considering the 100 SNPs most correlated with the first PC, we find that 75 SNPs are in the lactase region, 18 SNPs are in the HLA region, 5 SNPs are in the ADH1C gene, 1 SNP is in HERC2, and another is close to the LOC283177 gene (fig. \@ref(fig:ndf-fig7)). When considering the 100 SNPs most correlated with the second PC, we find less clustering than for PC1 with more peaks (supplementary fig. S13, Supplementary Material online). The regions that contain the largest number of SNPs in the top 100 SNPs are the HLA region (41 SNPs) and a region close to the NEK10 gene (10 SNPs), which is a gene potentially involved in breast cancer [@ahmed2009newly]. The genome scan retrieves well-known signals of adaption in humans that are related to lactase persistence (LCT) [@bersaglieri2004genetic], immunity (HLA), alcohol metabolism (ADH1C) [@han2007evidence], and pigmentation (HERC2) [@wilde2014direct]. The analysis of the POPRES data shows that genome scan based on PCA can be applied when there is a clinal or continuous pattern of population structure without well-defined clusters of individuals.
 
 (ref:ndf-fig6-cap) PCA with $K = 2$ applied to the POPRES data.
 
-```{r ndf-fig6, results='asis', fig.cap='(ref:ndf-fig6-cap)', out.width='300px'}
+```{r ndf-fig6, results='asis', fig.cap='(ref:ndf-fig6-cap)'}
 include_graphics("figure/ndf-fig6.png")
 ```
 
 (ref:ndf-fig7-cap) Manhattan plot for the POPRES data of the squared loadings $\rho_{j1}^2$ with the first principal component. For sake of presentation, only the top-ranked SNPs (top 5%) are displayed and the 100 top-ranked SNPs are colored in red.
 
-```{r ndf-fig7, results='asis', fig.cap='(ref:ndf-fig7-cap)', out.width='300px'}
+```{r ndf-fig7, results='asis', fig.cap='(ref:ndf-fig7-cap)'}
 include_graphics("figure/ndf-fig7.png")
 ```
 

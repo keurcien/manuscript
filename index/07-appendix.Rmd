@@ -435,7 +435,7 @@ pop <- c(rep("A", 50), rep("B", 50), rep("C", 50))
 plot(x, option = "scores", pop = pop)
 ```
 
-(ref:island-manhattan-cap) Manhattan plot obtenu à partir de l'analyse de la simulation \@ref(fig:island-manhattan-cap).
+(ref:island-manhattan-cap) Manhattan plot obtenu à partir de l'analyse de la simulation \@ref(fig:island-pca).
 
 ```{r island-manhattan, fig.cap='(ref:island-manhattan-cap)', echo=TRUE}
 plot(x, option = "manhattan")

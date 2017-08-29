@@ -19,6 +19,7 @@ include_graphics("figure/mendel.png")
 ### La théorie de l'évolution
 
 En 1859, Darwin soutenait l'idée selon laquelle la principale force évolutive serait la sélection naturelle [@darwin1980origine]. « Je me propose de passer brièvement en revue les progrès de l’opinion relativement à l’origine des espèces. Jusque tout récemment, la plupart des naturalistes croyaient que les espèces sont des productions immuables créées séparément. De nombreux savants ont habilement soutenu cette hypothèse. Quelques autres, au contraire, ont admis que les espèces éprouvent des modifications et que les formes actuelles descendent de formes préexistantes par voie de génération régulière. »
+
 C'est de cette manière qu'en 1920, Edmond Barbier, dans sa notice relative à la traduction française de *L'Origine des espèces* [@darwin1980origine], décide de présenter le contexte dans lequel il a été amené à effectuer ce travail de traduction. Bien qu'elle fut globalement bien accueillie par la communauté scientifique, sa théorie fut tout de même en proie à de nombreuses critiques. L'une des principales critiques émises à son encontre fut relative à la croyance de Darwin selon laquelle l'hérédité *par mélange* serait le principal mode de transmission des caractères héréditaires [@gayon1992darwin]. Or, si sélection naturelle il y a, la conservation et la transmission des caractères sélectionnés sont essentielles. Si bien qu'une hérédité *par mélange* n'est pas envisageable pour soutenir la thèse de la sélection naturelle, puisque tout caractère transmis de cette façon se verrait altéré (ou dilué si l'on souhaite conserver l'idée de mélange) à chaque génération et donc éliminé après un certain temps. Cependant, sa théorie bénéficiera par la suite des travaux de Mendel qui, lors de leur redécouverte en 1902 [@bateson1913mendel], apporteront l'élément fondamental manquant à la théorie darwinienne : le principe d'hérédité *mendélienne*. Cette théorie de l'évolution néo-darwinienne, née de la conciliation de la théorie darwinienne et du principe d'hérédité de Mendel, constitue le paradigme évolutionniste tel que nous le connaissons aujourd'hui et porte le nom de *théorie synthétique de l'évolution*.
 
 ### L'évolution d'une théorie
@@ -53,11 +54,11 @@ L'approbation de cette théorie, bien que conceptuellement intéressante, aura u
 
 ### Forces évolutives
 
-Si l'on s'en tient à la théorie neutraliste, cela relèverait de l'abus de langage que de parler de "forces" pour désigner les mécanismes expliquant les trajectoires fréquentielles empruntées par les allèles, puisque c'est principalement par le hasard qu'elles s'expliquent. Cela étant dit, les forces évolutives retenues par la communauté scientifique sont au nombre de quatre et nous en donnons ici une définition succinte.
+Ce changement de paradigme nous invite de ce fait à observer la sélection naturelle à travers le prisme de la théorie neutraliste, et donc à identifier les mutations sélectives comme des mutations dont les origines ne peuvent être uniquement expliquées par des processus biologiquement neutres. La génétique des populations distingue trois types de processus neutres qui, tout comme la sélection naturelle, constituent les principales *forces évolutives*. 
 
 1. La dérive génétique
 
-La dérive génétique est un mécanisme essentiel en génétique des populations. Le principe de dérive génétique est illustré en figure \@ref(fig:drift), à l'aide du modèle de Wright-Fisher tel qu'il est présenté dans l'ouvrage *Population Genetics* [@gillespie2010population].
+La dérive génétique est un concept essentiel en génétique des populations, et correspond   . Le principe de dérive génétique est illustré en figure \@ref(fig:drift), à l'aide du modèle de Wright-Fisher tel qu'il est présenté dans l'ouvrage *Population Genetics* [@gillespie2010population].
 
 (ref:drift-cap) Simulation numérique de la dérive génétique. La fréquence de l'allèle étudié est simulée pour 5 populations constituées chacune de 20, 100 ou 1000 individus sur une période de 100 générations. Dans chaque population, la fréquence de l'allèle est initialement de 0.20 [@gillespie2010population].
 
@@ -139,8 +140,7 @@ En biologie évolutive, la sélection naturelle est la force évolutive qui tend
 
 ### Adaptation locale
 
-La diversité climatique et la diversité géologique terrestre ont naturellement façonné des environnements aux propriétés physiques et chimiques variées. À celles-ci viennent s'ajouter des caractéristiques écologiques résultant des interactions entre l'environnement et les organismes qui y évoluent *lato sensu*.
-Une population sera dite adaptée à son environnement si elle développe, par le biais de la sélection naturelle, un ou plusieurs allèles augmentant la valeur sélective des individus la constituant, en réponse aux pressions environnementales auxquelles ces individus sont soumis. À titre d'exemple, nous pouvons citer l'adaptation des populations tibétaines et andines à la haute altitude [@beall2007two].
+La diversité climatique et la diversité géologique terrestre ont naturellement façonné des environnements aux constitutions physiques et chimiques variées. À celles-ci viennent s'ajouter des caractéristiques écologiques résultant des interactions entre l'environnement et les organismes qui y évoluent *lato sensu*. La valeur sélective, désignant la capacité de survie et de reproduction, de ces organismes peut être impactée par les caractéristiques environnementales auxquelles ils sont exposés. Si cette valeur sélective est associée à un trait phénotypique, on dit que ce trait confère un avantage adaptatif et on parle dans ce cas d'*adaptation locale*. Une population sera ainsi dite adaptée à son environnement si elle développe, par le biais de la sélection naturelle, un ou plusieurs allèles associés à un trait adaptatif augmentant la valeur sélective des individus la constituant, en réponse aux pressions environnementales auxquelles ces individus sont soumis. À titre d'exemple, nous pouvons citer l'adaptation des populations tibétaines et andines à la haute altitude [@beall2007two]. 
 
 (ref:andeanvstibetan-cap) Exemples de phénotypes liés à l'adaptation à la haute altitude distinguant les populations andines des populations tibétaines [@jeong2014adaptations].
 
@@ -165,14 +165,22 @@ data.frame(Traits = traits, Andean = andean, Tibetan = tibetan) %>%
   kable_styling(full_width = T)
 ```
 
+
 Chez l'Homme moderne, les habitudes alimentaires et les modes de vie constituent également des caractéristiques environnementales importantes. L'agriculture et le pastoralisme^[Le pastoralisme décrit la relation interdépendante entre les éleveurs, leurs troupeaux et les milieux exploités.] ont notamment participé à la diversification des environnements humains [@jeong2014adaptations]. En Europe, l'adaptation biologique à ces nouveaux modes de vie s'est par ailleurs manifesté par la sélection du phénotype *LP*, dit de *persistence de la lactase*, caractérisant l'aptitude à digérer le lactose à l'âge adulte [@itan2009origins].
 
-Environnement hétérogène
+L'adaptivité d'un caractère peut survenir de différentes manières :
+
+- le caractère est déjà présent dans la population.
+
+- le caractère apparaît dans la population à la suite d'une mutation spontanée.
+
+- le caractère est hérité d'une autre population par flux de gène.
+
+L'identification des mutations génétiques à l'origine d'épisodes d'adaptation locale est particulièrement cruciale pour la compréhension des processus évolutifs et plus spécifiquement ceux liés à la spéciation^[épisode de divergence d'une espèce ayant conduit à la formation d'au moins une nouvelle espèce]. Bien que l'adaptation locale puisse être étudiée de façon expérimentale^[par le biais de la *transplantation réciproque* [@kawecki2004conceptual]], les données de séquençage permettent d'appréhender le problème de façon plus quantitative.
 
 ## Données de polymorphismes génétiques
 
 Le séquençage de l'ADN consiste à déterminer l'ordre dans lequel sont agencées les paires de bases pour un fragment d'ADN donné. Son apparition a offert de nouvelles voies d'exploration en biologie évolutive. Les variations génétiques étaient jusqu'alors appréciées par le biais des différences phénotypiques. En phylogénie par exemple, le séquençage de l'ADN a donné naissance à la phylogénétique moléculaire, qui se distingue de la phylogénétique traditionnelle en ce qu'elle ne considère que les séquences de nucléotides pour évaluer la proximité entre deux espèces. Et c'est précisément l'accès à ces séquences qui va permettre à toute une population de méthodologies statistiques de voir le jour et de se développer. 
-
 
 ### Des données en grande dimension 
 
@@ -211,9 +219,9 @@ Le séquençage de l'ADN a également permis de faire évoluer le concept de *ma
 
 - Microsatellite :
 
-Jusqu'à présent, les microsatellites ont connu un succès important, notamment grâce à la popularisation de techniques telles que la PCR (*Réaction en Chaîne par Polymérase*). Un microsatellite est repérable par la répétition successive de petits motifs chacun composé de 1 à 4 acides aminés.
+Jusqu'à présent, les microsatellites ont connu un succès important, notamment grâce à la popularisation de techniques telles que la PCR (*Réaction en Chaîne par Polymérase*). Cependant, grâce aux nouvelles avancées technologiques que nous évoquerons un peu plus loin, ils sont progressivement délaissés au détriment des SNPs.
 
-(ref:microsat) Exemples de microsatellites. La première séquence comporte 3 répétitions du motif CCG, tandis que la seconde inclut 4 répétitions du motif CA.
+(ref:microsat) Exemples de microsatellites. Un microsatellite est repérable par la répétition successive de petits motifs chacun composé de 1 à 4 acides aminés. La première séquence comporte 3 répétitions du motif CCG, tandis que la seconde inclut 4 répétitions du motif CA.
 
 ```{r microsat, fig.cap = '(ref:microsat)'}
 pair_base = function(seq) {
@@ -298,12 +306,10 @@ rbind(microsatA.df, microsatB.df) %>%
         axis.title.y = element_blank(),
         legend.position = "none",
         plot.title = element_text(hjust = 0.5))
-
-
 ```
 
 
-- Indel :
+- Insertion/Délétion (Indel) :
 
 (ref:indel-cap) L'insertion ou la délétion d'une base constituent également des polymorphismes génétiques. Relativement à une séquence de nucléotides de référence, une insertion consiste en la présence d'une base supplémentaire tandis que la délétion consiste en l'absence d'une base.
 
@@ -392,7 +398,9 @@ rbind(indelA.df, indelB.df) %>%
         plot.title = element_text(hjust = 0.5))
 ```
 
-- Polymorphisme nucléotidique : 
+- Polymorphisme d'un seul nucléotide (SNP) :
+
+Le polymorphisme d'un seul nucléotide correspond au polymorphisme génétique le plus simple, et correspond à l'emplacement d'un nucléotide présentant des variations appréciables à l'échelle d'une population.
 
 ```{r snp}
 N <- 20
@@ -435,7 +443,7 @@ rbind(SNPA.df, SNPB.df) %>%
                                "X"), 
                     ordered = TRUE)) %>%
   ggplot() + 
-  ggtitle("Polymorphisme nucléotidique") + 
+  ggtitle("Polymorphisme d'un seul nucléotide") + 
   coord_fixed() +
   scale_fill_manual(values = cbbPalette[c(3, 6, 7)]) +
   geom_rect(mapping = aes(xmin = x1, 
@@ -483,10 +491,6 @@ rbind(SNPA.df, SNPB.df) %>%
         plot.title = element_text(hjust = 0.5))
 ```
 
-## Les motivations de la thèse
-
-La production de données génétiques, volumineuses par la quantité d'information qu'elles renferment, laisse présager le meilleur pour les domaines de la médecine clinique et de la biologie évolutive, pourvu qu'une attention particulière soit prêtée au traitement informatique et statistique de ces données. En génétique des populations, leur acquisition offre de nombreuses perspectives d'étude, notamment concernant la mise en évidence de marqueurs génétiques impliqués dans les processus évolutifs. Les méthodes répondant à cette problématique portent le nom de *scans génomiques*. 
-
 ## Introgression adaptative
 
 ### Qu'est-ce que l'introgression ?
@@ -496,4 +500,9 @@ Avant de s'intéresser à la notion d'introgression, intéressons-nous d'abord �
 Nous parlons d'introgression lorsqu'un certain nombre de gènes est transféré d'une population à une autre.
 
 L'étude de régions génomiques présentant des caractéristiques d'introgression ou de divergence peut se révéler intéressante pour plusieurs raisons. 
+
+
+## Les motivations de la thèse
+
+La production de données génétiques, volumineuses par la quantité d'information qu'elles renferment, laisse présager le meilleur pour les domaines de la médecine clinique et de la biologie évolutive, pourvu qu'une attention particulière soit prêtée au traitement informatique et statistique de ces données. En génétique des populations, leur acquisition offre de nombreuses perspectives d'étude, notamment concernant la mise en évidence de marqueurs génétiques impliqués dans les processus évolutifs. Les méthodes répondant à cette problématique portent le nom de *scans génomiques*. 
 

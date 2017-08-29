@@ -1,0 +1,10 @@
+# Aspect computationnel 
+
+Dans cette partie, nous nous intéresserons brièvement à l'aspect computationnel des méthodes qui ont été présentées dans les chapitres précédents. Le développement d'outils logiciels destinés à l'exploration de données génétiques volumineuses requiert qu'une attention toute particulière soit portée à l'utilisation des ressources de calcul. 
+
+Blockwise computation of covariance matrix
+Random SVD
+Storage in binary format
+Memory-mapping
+
+Pairwise-Cor [@dray2015principal]

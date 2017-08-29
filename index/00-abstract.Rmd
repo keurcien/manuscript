@@ -1,0 +1,5 @@
+** Résumé **  \par
+
+La nécessité de développer des outils d'analyse exploratoire capables de traiter de larges volumes de données.
+
+** Abstract **

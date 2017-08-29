@@ -1,0 +1,100 @@
+---
+author: 'Keurcien LUU'
+date: ' 31 octobre 2017'
+division: 'Mathematics and Natural Sciences'
+advisor: 'Michael BLUM'
+lab: "Techniques de l'Ingénierie Médicale et de la Complexité - Informatique, Mathématiques et Applications de Grenoble (TIMC-IMAG)"
+department: 'Ingénierie de la Santé, de la Cognition et Environnement (EDISCE)' 
+title: 'THÈSE'
+knit: "bookdown::render_book"
+site: bookdown::bookdown_site
+output: 
+  #thesisdown::thesis_pdf: default
+  bookdown::gitbook:
+   css: style.css
+
+  # thesisdown::thesis_gitbook: default
+  # thesisdown::thesis_epub: default
+  # thesisdown::thesis_word: default
+
+abstract: >
+  `r if(knitr:::is_latex_output()) paste(readLines("00-abstract.Rmd"), collapse = ' ')`
+acknowledgements: >
+  `r if(knitr:::is_latex_output()) paste(readLines("00-acknowledgements.Rmd"), collapse = ' ')`
+# preface: >
+#   `r if(knitr:::is_latex_output()) paste(readLines("00-preface.Rmd"), collapse = ' ')`
+bibliography: bib/thesis.bib
+csl: csl/apa.csl
+lot: false
+lof: false
+link-citations: true
+space_between_paragraphs: false
+---
+
+```{r include_packages, include = FALSE}
+if(!require(devtools)) {
+  install.packages("devtools", repos = "http://cran.rstudio.com")
+}
+
+if(!require(dplyr)) {
+  install.packages("dplyr", repos = "http://cran.rstudio.com")
+}
+
+if(!require(ggplot2)) {
+  install.packages("ggplot2", repos = "http://cran.rstudio.com")
+}
+
+if(!require(bookdown)) {
+  install.packages("bookdown", repos = "http://cran.rstudio.com")
+}
+
+if(!require(thesisdown)) {
+  devtools::install_github("ismayc/thesisdown")
+}
+
+if(!require(data.table)) {
+  install.packages("data.table", repos = "http://cran.rstudio.com")
+}
+
+if(!require(pcadapt)) {
+  devtools::install_github("bcm-uga/pcadapt")
+}
+
+if(!require(simulate)) {
+  devtools::install_github("keurcien/simulate")
+}
+
+if(!require(xtable)){
+  install.packages("xtable")
+}
+
+if(!require(kableExtra)){
+  install.packages("kableExtra")
+}
+
+if(!require(maps)){
+  install.packages("maps")
+}
+
+if(!require(qvalue)){
+  BiocInstaller::biocLite("qvalue")
+}
+
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.align = 'center',
+                      results = 'hide',
+                      cache = TRUE,
+                      out.width = '\\textwidth')
+#knitr::opts_knit$set(kable.force.latex = TRUE)
+
+# The palette with black:
+cbbPalette <- c("#000000", 
+                "#E69F00", 
+                "#56B4E9", 
+                "#009E73", 
+                "#F0E442", 
+                "#0072B2", 
+                "#D55E00", 
+                "#CC79A7")
+```
+

@@ -1,0 +1,566 @@
+`r if(knitr:::is_latex_output()) '\\appendix'`
+
+`r if(!knitr:::is_latex_output()) '# (APPENDIX) Appendix {-}'` 
+
+# Supplementary Information 
+
+## Article 1 {-}
+
+## Article 2 {-}
+
+(ref:FigureSI1-cap) Schematic description of the island and divergence model. For the island model, adaptation occurs simultaneously in each population. For the island model, adaptation takes place in the branch leading to the second population. 
+
+```{r FigureSI1, results='asis', fig.cap='(ref:FigureSI1-cap)'}
+include_graphics("figure/FigureSI1.png")
+```
+
+(ref:FigureSI2-cap) Proportion of false discoveries and statistical power as a function of the number of principal components in a model of range expansion.
+
+```{r FigureSI2, fig.height=4, fig.cap='(ref:FigureSI2-cap)'}
+dt <- readRDS("data/rexp.rds")
+p <- ncol(data)
+K <- 4:9
+df <- data.frame(values = vector(mode = "numeric", 
+                                 length = 2 * length(K)),
+                 type = c(rep("FDR", length(K)), 
+                          rep("Power", length(K))),
+                 K = rep(K, 2))
+
+for (k in 1:length(K)) {
+  x <- pcadapt(dt$geno,
+               K = K[k],
+               ploidy = 1,
+               min.maf = 0)
+  qval <- qvalue(x$pvalues)$qvalues
+  rnk <- which(qval < 0.1)
+
+  if (length(rnk) > 0) {
+    df$values[df$type == "FDR"][k] <- sum(!(rnk %in% dt$ground.truth)) / length(rnk)
+  }
+  df$values[df$type == "Power"][k] <- sum(rnk %in% dt$ground.truth)/length(dt$ground.truth)
+}
+
+ggplot(data = df) + 
+  geom_line(size = 2,
+            aes(x = K,
+                y = values,
+                colour = type,
+                linetype = type)) + 
+  ylim(0,1) + 
+  scale_colour_manual("Curve",
+                      values = cbbPalette[c(7, 3)]) +
+  scale_linetype_manual(name = "Curve",
+                        values = c(3, 1)) +
+  guides(colour = guide_legend(nrow = 1), 
+         linetype = guide_legend(nrow = 1)) +
+  theme_bw() + 
+  theme(legend.position = "bottom",
+        legend.direction = "vertical",
+        axis.title.y = element_blank(),
+        legend.title.align = 0.5,
+        legend.key.width = unit(5, "line"))
+```
+
+(ref:FigureSI3-cap) Statistical power averaged over the expected proportion of false discoveries
+(ranging between 0% and 50%) for the island model.
+
+```{r FigureSI3, fig.height=4, fig.cap='(ref:FigureSI3-cap)'}
+readRDS("data/isldivrexp.rds") %>% 
+  filter(model == "isl") %>%
+  ggplot(aes(x = software,
+             y = measure,
+             fill = factor(type))) +
+  geom_bar(stat = "identity",
+           position = "dodge",
+           color = "black") +
+  ylim(0, 1) +
+  scale_fill_manual(values = c("lightblue", "darkblue"),
+                    labels = c("No admixture", "With admixture")) +
+  scale_x_discrete(labels = c("BayeScan",
+                              "hapflk",
+                              "OutFLANK",
+                              "pcadapt",
+                              "sNMF")) +
+  xlab("Software") + 
+  ylab("Power") + 
+  theme_bw() +
+  theme(axis.text.x = element_text(face = "italic"),
+        legend.title = element_blank(),
+        legend.position = c(0.125, 0.9),
+        legend.background = element_rect(fill = alpha("white", 0)))
+```
+
+\newpage
+
+(ref:FigureSI4-cap) Statistical power as a function of the proportion of false discoveries for the island model.
+
+```{r FigureSI4, fig.height=9, fig.cap='(ref:FigureSI4-cap)'}
+df <- readRDS("data/curves-fdrpower.rds") %>%
+  filter(model %in% c("isl", "islh")) %>%
+  droplevels()
+levels(df$model) <- c("No admixture", "With admixture")
+df %>%
+  ggplot(aes(x = fdr,
+             y = power)) +
+  facet_wrap(~model, ncol = 1) +
+  geom_line(aes(linetype = software, 
+                color = software),
+            size = 1.5, na.rm = TRUE) +
+  scale_color_manual("Software", 
+                     values = cbbPalette[c(7, 2, 4, 3, 8)],
+                     labels = c("BayeScan",
+                                "hapflk",
+                                "OutFLANK",
+                                "pcadapt",
+                                "sNMF")) +
+  scale_linetype_manual(name = "Software",
+                        labels = c("BayeScan",
+                                   "hapflk",
+                                   "OutFLANK",
+                                   "pcadapt",
+                                   "sNMF"),
+                        values = c("dotdash", 
+                                   "dotted",
+                                   "longdash",
+                                   "solid",
+                                   "dashed")) +
+  xlim(0, 0.6) + 
+  ylim(0, 1) +
+  guides(colour = guide_legend(nrow = 2), 
+         linetype = guide_legend(nrow = 2)) +
+  xlab("FDR") +
+  ylab("Power") +
+  theme_bw() +
+  theme(legend.position = "bottom",
+        legend.direction = "vertical",
+        legend.title.align = 0.5,
+        legend.text = element_text(face = "italic"),
+        legend.key.width = unit(5, "line"))
+```
+
+\newpage
+
+(ref:FigureSI5-cap) Statistical power as a function of the proportion of false discoveries for the divergence model.
+
+```{r FigureSI5, fig.height=9, fig.cap='(ref:FigureSI5-cap)'}
+df <- readRDS("data/curves-fdrpower.rds") %>%
+  filter(model %in% c("div", "divh")) %>%
+  droplevels()
+levels(df$model) <- c("No admixture", "With admixture")
+df %>%
+  ggplot(aes(x = fdr,
+             y = power)) +
+  facet_wrap(~model, ncol = 1) +
+  geom_line(aes(linetype = software, 
+                color = software),
+            size = 1.5, na.rm = TRUE) +
+  scale_color_manual("Software", 
+                     values = cbbPalette[c(7, 2, 4, 3, 8)],
+                     labels = c("BayeScan",
+                                "hapflk",
+                                "OutFLANK",
+                                "pcadapt",
+                                "sNMF")) +
+  scale_linetype_manual(name = "Software",
+                        labels = c("BayeScan",
+                                   "hapflk",
+                                   "OutFLANK",
+                                   "pcadapt",
+                                   "sNMF"),
+                        values = c("dotdash", 
+                                   "dotted",
+                                   "longdash",
+                                   "solid",
+                                   "dashed")) +
+  xlim(0, 0.6) + 
+  ylim(0, 1) +
+  guides(colour = guide_legend(nrow = 2), 
+         linetype = guide_legend(nrow = 2)) +
+  xlab("FDR") +
+  ylab("Power") +
+  theme_bw() +
+  theme(legend.position = "bottom",
+        legend.direction = "vertical",
+        legend.title.align = 0.5,
+        legend.text = element_text(face = "italic"),
+        legend.key.width = unit(5, "line"))
+```
+
+\newpage
+
+(ref:FigureSI6-cap) Statistical power as a function of the proportion of false discoveries for the
+model of range expansion.
+
+```{r FigureSI6, fig.height=5, fig.cap='(ref:FigureSI6-cap)'}
+df <- readRDS("data/curves-fdrpower.rds") %>%
+  filter(model == "rexp") %>%
+  droplevels()
+levels(df$model) <- c("No admixture", "With admixture")
+df %>%
+  ggplot(aes(x = fdr,
+             y = power)) +
+  geom_line(aes(linetype = software, 
+                color = software),
+            size = 1.5, na.rm = TRUE) +
+  scale_color_manual("Software", 
+                     values = cbbPalette[c(7, 2, 4, 3, 8)],
+                     labels = c("BayeScan",
+                                "hapflk",
+                                "OutFLANK",
+                                "pcadapt",
+                                "sNMF")) +
+  scale_linetype_manual(name = "Software",
+                        labels = c("BayeScan",
+                                   "hapflk",
+                                   "OutFLANK",
+                                   "pcadapt",
+                                   "sNMF"),
+                        values = c("dotdash", 
+                                   "dotted",
+                                   "longdash",
+                                   "solid",
+                                   "dashed")) +
+  xlim(0, 0.6) + 
+  ylim(0, 1) +
+  guides(colour = guide_legend(nrow = 2), 
+         linetype = guide_legend(nrow = 2)) +
+  xlab("FDR") +
+  ylab("Power") +
+  theme_bw() +
+  theme(legend.position = "bottom",
+        legend.direction = "vertical",
+        legend.title.align = 0.5,
+        legend.text = element_text(face = "italic"),
+        legend.key.width = unit(5, "line"))
+```
+
+(ref:FigureSI7-cap) Running times of the different computer programs. The different programs were run on genotype matrices containing 300 individuals and from 500 to 50,000 SNPs. The characteristics of the computer we used to perform comparisons are the following: OSX El Capitan 10.11.3, 2,5 GHz Intel Core i5, 8 Go 1600 MHz DDR3.
+
+```{r FigureSI7, fig.height=4, fig.cap='(ref:FigureSI7-cap)'}
+readRDS("data/runtime-molecol.rds") %>%
+  mutate(Runtime = log10(Runtime + 1)) %>%
+  ggplot(aes(x = nSNP,
+             y = Runtime,
+             colour = Software)) + 
+  scale_y_continuous(breaks = 0:3, labels = c(0, 10, 100, 1000)) +
+  scale_color_manual(values = cbbPalette[c(2, 4, 3, 8)]) +
+  guides(colour = guide_legend(nrow = 1)) + 
+  geom_point(size = 5) + 
+  geom_line(size = 2) + 
+  ylab("Running time (seconds)") +
+  xlab("Number of SNPs") +
+  theme_bw() + 
+  theme(legend.position = "bottom",
+        legend.direction = "vertical",
+        legend.title.align = 0.5,
+        legend.text = element_text(face = "italic"),
+        legend.key.width = unit(5, "line"))
+```
+
+## Article 3 {-}
+
+(ref:ancestry-cap) Standardized average ancestry coefficient computed with pcadapt and different LAI methods (EILA, Loter and  RFMix) for a population of simulated admixed individuals. Simulations use phased genotype data from $25$ *Populus balsamifera* individuals and $25$ *Populus trichocarpa* individuals and assume that admixture took place $\lambda=100$ generations ago. A total of $25$ admixed individuals were generated assuming $30\%$ of *Populus balsamifera* ancestry except from the 5 outlier $500$ SNP regions where *Populus balsamifera* ancestry is of $50\%$.
+
+```{r ancestry, results='asis', fig.cap='(ref:ancestry-cap)'}
+include_graphics("figure/ancestry.png")
+```
+
+(ref:losspower-admix-cap) Relative loss of power of the different methods when compared to an ideal method called *oracle*, which would know ancestry chunks for each admixed individual. The relative power is averaged over the difference $\Delta_q$ of ancestry between neutral and outlier regions. Simulations use phased genotype data from $25$ *Populus balsamifera* individuals and $25$ *Populus trichocarpa* individuals and assume that admixture took place $\lambda$ generations ago. A total of $25$ admixed individuals were generated assuming $70\%$ of *Populus balsamifera* ancestry except from the 5 outlier $500$ SNP regions where *Populus balsamifera* ancestry is of $70\%-\Delta_q$ where $\Delta_q$ is equal to $0.05$, $0.10$, $0.15$, $0.20$, $0.30$, $0.40$, or $0.50$.
+
+```{r losspower-admix, results='asis', fig.cap='(ref:losspower-admix-cap)'}
+include_graphics("figure/meanloss_admixture.png")
+```
+
+(ref:power-admix-max-cap) Proportion of true outlier peaks among the five top peaks found with pcadapt and different LAI methods (EILA, Loter and  RFMix) in a scenario where 2 Populus populations experienced admixture. Compared to Figure \@ref(fig:power-admix), we compute maximum of ancestry coefficients within each genomic region instead of mean of ancestry coefficients. Proportion of true outlier peaks are displayed as a function of the difference $\Delta_q$ of ancestry between outlier and neutral regions. The three panels correspond to the three different possible values ($\lambda=10$ or $100$ or $1000$) of the number of generations since admixture.
+
+```{r power-admix-max, results='asis', fig.cap='(ref:power-admix-max-cap)'}
+include_graphics("figure/power_Dq_max.png")
+```
+
+(ref:si-power-admix-cap) Proportion of true outlier peaks as a function of the number of top peaks found with pcadapt and different LAI methods (EILA, Loter and RFMix) in a scenario where 2 Populus populations experienced admixture. The different panels correspond to the different possible values for the number of generations since admixture occurred ($\lambda=\{10,100,1000\}$) and to the different values of the difference of ancestry $\Delta_q$ between neutral and outlier regions.
+
+```{r si-power-admix, results='asis', fig.cap='(ref:si-power-admix-cap)'}
+include_graphics("figure/power_Dq_curves.png")
+```
+
+(ref:introgression-cap) Schematic description of simulations under an introgression scenario.
+
+```{r introgression, results='asis', fig.cap='(ref:introgression-cap)'}
+include_graphics("figure/introgression.png")
+```
+
+(ref:admixture-cap) Schematic description of simulations under an admixture scenario.
+
+```{r admixture, results='asis', fig.cap='(ref:admixture-cap)'}
+include_graphics("figure/admixture.png")
+```
+
+(ref:annotation-cap) Transcripts detected with pcadapt in chromosome 6 and not detected in [@suarez2016] located in regions with excess of *Populus balsamifera* ancestry.
+
+```{r annotation, results='asis', message=FALSE}
+name <- c("Potri.006G156000.1", 
+          "Potri.006G156100.1", 
+          "Potri.006G156200.1",
+          "Potri.006G161800.1",
+          "Potri.006G161900.1")
+
+region <- c("14266001:14305734", 
+        "14266001:14305734",
+        "14266001:14305734",
+        "15556790:15791830",
+        "15556790:15791830")
+
+func <- c("Sulfate transporter", 
+        "Not named",
+        "Not named",
+        "Not named",
+        "Vernalization intensive protein")
+
+data.frame(name = name,
+           region = region,
+           func = func) %>%
+  knitr::kable(col.names = c("Transcript",
+                             "Region",
+                             "PANTHER annotation"),
+               caption = '(ref:annotation-cap)',
+               longtable = TRUE,
+               booktabs = TRUE,
+               escape = TRUE) %>%
+  kable_styling(full_width = T)
+```
+
+
+# R & Python
+
+## Simulations et modèles démographiques
+
+Nous mettons ici à disposition une partie des codes qui ont servi à produire les simulations et à leur exploitation.
+
+### Modèle en île  
+
+(ref: island-pca-cap) Exemple de simulation réalisée à l'aide de *ms* [@hudson2002generating].
+
+```{r island-pca, fig.cap='(ref:island-pca-cap)', echo=TRUE}
+if (!file.exists("ms/ms")) {
+  system("gcc -o ms/ms ms/ms.c ms/streec.c ms/rand1.c -lm")
+}
+
+### ms : list of parameters ###
+nb_demes <- 3
+nCHR_per_POP <- 50
+nCHR <- nb_demes * nCHR_per_POP
+nIND <- nCHR / 2
+nb_neutral <- 100
+nb_adaptive <- 25
+mig_rate_neutral <- 10
+mig_rate_adaptive <- 0.1
+###############################
+
+nCHR_per_POP_string <- nCHR_per_POP
+for (k in 1:(nb_demes - 1)) {
+  nCHR_per_POP_string <- paste(nCHR_per_POP_string, nCHR_per_POP)
+}
+
+mig_rate_neutral_string <- "x"
+mig_rate_adaptive_string <- "x"
+for (k in 1:nb_demes){
+  for (j in 1:nb_demes){
+    if ((k == j) && (k > 1)){
+      mig_rate_neutral_string <- paste(mig_rate_neutral_string, "x")
+      mig_rate_adaptive_string <- paste(mig_rate_adaptive_string, "x")      
+    } else if (k != j) {
+      mig_rate_neutral_string <- paste(mig_rate_neutral_string, 
+                                       mig_rate_neutral)
+      mig_rate_adaptive_string <- paste(mig_rate_adaptive_string, 
+                                        mig_rate_adaptive)
+    }
+  }
+}
+
+cmd_neutral <- paste("ms/./ms",
+                     nCHR,
+                     nb_neutral,
+                     "-s 1 -I",
+                     nb_demes,
+                     nCHR_per_POP_string,
+                     "-ma",
+                     mig_rate_neutral_string,
+                     ">", 
+                     "data/neutral.txt")
+
+cmd_adaptive <- paste("ms/./ms",
+                      nCHR,
+                      nb_adaptive,
+                      "-s 1 -I",
+                      nb_demes,
+                      nCHR_per_POP_string,
+                      "-ma",
+                      mig_rate_adaptive_string,
+                      ">",
+                      "data/adaptive.txt") 
+
+system(cmd_neutral)
+system(cmd_adaptive)
+
+file.neutral <- scan(file = "data/neutral.txt", 
+              what = "character", 
+              sep = "\n", 
+              skip = 2)
+
+g.neutral <- NULL
+
+for (locus in 1:nb_neutral){
+  res.locus1 <- file.neutral[4:(nCHR + 3)]
+  file.neutral <- file.neutral[-(1:(nCHR+3))]
+  g.neutral <- cbind(g.neutral, as.numeric(as.factor(res.locus1)))
+}
+
+file.adaptive <- scan(file = "data/adaptive.txt", 
+                      what = "character", 
+                      sep = "\n", 
+                      skip = 2)
+
+g.adaptive <- NULL
+
+for (locus in 1:nb_adaptive){
+  res.locus1 <- file.adaptive[4:(nCHR + 3)]
+  file.adaptive <- file.adaptive[-(1:(nCHR+3))]
+  g.adaptive <- cbind(g.adaptive, as.numeric(as.factor(res.locus1)))
+}
+
+g <- cbind(g.neutral, g.adaptive)
+
+x <- pcadapt::pcadapt(t(g), K = 2)
+pop <- c(rep("A", 50), rep("B", 50), rep("C", 50))
+plot(x, option = "scores", pop = pop)
+```
+
+(ref:island-manhattan-cap) Manhattan plot obtenu à partir de l'analyse de la simulation \@ref(fig:island-manhattan-cap).
+
+```{r island-manhattan, fig.cap='(ref:island-manhattan-cap)', echo=TRUE}
+plot(x, option = "manhattan")
+```
+
+### Modèle de divergence
+
+Nous adaptons une version du script Python utilisé dans [@roux2012recent], basé sur le module de simulation simuPOP [@peng2005simupop].
+
+```{python simuPOP, cache = TRUE, echo = TRUE}
+#!/usr/bin/env python
+from __future__ import division
+import simuOpt, types, os, sys, time
+simuOpt.setOptions(alleleType = 'long')
+from operator import itemgetter
+import numpy as np
+from simuPOP import *
+from simuPOP.utils import *
+from simuPOP.sampling import drawRandomSample
+
+def simulate(Ne, Nsam, T1, T2, T3, s10, s11):
+    pop = Population(size = Ne, 
+                     ploidy = 2, 
+                     loci = [1], 
+                     infoFields = ['fitness', 'migrate_to'])
+                     
+    def getfitness10(geno):
+        if geno[0] + geno[1] == 0 :
+            return 1 - 2 * s10
+        if geno[0] + geno[1] == 1 :
+            return 1 - s10
+        else :
+            return 1
+
+    def getfitness11(geno):
+        if geno[0] + geno[1] == 0 :
+            return 1 - 2 * s11
+        if geno[0] + geno[1] == 1 :
+            return 1 - s11
+        else :
+            return 1
+            
+    pop.evolve( 
+        initOps = [
+            InitSex(),
+            InitGenotype(loci = ALL_AVAIL, 
+                         freq = [0.5, 0.5],  
+                         begin = 0, 
+                         end = 1)
+        ],
+        
+        preOps = [
+            # resize the ancestral population at the time immediatly 
+            # before the split
+            ResizeSubPops([0], 
+                          sizes = [Ne + Ne], 
+                          at = T1 - 1),
+                              
+            ResizeSubPops(["S1_1"], 
+                          sizes = [Ne + Ne], 
+                          at = T1 + T2 - 1),
+                              
+            # split populations in 2 subpopulations 
+            SplitSubPops(subPops = [0], 
+                         sizes = [Ne, Ne], 
+                         names = ["S1_0", "S1_1"], 
+                         at = T1),
+                             
+            SplitSubPops(subPops = ["S1_1"], 
+                         sizes = [Ne, Ne], 
+                         at = T1 + T2, 
+                         names = ["S2_0", "S2_1"]),
+                         
+            # apply selection by invoking function getfitness
+            PySelector(loci = [0], 
+                       func = getfitness11, 
+                       begin = T1 + T2,
+                       subPops = ["S2_1"]),
+                   
+            PySelector(loci = [0],
+                       func = getfitness10, 
+                       begin = T1, 
+                       subPops = ["S1_0"], 
+                       end = T1 + T2 + T3 - 1)
+        ],
+        
+        matingScheme = RandomMating(ops = [
+                                        Recombinator(intensity = 1)
+                                    ]),
+                       
+        gen = T1 + T2 + T3 
+      
+    )
+    
+    sample = drawRandomSample(pop, sizes = [Nsam, Nsam, Nsam])
+    
+    return sample
+
+    
+Ne = 1000
+Nsam = 25
+T1 = 10
+T2 = 100
+T3 = 100
+s = 0.1
+nSNP = 10
+
+G  = np.zeros([3 * Nsam, nSNP])
+
+for i in range(nSNP):
+    if i < 1:
+        s10 = 2 * s
+        s11 = 0.0
+    elif i < 2:
+        s10 = 0.0
+        s11 = s
+    else:
+        s10 = 0.0
+        s11 = 0.0
+    res = simulate(Ne, Nsam, T1, T2, T3, s10, s11)
+    for j in range(3):
+        Sj = res.genotype(j)
+        for k in range(int(len(Sj) / 2)):
+            idx = j * int(len(Sj) / 2) + k 
+            G[idx][i] = Sj[2 * k] + Sj[2 * k + 1]
+            
+np.savetxt('data/simuPOP.pcadapt', G, fmt = '%i')
+```

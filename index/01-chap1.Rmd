@@ -1,0 +1,280 @@
+<!--
+This is for including Chapter 1. Notice that it's also good practice to name your chunk. This will help you debug potential issues as you knit. The chunk above is called intro and the one below is called chapter1. Feel free to change the name of the Rmd file as you wish, but don't forget to change it here from chap1.Rmd.
+-->
+
+<!--
+The {#rmd-basics} text after the chapter declaration will allow us to link throughout the document back to the beginning of Chapter 1. These labels will automatically be generated (if not specified) by changing the spaces to hyphens and capital letters to lowercase. Look for the reference to this label at the beginning of Chapter 2.
+-->
+
+# État de l'art
+
+## Adaptation locale
+
+### Les scans génomiques
+
+Les scans génomiques pour la sélection se sont largement répandus au cours des dernières années, principalement grâce au développement fulgurant qu'ont connu les technologies NGS. Principalement réalisés sur des données humaines, les scans génomiques se sont progressivement étendus à d'autres espèces, modèles et non-modèles [@haasl2016detecting], tout en amorçant la transition vers des marqueurs génétiques de type SNP (Figure \@ref(fig:gwss)).
+
+(ref:gwss-cap) Évolution de la proportion d'articles scientifiques s'intéressant à des espèces non humaines et de la proportion de ceux dont l'étude est réalisée sur des données de SNPs, dans le cadre des scans génomiques pour la sélection [@haasl2016detecting].
+
+```{r gwss, fig.cap = '(ref:gwss-cap)', fig.height=3}
+df <- read.csv2("data/NIHMS785639-supplement-Supplemental_Table_1.csv") %>% 
+  mutate(Recent = (Year >= 2010))
+snp <- strsplit(as.character(df$Markers), split = " ")
+df$Methodology <- as.character(df$Methodology)
+df$Methodology[108] <- "recombination, and LD" 
+df$Methodology[128] <- "extreme Tajima's D; searching for balancing selection" 
+df$Methodology <- as.factor(df$Methodology)
+fst_6 <- strsplit(as.character(df$Methodology), split = "-")
+fst_space <- strsplit(as.character(df$Methodology), split = " ")
+df$var <- unlist(lapply(snp, FUN = function(x){("SNP" %in% x) || ("SNPs" %in% x)}))
+
+snp.df <- df %>% 
+  group_by(Recent, var) %>%
+  summarise(count = n()) %>%
+  mutate(freq = count / sum(count)) %>%
+  filter(var)
+
+snp.df$data <- "SNP"
+
+word.list <- c("Homo sapiens", 
+               "Homo sapiens and Pan troglodytes",
+               "Homo sapiens, Pan troglodytes",
+               "Homo sapiens, Pan troglodytes, Mus musculus",
+               "Homo sapiens, Pan troglodytes, oragutan, Rhesus macaque")
+
+h.df <- df %>% mutate(var = Species %in% word.list) %>%
+  group_by(Recent, var) %>%
+  summarise(count = n()) %>%
+  mutate(freq = count / sum(count)) %>%
+  filter(!var)
+
+h.df$data <- "Human"
+
+bool_6 <- unlist(lapply(fst_6, FUN = function(x){"FST" %in% x}))
+bool_space <- unlist(lapply(fst_space, FUN = function(x){"FST" %in% x}))
+df$var <- (bool_6 | bool_space)
+
+fst.df <- df %>% 
+  group_by(Recent, var) %>%
+  summarise(count = n()) %>%
+  mutate(freq = count / sum(count)) %>%
+  filter(var)
+
+fst.df$data <- "FST"
+
+df <- rbind(snp.df, h.df, fst.df) 
+df$Recent[df$Recent] <- "2010-2016"
+df$Recent[df$Recent == FALSE] <- "1999-2009"
+df$Recent <- factor(df$Recent, levels = sort(unique(df$Recent), decreasing = TRUE))
+
+df %>% ggplot(aes(x = Recent, 
+                  y = freq, 
+                  fill = factor(data))) +
+  ylim(0, 1) +
+  coord_flip() +
+  geom_bar(stat = "identity", 
+           colour = "black", 
+           position = "dodge",
+           width = 0.5) +
+  scale_fill_manual(labels = c("Proportion de scans à sélection utilisant l'indice de fixation",
+                               "Proportion de scans à sélection pour des espèces non humaines",
+                               "Proportion de scans à sélection utilisant des données de SNPs"),
+                    values = cbbPalette[c(8, 6, 5)]) +
+  theme_bw() +
+  theme(axis.ticks.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        legend.position = "bottom",
+        legend.title = element_blank(), 
+        legend.direction = "vertical")
+```
+
+### L'indice de fixation
+
+En se différenciant génétiquement, les populations voient leurs fréquences d'allèles évoluer de façon indépendante. L'indice de fixation est une statistique permettant de quantifier pour un allèle donné, l'écart de la fréquence observée dans une sous-population à la fréquence théorique
+
+### Modèle de FLK
+
+Le modèle de FLK estime le modèle neutre d'un SNP bi-allélique lorsque celui-ci est uniquement soumis à la dérive génétique. À l'instant $t = 0$, le SNP a une fréquence $p_0$. Notant $F_t$ l'indice de fixation de cet allèle, $p(t)$ sa fréquence après $t$ générations, et en supposant que $F_t$ soit suffisamment petit, ce qui devrait être vérifié dans le cas neutre. [@nicholson2002assessing] : 
+
+\begin{equation} 
+  p(t) \sim N(p_0, F_t p_0 (1-p_0)) 
+  (\#eq:frequency-law)
+\end{equation}
+
+De la loi \@ref(eq:frequency-law) nous tirons $\text{Var}(p(t)) = F_t p_0 (1-p_0)$.
+
+La statistique FLK [@bonhomme2010detecting] requiert d'estimer au préalable deux paramètres que sont la fréquence allélique initiale $p_0$ et la matrice d'apparentement $V$, $V \in M_K(\mathbb{R})$ où $K$ est le nombre de populations observées. Notant : 
+
+- $\boldsymbol{p} = (p_1, p_2, \dots, p_K) \in \mathbb{R}^K$, 
+
+- $\boldsymbol{p_0} = (p_0, p_0, \dots, p_0) \in \mathbb{R}^K$, 
+
+- $\boldsymbol{r} = N(0, V)$, 
+
+le modèle neutre pour $\boldsymbol{p}$ est donné par la relation suivante : 
+
+\begin{equation} 
+  \boldsymbol{p} = \boldsymbol{p_0} + \boldsymbol{r} 
+  (\#eq:flk-neutral-model)
+\end{equation}
+
+Bonhomme \textit{et al.} proposent pour ce modèle de mesurer une statistique de qualité de l'ajustement pour quantifier la déviance d'un allèle par rapport au modèle neutre : 
+
+\begin{equation} 
+  FLK = (\boldsymbol{p - \hat{p}_0})^T V (\boldsymbol{p - \hat{p}_0})                               
+  (\#eq:flk-statistic)
+\end{equation}
+
+Sous l'hypothèse neutre et suivant \@ref(eq:flk-statistic), $FLK \sim \chi^2 (K - 1)$.
+
+### Modèle de OutFLANK
+
+En reprenant le modèle proposé par Lewontin et Krakauer [@lewontin1973distribution] et en y apportant les corrections nécessaires afin de prendre en compte les erreurs d'échantillonnage, 
+Whitlock \textit{et al.} proposent une méthode permettant de détecter les allèles sous sélection en environnement hétérogène [@whitlock2015reliable]. Ainsi, la quantité 
+
+\begin{equation} 
+  k \frac{F_{ST}^{\prime}}{\bar{{F_{ST}^{\prime}}}}  
+  (\#eq:OutFLANK-statistic)
+\end{equation}
+
+où $k$ représente le nombre de degrés de libertés.
+
+### Modèle du logiciel Bayescan
+
+Bayescan est aujourd'hui encore un des logiciels les plus utilisés pour détecter l'adaptation locale. Le modèle employé suppose que les sous-populations observées proviennent toutes d'une même population ancestrale. Pour une sous-population donnée et un SNP donné, la statistique de $F_{ST}$ peut être estimée en utilisant la
+vraisemblance d’un modèle multinomial-Dirichlet [@beaumont2004identifying].
+$F_{ST} \in [0, 1]$ est une quantité qui peut être interprété comme proportionnel à la probabilité que deux individus aient un ancêtre commun dans la sous-population
+
+\begin{equation} 
+  \log \left( \frac{F_{ST}}{1 - F_{ST}} \right) = \alpha_j + \beta_i + \gamma_{ij}
+  (\#eq:Bayescan-statistic)
+\end{equation}
+
+### Fast PCA
+
+#### L'ACP en génétique des populations
+
+L'utilisation de l'Analyse en Composantes Principales en génétique des populations a été popularisée par Cavalli-Sforza [@menozzi1978synthetic].
+
+(ref:popres-cap) ACP réalisée sur le jeu de données POPRES [@novembre2008genes].
+
+```{r popres, fig.cap = '(ref:popres-cap)', out.width='\\textwidth'}
+obj.popres <- readRDS("data/popres.rds")
+
+ggdf <- data.frame(PC1 = -obj.popres$u[, 1], 
+                   PC2 = -obj.popres$u[, 2],
+                   pop = obj.popres$pop.fr)
+
+ggplot(ggdf, aes(x = PC2, y = PC1, fill = pop)) + 
+  geom_point(size = 2.5, shape = 21, stroke = 1) + 
+  scale_fill_manual(labels = sort(unique(ggdf$pop)), 
+                    values = as.character(obj.popres$palette.fr)) +
+  guides(fill = guide_legend(nrow = 5)) +
+  theme_bw() +
+  theme(axis.text = element_text(face = "bold"),
+        legend.text = element_text(size = 7.5),
+        legend.key.height = unit(0.75, "line"),
+        legend.key.width = unit(0.5, "line"),
+        legend.title = element_blank(),
+        legend.direction = "horizontal",
+        legend.position = "bottom")
+```
+
+
+
+### Analyse en Composantes Principales parcimonieuse
+
+### Bootstrap ACP
+
+### Contexte
+
+### Tests multiples
+
+### Contrôle du taux de fausse découverte
+
+Le taux de fausse découverte, correspond à la proportion de faux positifs parmi les positifs. En notant $FP$ le nombre de faux positifs, $FP$ le nombre de vrais positifs, on définit le taux de fausse découverte $FDR$ par : 
+
+\begin{equation} 
+  FDR = \mathbb{E}\Big[\frac{FP}{TP + FP} 1_{FP+TP > 0}\Big] 
+  (\#eq:FDR-def)
+\end{equation}
+
+- Référence cours de Christophe Giraud
+
+q-value, bonferroni, benjamini-hochberg
+La figure suivante donne les comparaisons entre les différentes procédures de correction :
+
+## Introgression adaptative
+
+### Coefficients de métissage globaux et locaux
+
+Étant données des populations ancestrales, il est possible d'estimer pour un individu donné, la proportion de son génôme provenant de chacune des populations ancestrales. Ces proportions sont connues plus communément sous le nom de *coefficients de métissage globaux*. De nombreux logiciels existent pour l'estimation de ces coefficients : STRUCTURE, ADMIXTURE [@alexander2009fast], LEA [@frichot2015lea], tess3r [@caye2016tess3]. En complément à cette information globale, il peut être intéressant de déterminer sur des portions plus petites du génôme, de la même manière que dans le cas global, les proportions venant de telle ou telle population ancestrale pour chacune de ces portions. Nous parlons dans ce cas de *coefficients de métissage locaux*. Encore une fois, plusieurs logiciels ont été proposés dans le but d'estimer ces coefficients : Hapmix [@price2009sensitive], EILA [@yang2013efficient], LAMP [@thornton2014local], loter ou encore RFmix [@maples2013rfmix].
+
+L'introgression peut être détectée de différentes façons. Une première approche consiste à utiliser les *coefficients de métissage locaux*. Les méthodes mentionnées plus haut estiment ces coefficients pour chaque individu, permettant de calculer à partir de ceux-ci des coefficients de métissage locaux pour chaque population.
+
+### Lien entre Analyse en Composantes Principales et métissage global.
+
+L'un des premiers articles à établir un lien entre l'ACP et les coefficients de métissage global fut sur l'interprétation généalogique de l'ACP de Gil McVean [@mcvean2009genealogical]: 
+
+(ref:mcvean-cap) Coefficients de métissage et ACP [@mcvean2009genealogical].
+
+```{r mcvean, results = 'asis', fig.cap = '(ref:mcvean-cap)', out.width = '300px'}
+include_graphics("figure/mcvean.png")
+```
+
+Pour chacun des 22 chromosomes, 
+
+### Analyse en Composantes Principales locale
+
+Notant $p$ le nombre de marqueurs génétiques, $i$ un entier compris entre $1$ et $p$, et $x_i$ la position génétique (en Morgans) ou la position physique (en paires de bases) du $i$-ème marqueur génétique. Nous définissons pour cet entier $i$ la fenêtre $W_i^T$ de taille $T$ et centrée en $i$ :
+
+$$W_i^T = \{ j \in [|1, p|], |x_i - x_j| \leq T/2 \}$$
+
+### Sensibilité à l'imputation des données manquantes
+
+\newpage
+
+#### Méthodes de détection
+
+##### La statistique D de Patterson
+
+La statistique $D$ de Patterson [@durand2011testing] demeure aujourd'hui la méthode la plus utilisée pour détecter la trace de flux de gènes dans une population. La méthode repose sur l'observation de motifs portant les noms *ABBA* et *BABA*, en référence aux différents types de généalogie possible pour un site nucléotidique.
+
+$$ D = \displaystyle \frac{\sum_i C_{ABBA}(i) - C_{BABA}(i)}{\sum_i C_{ABBA}(i) + C_{BABA}(i)} $$
+
+##### RNDmin
+
+[Descriptif de RNDmin]
+
+Pour comprendre la récente méthode proposée par [@rosenzweig2016powerful], il est nécessaire de définir un certain nombre de statistiques dont $RND_{\text{min}}$ dérive.
+
+&nbsp;
+
+- $d_{xy}$ est la distance de Hamming entre la séquence $X$ de la population $1$ et la séquence $Y$ de la population $2$. Ainsi, si $x = (x_i)_{1 \leq i \leq n}$ et $y = (y_i)_{1 \leq i \leq n}$, alors : 
+
+$$d_{xy} = \text{Card}(\{i \in [|1, n|] \; | \; x_i \neq y_i \})$$
+
+Cette statistique est ainsi définie pour une paire de séquences ($x$, $y$). Pour quantifier la dissimilarité entre deux ensembles de séquences, deux approches sont possibles. La première consiste à calculer la distance moyenne $d_{XY}$. De par sa définition, cette distance présente néanmoins le défaut d'être peu sensible aux épisodes récents d'introgression [@geneva2015new].
+En effet, les faibles valeurs de $d_{xy}$ correspondant à des évènements de divergence récents peuvent voir leur influence diminuée en cas de présence d'évènements de divergence plus anciens.
+Pour pallier à ce problème, considérer la distance minimale entre les deux ensembles de séquences [@joly2009statistical] constitue une solution intéressante.
+
+[Expliquer pourquoi on définit $d_{\text{out}}$ et $RND$]
+
+En définissant $d_{out} = \frac{1}{2}(d_{XO} + d_{YO})$, il est possible de définir de la même 
+façon $RND_{min}$ :
+
+$$RND_{\text{min}} = \frac{d_{\text{min}}}{d_{\text{out}}}$$
+
+Pour récapituler, $RND_{\text{min}}$ est une statistique robuste aux variations de taux de mutation et qui reste sensible aux récents évènements d'introgression. En pratique, l'introduction de $d_{\text{out}}$ requiert ainsi la donnée d'une population ancestrale commune aux deux populations d'intérêt.
+
+##### Bdf
+
+##### Analyse Linéaire Discriminante
+
+##### Régression linéaire, régression logistique, forêts aléatoires et importance des variables
+
+##### Régression locale, package mgcv, locfit, Backward selection strategy
+
+##### ACP locale et espace de formes
+

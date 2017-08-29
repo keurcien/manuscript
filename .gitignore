@@ -1,0 +1,10 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+index/data/
+index/figure/
+index/seedms
+index/_book/
+index/_bookdown_files/ 
+

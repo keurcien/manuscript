@@ -43,10 +43,6 @@ if(!require(ggplot2)) {
   install.packages("ggplot2", repos = "http://cran.rstudio.com")
 }
 
-if(!require(bookdown)) {
-  install.packages("bookdown", repos = "http://cran.rstudio.com")
-}
-
 if(!require(thesisdown)) {
   devtools::install_github("ismayc/thesisdown")
 }

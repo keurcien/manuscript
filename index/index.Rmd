@@ -12,7 +12,6 @@ output:
   #thesisdown::thesis_pdf: default
   bookdown::gitbook:
    css: style.css
-
   # thesisdown::thesis_gitbook: default
   # thesisdown::thesis_epub: default
   # thesisdown::thesis_word: default

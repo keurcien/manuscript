@@ -50,7 +50,7 @@ data.frame(theory = sort(rep(c("Darwin", "Kimura"), 3)),
 
 Une des composantes principales de cette nouvelle théorie consiste à affirmer que les fluctuations aléatoires dans les fréquences d'allèle, n'affectant que très peu ou pas du tout la valeur sélective, constituent la principale source de variabilité de l'ADN [@charlesworth2009darwin]. Une grande partie de la variation génétique observée est fonctionnellement neutre et n'occasionne pas de changement de phénotype. 
 
-L'approbation de cette théorie, bien que conceptuellement intéressante, aura un retentissement beaucoup plus important d'un point de vue méthodologie statistique. La formulation d'une hypothèse permettant de décrire un processus évolutif en l'absence de sélection, portant généralement le nom de *modèle neutre*, est souvent de première nécessité dans toute démarche visant à caractériser un mécanisme de sélection. La donnée d'observations mettant en défaut le modèle neutre aura pour conséquences de créditer davantage une hypothèse invoquant un processus de sélection. Historiquement, la statistique $D$ de Tajima fut l'une des premières statistiques développées à partir d'une hypothèse nulle bâtie pour les mutations neutres [@tajima1989statistical]. 
+L'approbation de cette théorie, bien que conceptuellement intéressante, aura un retentissement beaucoup plus important d'un point de vue méthodologie statistique. La formulation d'une hypothèse permettant de décrire un processus évolutif en l'absence de sélection, portant généralement le nom d'*hypothèse nulle* ou encore de *modèle neutre*, est souvent de première nécessité dans toute démarche visant à caractériser un mécanisme de sélection. La donnée d'observations mettant en défaut le modèle neutre aura pour conséquences de créditer davantage une hypothèse invoquant un processus de sélection. Historiquement, la statistique $D$ de Tajima fut l'une des premières statistiques développées à partir d'une hypothèse nulle bâtie pour les mutations neutres [@tajima1989statistical]. 
 
 ### Forces évolutives
 
@@ -58,7 +58,7 @@ Ce changement de paradigme nous invite de ce fait à observer la sélection natu
 
 1. La dérive génétique
 
-La dérive génétique est un concept essentiel en génétique des populations, et correspond   . Le principe de dérive génétique est illustré en figure \@ref(fig:drift), à l'aide du modèle de Wright-Fisher tel qu'il est présenté dans l'ouvrage *Population Genetics* [@gillespie2010population].
+La dérive génétique correspond à tout ce qu'il y a d'aléatoire dans l'évolution d'une population. C'est le *hasard des choses*. Le nombre de descendants ou le choix de partenaire sexuel sont des exemples de phénomènes aléatoires participant à la dérive génétique. Le principe de dérive génétique est illustré en figure \@ref(fig:drift), à l'aide du modèle de Wright-Fisher tel qu'il est présenté dans l'ouvrage *Population Genetics* [@gillespie2010population]. Ce modèle simpliste suppose que la taille de la population est constante et que chaque individu de la ${n+1}^\text{ème}$ génération est issu du brassage génétique de deux individus tirés aléatoirement de la $n^\text{ème}$ génération.
 
 (ref:drift-cap) Simulation numérique de la dérive génétique. La fréquence de l'allèle étudié est simulée pour 5 populations constituées chacune de 20, 100 ou 1000 individus sur une période de 100 générations. Dans chaque population, la fréquence de l'allèle est initialement de 0.20 [@gillespie2010population].
 
@@ -132,13 +132,15 @@ data.frame(Species = species, Rates = rates) %>%
 
 3. Le flux de gène
 
-Le flux de gène est le résultat d'évènements migratoires, initiés par des individus appartenant à une population donnée, vers une seconde population dont le pool génique diffère éventuellement de la population d'origine. Le flux de gène influe instantanément sur la diversité génétique initialement présente, soit parce que les allèles *migrants* n'arrivent pas dans les mêmes proportions que celles qui sont établies dans la population receveuse, soit parce que parmi les allèles *migrants* figurent des allèles qui n'existaient tout simplement pas dans la population receveuse. 
+Le flux de gène est généralement le résultat d'évènements migratoires (bien que ce ne soit pas nécessairement toujours le cas [@tigano2016genomics]), initiés par des individus appartenant à une population donnée, vers une seconde population dont le pool génique diffère éventuellement de la population d'origine. Le flux de gène influe sur la diversité génétique initialement présente si par exemple, parmi les allèles *migrants* figurent des allèles qui n'existaient pas dans la population receveuse. 
 
 4. La sélection naturelle
 
 En biologie évolutive, la sélection naturelle est la force évolutive qui tend à préserver les allèles conférant des avantages quant à la survie d'un individu ou d'une espèce. Elle agit sur les traits qui sont héritables. La grande majorité de ces traits sont transmis aux descendants en suivant le mécanisme d'hérédité génétique. Cependant, d'autres aspects de la biologie d'un organisme peuvent se transmettre via des mécanismes différents, comme certains comportements culturels ou caractéristiques de l'environnement qui ont été façonnées par les populations ancestrales [@gerbault2011evolution]. 
 
 ### Adaptation locale
+
+#### Principe
 
 La diversité climatique et la diversité géologique terrestre ont naturellement façonné des environnements aux constitutions physiques et chimiques variées. À celles-ci viennent s'ajouter des caractéristiques écologiques résultant des interactions entre l'environnement et les organismes qui y évoluent *lato sensu*. La valeur sélective, désignant la capacité de survie et de reproduction, de ces organismes peut être impactée par les caractéristiques environnementales auxquelles ils sont exposés. Si cette valeur sélective est associée à un trait phénotypique, on dit que ce trait confère un avantage adaptatif et on parle dans ce cas d'*adaptation locale*. Une population sera ainsi dite adaptée à son environnement si elle développe, par le biais de la sélection naturelle, un ou plusieurs allèles associés à un trait adaptatif augmentant la valeur sélective des individus la constituant, en réponse aux pressions environnementales auxquelles ces individus sont soumis. À titre d'exemple, nous pouvons citer l'adaptation des populations tibétaines et andines à la haute altitude [@beall2007two]. 
 
@@ -168,7 +170,7 @@ data.frame(Traits = traits, Andean = andean, Tibetan = tibetan) %>%
 
 Chez l'Homme moderne, les habitudes alimentaires et les modes de vie constituent également des caractéristiques environnementales importantes. L'agriculture et le pastoralisme^[Le pastoralisme décrit la relation interdépendante entre les éleveurs, leurs troupeaux et les milieux exploités.] ont notamment participé à la diversification des environnements humains [@jeong2014adaptations]. En Europe, l'adaptation biologique à ces nouveaux modes de vie s'est par ailleurs manifesté par la sélection du phénotype *LP*, dit de *persistence de la lactase*, caractérisant l'aptitude à digérer le lactose à l'âge adulte [@itan2009origins].
 
-L'adaptivité d'un caractère peut survenir de différentes manières :
+Un caractère peut survenir de différentes manières :
 
 - le caractère est déjà présent dans la population.
 
@@ -178,17 +180,17 @@ L'adaptivité d'un caractère peut survenir de différentes manières :
 
 L'identification des mutations génétiques à l'origine d'épisodes d'adaptation locale est particulièrement cruciale pour la compréhension des processus évolutifs et plus spécifiquement ceux liés à la spéciation^[épisode de divergence d'une espèce ayant conduit à la formation d'au moins une nouvelle espèce]. Bien que l'adaptation locale puisse être étudiée de façon expérimentale^[par le biais de la *transplantation réciproque* [@kawecki2004conceptual]], les données de séquençage permettent d'appréhender le problème de façon plus quantitative.
 
+#### L'hybridation et le flux de gène comme sources d'adaptation
+
+La reproduction sexuée est connue pour jouer un rôle important dans la sélection naturelle, offrant par le biais du brassage allélique la possibilité aux individus d'hériter des "meilleurs allèles" que possèdent leurs parents. Pour enrichir le catalogue d'allèles, nous avons vu un peu plus haut que le flux de gène constituait un processus clé. De la même manière, l'hybridation entre deux espèces peut permettre à l'une des deux espèces d'intégrer de nouveaux allèles [@stevison2008hybridization]. La sélection d'allèles transmis par flux de gène ou par hybridation correspond à ce qu'on appelle l'*introgression adaptative*.
+
 ## Données de polymorphismes génétiques
 
 Le séquençage de l'ADN consiste à déterminer l'ordre dans lequel sont agencées les paires de bases pour un fragment d'ADN donné. Son apparition a offert de nouvelles voies d'exploration en biologie évolutive. Les variations génétiques étaient jusqu'alors appréciées par le biais des différences phénotypiques. En phylogénie par exemple, le séquençage de l'ADN a donné naissance à la phylogénétique moléculaire, qui se distingue de la phylogénétique traditionnelle en ce qu'elle ne considère que les séquences de nucléotides pour évaluer la proximité entre deux espèces. Et c'est précisément l'accès à ces séquences qui va permettre à toute une population de méthodologies statistiques de voir le jour et de se développer. 
 
 ### Des données en grande dimension 
 
-Le séquençage nouvelle génération (appelé encore séquençage à haut débit) a connu un essor considérable au cours des dernières décennies. Si bien que les prouesses techniques et les progrès technologiques réalisés dans ce domaine ont permis de réduire d'un facteur 100,000 les coûts de séquençage en l'espace de seulement 15 ans [@wetterstrand2013dna]. 
-
-Toutefois, compte tenu de la popularité croissante des technologies NGS [@muir2016real] et des considérables volumes de données qu'elles génèrent, de nouvelles problèmatiques se posent quant à leur stockage et leur analyse, nécessitant l'utilisation de puissantes ressources de calcul ainsi que le développement d'algorithmes plus adaptés [@gogol2012overview]. 
-
-D'un point de vue statistique, l'accumulation de données, aussi bien en termes d'observations qu'en termes de variables, tend à opacifier la limite, si elle existe, entre ce qui relève du signal que l'on cherche à détecter, et ce qui n'en relève pas. Ce phénomène bien connu en statistiques porte le nom de *fléau de la dimension* [@giraud2014introduction].
+Le séquençage nouvelle génération (appelé encore séquençage à haut débit) a connu un essor considérable au cours des dernières décennies. Si bien que les prouesses techniques et les progrès technologiques réalisés dans ce domaine ont permis de réduire d'un facteur 100,000 les coûts de séquençage en l'espace de seulement 15 ans \@ref(fig:wetterstrand). 
 
 (ref:wetterstrand-cap) Évolution des coûts de séquençage depuis 2001 [@wetterstrand2013dna]. 
 
@@ -213,6 +215,10 @@ df %>%
   theme_bw()
 ```
 
+Toutefois, compte tenu de la popularité croissante des technologies NGS [@muir2016real] et des considérables volumes de données qu'elles génèrent, de nouvelles problèmatiques se posent quant à leur stockage et leur analyse, nécessitant l'utilisation de puissantes ressources de calcul ainsi que le développement d'algorithmes plus adaptés [@gogol2012overview]. 
+
+D'un point de vue statistique, l'accumulation de données, aussi bien en termes d'observations qu'en termes de variables, tend à opacifier la limite, si elle existe, entre ce qui relève du signal que l'on cherche à détecter, et ce qui n'en relève pas. Ce phénomène bien connu en statistiques porte le nom de *fléau de la dimension* [@giraud2014introduction].
+
 ### Les marqueurs génétiques
 
 Le séquençage de l'ADN a également permis de faire évoluer le concept de *marqueur génétique*. Un marqueur génétique correspondait autrefois à un gène *polymorphe*^[présentant des variations à l'échelle de l'espèce.] identifié sur la base d'observations phénotypiques. Grâce au séquençage de l'ADN, une nouvelle définition tenant compte de la position sur le chromosome a été adoptée pour caractériser un marqueur génétique. Différents types de marqueurs génétiques ont été identifiés, parmi lesquels figurent les microsatellites, les insertions, les délétions et les SNPs^[SNP *(Single-Nucleotide Polymorphism)* : polymorphisme d'un seul nucléotide.]. La structure spatiale de l'ADN n'étant pas prise en compte dans les travaux présentés ici, nous en garderons une représentation unidimensionnelle.
@@ -223,7 +229,7 @@ Jusqu'à présent, les microsatellites ont connu un succès important, notamment
 
 (ref:microsat) Exemples de microsatellites. Un microsatellite est repérable par la répétition successive de petits motifs chacun composé de 1 à 4 acides aminés. La première séquence comporte 3 répétitions du motif CCG, tandis que la seconde inclut 4 répétitions du motif CA.
 
-```{r microsat, fig.cap = '(ref:microsat)'}
+```{r microsat, fig.cap = '(ref:microsat)', fig.height=3}
 pair_base = function(seq) {
   x <- vector(mode = "character", length = length(seq))
   x[seq == "A"] <- "T"
@@ -313,7 +319,7 @@ rbind(microsatA.df, microsatB.df) %>%
 
 (ref:indel-cap) L'insertion ou la délétion d'une base constituent également des polymorphismes génétiques. Relativement à une séquence de nucléotides de référence, une insertion consiste en la présence d'une base supplémentaire tandis que la délétion consiste en l'absence d'une base.
 
-```{r indel, fig.cap='(ref:indel-cap)'}
+```{r indel, fig.cap='(ref:indel-cap)', fig.height=3}
 N <- 20
 nuclA1 <- sample(c("A", "C", "G", "T"), size = N, replace = TRUE)
 nuclA2 <- pair_base(nuclA1)
@@ -400,9 +406,9 @@ rbind(indelA.df, indelB.df) %>%
 
 - Polymorphisme d'un seul nucléotide (SNP) :
 
-Le polymorphisme d'un seul nucléotide correspond au polymorphisme génétique le plus simple, et correspond à l'emplacement d'un nucléotide présentant des variations appréciables à l'échelle d'une population.
+(ref:snp-cap) Le polymorphisme d'un seul nucléotide correspond au polymorphisme génétique le plus simple, et correspond à l'emplacement d'un nucléotide présentant des variations appréciables à l'échelle d'une population.
 
-```{r snp}
+```{r snp, fig.cap='(ref:snp-cap)', fig.height=3}
 N <- 20
 nuclA1 <- sample(c("A", "C", "G", "T"), size = N, replace = TRUE)
 nuclA2 <- pair_base(nuclA1)
@@ -504,5 +510,7 @@ L'étude de régions génomiques présentant des caractéristiques d'introgressi
 
 ## Les motivations de la thèse
 
-La production de données génétiques, volumineuses par la quantité d'information qu'elles renferment, laisse présager le meilleur pour les domaines de la médecine clinique et de la biologie évolutive, pourvu qu'une attention particulière soit prêtée au traitement informatique et statistique de ces données. En génétique des populations, leur acquisition offre de nombreuses perspectives d'étude, notamment concernant la mise en évidence de marqueurs génétiques impliqués dans les processus évolutifs. Les méthodes répondant à cette problématique portent le nom de *scans génomiques*. 
+La production de données génétiques, volumineuses par la quantité d'information qu'elles renferment, laisse présager le meilleur pour les domaines de la médecine clinique et de la biologie évolutive. En génétique des populations, leur acquisition offre de nombreuses perspectives d'étude, notamment concernant la mise en évidence de marqueurs génétiques impliqués dans les processus évolutifs. Les méthodes répondant à cette problématique portent le nom de *scans génomiques*. 
 
+Toutefois, certains outils statistiques ayant été développés ne sont plus adaptés. La raison principale étant que les temps de calculs requis pour l'analyse de ces données massives sont souvent prohibitifs. Une méthode d'analyse exploratoire nécessite parfois d'être 
+expérimentée plusieurs fois. D'une part parce que le prétraitement des données peut être est amené à changer au cours de l'étude. Des marqueurs génétiques ou des individus peuvent par exemple être retirés du jeu de données si ceux-ci présentent une proportion trop importante (le degré d'importance étant fixé par un seuil fixé de façon arbitraire) de données manquantes. D'autre part car les méthodes d'analyse proposent généralement un éventail de paramètres dont le choix ne s'impose pas spontanément. La possibilité d'expérimenter une même méthode avec différents critères de qualité et différents paramètres est donc primordiale pour minimiser les biais d'utilisation. Bien évidemment cela ne dépend pas uniquement des algorithmes utilisés et il faut aussi tenir compte des ressources de calcul mises à disposition des utilisateurs. Nous avons néanmoins pris le parti de proposer un outil permettant de réaliser des scans génomiques pour la sélection sur des données pouvant contenir jusqu'à plusieurs millions de marqueurs génétiques génotypés pour plusieurs milliers d'individus, sans que cela ne requiert une utilisation démesurée de mémoire vive.

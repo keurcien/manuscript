@@ -1,6 +1,6 @@
 ---
 author: 'Keurcien LUU'
-date: ' 31 octobre 2017'
+date: '31 octobre 2017'
 division: 'Mathematics and Natural Sciences'
 advisor: 'Michael BLUM'
 lab: "Techniques de l'Ingénierie Médicale et de la Complexité - Informatique, Mathématiques et Applications de Grenoble (TIMC-IMAG)"
@@ -11,7 +11,7 @@ site: bookdown::bookdown_site
 output: 
   #thesisdown::thesis_pdf: default
   bookdown::gitbook:
-    css: style.css
+   css: style.css
   # thesisdown::thesis_gitbook: default
   # thesisdown::thesis_epub: default
   # thesisdown::thesis_word: default
@@ -41,6 +41,10 @@ if(!require(dplyr)) {
 
 if(!require(ggplot2)) {
   install.packages("ggplot2", repos = "http://cran.rstudio.com")
+}
+
+if(!require(cowplot)) {
+  install.packages("cowplot", repos = "http://cran.rstudio.com")
 }
 
 if(!require(thesisdown)) {
@@ -80,7 +84,7 @@ knitr::opts_chunk$set(echo = FALSE,
                       results = 'hide',
                       cache = TRUE,
                       out.width = '\\textwidth')
-#knitr::opts_knit$set(kable.force.latex = TRUE)
+# knitr::opts_knit$set(kable.force.latex = TRUE)
 
 # The palette with black:
 cbbPalette <- c("#000000", 

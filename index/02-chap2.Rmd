@@ -1,6 +1,9 @@
 # La communalité : une statistique proche de la $F_{ST}$
 
 
+### Analyse en Composantes Principales parcimonieuse
+
+### Bootstrap ACP
 
 ## Contributions
 

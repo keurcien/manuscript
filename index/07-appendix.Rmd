@@ -2,6 +2,10 @@
 
 `r if(!knitr:::is_latex_output()) '# (APPENDIX) Appendix {-}'` 
 
+# Details
+
+
+
 # Supplementary Information 
 
 ## Article 1 {-}
@@ -280,7 +284,77 @@ include_graphics("figure/power_Dq_max.png")
 (ref:si-power-admix-cap) Proportion of true outlier peaks as a function of the number of top peaks found with pcadapt and different LAI methods (EILA, Loter and RFMix) in a scenario where 2 Populus populations experienced admixture. The different panels correspond to the different possible values for the number of generations since admixture occurred ($\lambda=\{10,100,1000\}$) and to the different values of the difference of ancestry $\Delta_q$ between neutral and outlier regions.
 
 ```{r si-power-admix, results='asis', fig.cap='(ref:si-power-admix-cap)'}
-include_graphics("figure/power_Dq_curves.png")
+#include_graphics("figure/power_Dq_curves.png")
+adm.df <- readRDS("data/admixture_power_top_hits.rds")
+adm.df %>%
+  ggplot(aes(x = NumberOfTopHits,
+             y = Power,
+             colour = Method)) +
+  xlab("Number of top hits") +
+  ylab("Power") +
+  scale_color_manual(values = c("#000000", # Oracle
+                                "white",
+                                "white",
+                                "#D55E00", # Loter
+                                "#009E73", # RFMix
+                                "white",
+                                "white",
+                                "#E69F00", # EILA
+                                "#56B4E9"), # pcadapt
+                     drop = FALSE) +
+  geom_line(size = 1) +
+  facet_grid(Dp ~ TimeSinceAdmixture) +
+  scale_y_continuous(breaks = c(0.5, 1)) +
+  scale_x_continuous(breaks = c(0, 25, 50)) +
+  theme_bw(base_size = 20) + guides(colour = guide_legend(title = " ")) +
+  theme(axis.text = element_text(face = "bold"),
+        axis.title.x = element_text(margin = margin(t = 20, r = 0, b = 0, l = 0)),
+        axis.title = element_text(face = "bold"),
+        title = element_text(face = "bold"),
+        strip.text = element_text(face = "bold"),
+        legend.text = element_text(face = "bold"),
+        legend.key.height = unit(3, "line"),
+        legend.key.width = unit(3, "line"),
+        panel.spacing = unit(0.5, "lines"))
+```
+
+(ref:GF-power-top-hits-cap) Power as a function of the number of top hits.
+
+```{r GF-power-top-hits, fig.cap='(ref:GF-power-top-hits-cap)'}
+gf.df <- readRDS("data/GF_power_top_hits.rds")
+gf.df %>% 
+  filter(mutationRate == "Constant mutation rate", GF <= 0.5) %>%
+  ggplot(aes(x = NumberOfTopHits,
+             y = Power,
+             colour = Method)) +
+  xlab("Number of top hits") +
+  ylab("Power") +
+  geom_line(size = 1) +
+  facet_grid(GF~tGF) +
+  scale_color_manual(labels = c(expression(bold(Bd)[italic(f)]),
+                                expression(bolditalic(D)),
+                                expression(bolditalic(f[italic(d)])),
+                                expression(bold(pcadapt)),
+                                expression(bolditalic(RND)[min])),
+                     values = c("#D55E00", # Bdf
+                                "#E69F00", # D
+                                "#009E73", # f
+                                "#56B4E9", # pcadapt
+                                "#CC79A7"), # RNDmin
+                     drop = FALSE) +
+  scale_y_continuous(breaks = c(0.5, 1)) +
+  scale_x_continuous(breaks = c(0, 25, 50)) +
+  theme_bw(base_size = 20) + guides(colour = guide_legend(title = " ")) +
+  theme(axis.text = element_text(face = "bold"),
+        axis.title.x = element_text(margin = margin(t = 20, r = 0, b = 0, l = 0)),
+        axis.title = element_text(face = "bold"),
+        title = element_text(face = "bold"),
+        strip.text = element_text(face = "bold"),
+        legend.text = element_text(face = "bold"),
+        legend.key.height = unit(3, "line"),
+        legend.text.align = 0,
+        legend.key.width = unit(3, "line"),
+        panel.spacing = unit(0.5, "lines"))
 ```
 
 (ref:introgression-cap) Schematic description of simulations under an introgression scenario.
@@ -338,7 +412,7 @@ Nous mettons ici à disposition une partie des codes qui ont servi à produire l
 
 ### Modèle en île  
 
-(ref: island-pca-cap) Exemple de simulation réalisée à l'aide de *ms* [@hudson2002generating].
+(ref:island-pca-cap) Exemple de simulation réalisée à l'aide de *ms* [@hudson2002generating].
 
 ```{r island-pca, fig.cap='(ref:island-pca-cap)', echo=TRUE}
 if (!file.exists("ms/ms")) {
@@ -564,3 +638,14 @@ for i in range(nSNP):
             
 np.savetxt('data/simuPOP.pcadapt', G, fmt = '%i')
 ```
+
+## Détails 
+
+### Données manquantes
+
+Les données manquantes sont prises en compte à différentes étapes de la méthode, cela va de l'estimation de matrice de covariance à la régression linéaire multiple. Nous supposons que les données manquantes sont MAR (*missing at random*) ou MCAR (*missing completely at random*) et qu'elles ne dépendent donc pas de leur valeur (elles ne sont pas MNAR).
+
+Pour chaque entrée de la matrice de covariance par individus, le calcul ne tient compte que des paires d'observations présentes.
+
+Si $X_i$ et $X_j$ désignent deux individus, $\text{Cov}(X_i, X_j) = E[(X_i - \bar{X_i})(X_j - \bar{X_j})^T]$
+Un estimateur de $\text{Cov}(X_i, X_j)$ tenant compte des valeurs manquantes donne

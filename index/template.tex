@@ -36,13 +36,14 @@
 \usepackage{amssymb,amsthm}
 \usepackage{xcolor}
 \usepackage{eso-pic}
+\usepackage{tabu}
 \usepackage{longtable,booktabs,setspace}
 \usepackage[hyphens]{url}
 \usepackage{pdfpages}
 \usepackage{sectsty}
 \usepackage{tikz}
 \usetikzlibrary{calc}
-
+\usepackage{titlesec}
 
 % Added by CII
 \usepackage{hyperref}
@@ -65,11 +66,21 @@
 \definecolor{customGreen}{RGB}{41,124,120}
 \definecolor{customGrey}{RGB}{105,105,105}
 \definecolor{customSteelBlue}{RGB}{65,131,196}
-\renewcommand{\familydefault}{\sfdefault}
-\chapterfont{\color{black}\huge}  % sets colour of chapters
-\sectionfont{\color{customDarkGrey}\LARGE}  % sets colour of sections
-\subsectionfont{\color{customGreen}}
-\subsubsectionfont{\color{customGrey}}  % sets colour of sections
+%\renewcommand{\familydefault}{\sfdefault}
+%\chapterfont{\color{black}\huge}  % sets colour of chapters
+%\sectionfont{\color{customDarkGrey}\LARGE}  % sets colour of sections
+%\subsectionfont{\color{customGreen}}
+%\subsubsectionfont{\color{customGrey}}  % sets colour of sections
+
+\titleformat{\chapter}[display]
+{\normalfont%
+    \huge% %change this size to your needs for the first line
+    \bfseries\sffamily}{\chaptertitlename\ \thechapter}{20pt}{%
+    \Huge %change this size to your needs for the second line
+    }
+\titleformat*{\section}{\color{customDarkGrey}\LARGE\bfseries\sffamily}
+\titleformat*{\subsection}{\color{customGreen}\Large\bfseries\sffamily}
+\titleformat*{\subsubsection}{\color{customGrey}\large\bfseries\sffamily}
 \hypersetup{unicode=true,
             colorlinks=true,
             linkcolor=customSteelBlue,
@@ -148,19 +159,19 @@ $endif$
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
 \Acknowledgements{
-$acknowledgements$
+  $acknowledgements$
 }
 
 \Dedication{
-$dedication$
+  $dedication$
 }
 
 \Preface{
-$preface$
+  $preface$
 }
 
 \Abstract{
-$abstract$
+  $abstract$
 }
 
 $for(header-includes)$

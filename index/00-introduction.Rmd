@@ -132,32 +132,32 @@ data.frame(Species = species, Rates = rates) %>%
 
 3. Le flux de gène
 
-Le flux de gène est généralement le résultat d'évènements migratoires (bien que ce ne soit pas nécessairement toujours le cas [@tigano2016genomics]), initiés par des individus appartenant à une population donnée, vers une seconde population dont le pool génique diffère éventuellement de la population d'origine. Le flux de gène influe sur la diversité génétique initialement présente si par exemple, parmi les allèles *migrants* figurent des allèles qui n'existaient pas dans la population receveuse. 
+Le flux de gène est généralement le résultat d'évènements migratoires (bien que ce ne soit pas nécessairement toujours le cas [@tigano2016genomics]), initiés par des individus appartenant à une population donnée, vers une seconde population dont le pool génique diffère éventuellement de la population d'origine. Le flux de gène influe sur la diversité génétique initialement présente si par exemple, parmi les allèles *migrants* figurent des allèles qui n'existaient pas dans la population receveuse.
 
 4. La sélection naturelle
 
-En biologie évolutive, la sélection naturelle est la force évolutive qui tend à préserver les allèles conférant des avantages quant à la survie d'un individu ou d'une espèce. Elle agit sur les traits qui sont héritables. La grande majorité de ces traits sont transmis aux descendants en suivant le mécanisme d'hérédité génétique. Cependant, d'autres aspects de la biologie d'un organisme peuvent se transmettre via des mécanismes différents, comme certains comportements culturels ou caractéristiques de l'environnement qui ont été façonnées par les populations ancestrales [@gerbault2011evolution]. 
+En biologie évolutive, la sélection naturelle est la force évolutive qui tend à préserver les allèles conférant des avantages quant à la survie d'un individu ou d'une espèce. Elle agit sur les traits qui sont héritables. La grande majorité de ces traits sont transmis aux descendants en suivant le mécanisme d'hérédité génétique. Cependant, d'autres aspects de la biologie d'un organisme peuvent se transmettre via des mécanismes différents, comme certains comportements culturels ou caractéristiques de l'environnement qui ont été façonnées par les populations ancestrales [@gerbault2011evolution].
 
 ### Adaptation locale
 
 #### Principe
 
-La diversité climatique et la diversité géologique terrestre ont naturellement façonné des environnements aux constitutions physiques et chimiques variées. À celles-ci viennent s'ajouter des caractéristiques écologiques résultant des interactions entre l'environnement et les organismes qui y évoluent *lato sensu*. La valeur sélective, désignant la capacité de survie et de reproduction, de ces organismes peut être impactée par les caractéristiques environnementales auxquelles ils sont exposés. Si cette valeur sélective est associée à un trait phénotypique, on dit que ce trait confère un avantage adaptatif et on parle dans ce cas d'*adaptation locale*. Une population sera ainsi dite adaptée à son environnement si elle développe, par le biais de la sélection naturelle, un ou plusieurs allèles associés à un trait adaptatif augmentant la valeur sélective des individus la constituant, en réponse aux pressions environnementales auxquelles ces individus sont soumis. À titre d'exemple, nous pouvons citer l'adaptation des populations tibétaines et andines à la haute altitude [@beall2007two]. 
+La diversité climatique et la diversité géologique terrestre ont naturellement façonné des environnements aux constitutions physiques et chimiques variées. À celles-ci viennent s'ajouter des caractéristiques écologiques résultant des interactions entre l'environnement et les organismes qui y évoluent *lato sensu*. La valeur sélective, désignant la capacité de survie et de reproduction, de ces organismes peut être impactée par les caractéristiques environnementales auxquelles ils sont exposés. Si cette valeur sélective est associée à un trait phénotypique, on dit que ce trait confère un avantage adaptatif et on parle dans ce cas d'*adaptation locale*. Une population sera ainsi dite adaptée à son environnement si elle développe, par le biais de la sélection naturelle, un ou plusieurs allèles associés à un trait adaptatif augmentant la valeur sélective des individus la constituant, en réponse aux pressions environnementales auxquelles ces individus sont soumis. À titre d'exemple, nous pouvons citer l'adaptation des populations tibétaines et andines à la haute altitude [@beall2007two].
 
 (ref:andeanvstibetan-cap) Exemples de phénotypes liés à l'adaptation à la haute altitude distinguant les populations andines des populations tibétaines [@jeong2014adaptations].
 
 ```{r andeanvstibetan, results='asis', message=FALSE}
-tibetan <- c("à partir de 4000m d'altitude", 
+tibetan <- c("à partir de 4000m d'altitude",
              "non",
              "non",
              "1%")
-andean <- c("oui", 
+andean <- c("oui",
             "oui",
             "oui",
             "5%")
-traits <- c("Augmentation du taux d'hémoglobine", 
-            "Augmentation de la pression artérielle pulmonaire", 
-            "Augmentation de la ventilation au repos", 
+traits <- c("Augmentation du taux d'hémoglobine",
+            "Augmentation de la pression artérielle pulmonaire",
+            "Augmentation de la ventilation au repos",
             "Prévalence du mal chronique des montagnes")
 data.frame(Traits = traits, Andean = andean, Tibetan = tibetan) %>%
   knitr::kable(col.names = c("Trait", "Andins", "Tibétains"),
@@ -167,40 +167,43 @@ data.frame(Traits = traits, Andean = andean, Tibetan = tibetan) %>%
   kable_styling(full_width = T)
 ```
 
-
 Chez l'Homme moderne, les habitudes alimentaires et les modes de vie constituent également des caractéristiques environnementales importantes. L'agriculture et le pastoralisme^[Le pastoralisme décrit la relation interdépendante entre les éleveurs, leurs troupeaux et les milieux exploités.] ont notamment participé à la diversification des environnements humains [@jeong2014adaptations]. En Europe, l'adaptation biologique à ces nouveaux modes de vie s'est par ailleurs manifesté par la sélection du phénotype *LP*, dit de *persistence de la lactase*, caractérisant l'aptitude à digérer le lactose à l'âge adulte [@itan2009origins].
-
-Un caractère peut survenir de différentes manières :
-
-- le caractère est déjà présent dans la population.
-
-- le caractère apparaît dans la population à la suite d'une mutation spontanée.
-
-- le caractère est hérité d'une autre population par flux de gène.
-
-L'identification des mutations génétiques à l'origine d'épisodes d'adaptation locale est particulièrement cruciale pour la compréhension des processus évolutifs et plus spécifiquement ceux liés à la spéciation^[épisode de divergence d'une espèce ayant conduit à la formation d'au moins une nouvelle espèce]. Bien que l'adaptation locale puisse être étudiée de façon expérimentale^[par le biais de la *transplantation réciproque* [@kawecki2004conceptual]], les données de séquençage permettent d'appréhender le problème de façon plus quantitative.
 
 #### L'hybridation et le flux de gène comme sources d'adaptation
 
-La reproduction sexuée est connue pour jouer un rôle important dans la sélection naturelle, offrant par le biais du brassage allélique la possibilité aux individus d'hériter des "meilleurs allèles" que possèdent leurs parents. Pour enrichir le catalogue d'allèles, nous avons vu un peu plus haut que le flux de gène constituait un processus clé. De la même manière, l'hybridation entre deux espèces peut permettre à l'une des deux espèces d'intégrer de nouveaux allèles [@stevison2008hybridization]. La sélection d'allèles transmis par flux de gène ou par hybridation correspond à ce qu'on appelle l'*introgression adaptative*.
+Un caractère peut être sélectionné au sein d'une population de différentes manières :
+
+- le caractère y est déjà présent^[standing genetic variation.].
+
+- le caractère y apparaît à la suite d'une mutation spontanée^[*de novo* mutations.].
+
+- le caractère est hérité d'une autre population par flux de gène^[adaptive introgression.].
+
+Cette dernière possibilité est d'ailleurs très intéressante pour une espèce d'un point de vue de la diversité génétique. Pour enrichir le catalogue d'allèles, nous avons vu plus haut que le flux de gène constituait un processus clé. La reproduction sexuée est connue pour jouer un rôle important dans la sélection naturelle, offrant aux individus la possibilité, par le biais du brassage allélique, d'hériter des "meilleurs allèles" que possèdent leurs parents. Augmenter la diversité génétique augmente ainsi les chances de voir se transmettre des allèles favorables.
+
+Nous parlons d'hybridation ou de métissage lorsque deux individus, appartenant à deux populations différentes, se reproduisent entre eux. Pour ce qui est de la distinction de populations, nous nous en tiendrons à la suggestion faite par Harrison, considérant que deux individus issus de populations différentes doivent chacun posséder des traits héritables qui les différencient [@harrison1990hybrid]. Ainsi, l'hybridation constitue un excellent moyen pour permettre à une espèce d'intégrer de nouveaux allèles [@stevison2008hybridization]. Bien que l'hybridation conduise fréquemment à la naissance d'individus à la valeur sélective hautement diminuée voire d'individus non fertiles, il arrive que certains descendants aient tout de même la capacité de se reproduire et ainsi être à l'origine de l'apparition de nouveaux allèles. La sélection de tels allèles transmis par flux de gène ou par hybridation correspond à ce que l'on appelle *l'introgression adaptative*. Des exemples d'introgression sont observés à la fois dans la nature (*introgression naturelle*) et à la fois chez des espèces domestiquées (*introgression délibérée*). Nous pouvons citer l'exemple de la souris domestique, *Mus musculus domesticus*, qui a hérité d'un gène de résistance à la coumadine (communément appelée « mort aux rats ») en s'hybridant avec une espèce sauvage, *Mus spretus* [@song2011adaptive]. Ce gène de résistance est localisé sur le chromosome 7 de la souris domestique et appartient à une région qui a été identifiée comme provenant effectivement de la souris sauvage.
+
+------
+
+L'identification des mutations génétiques responsables de l'adaptation est particulièrement cruciale pour la compréhension des processus évolutifs et plus spécifiquement ceux liés à la spéciation^[épisode de divergence d'une espèce ayant conduit à la formation d'au moins une nouvelle espèce.]. L'introgression adaptative permet quant à elle de comprendre l'adaptation rapide de certaines espèces et en quoi l'hybridation constitue un vecteur important pour l'adaptation [@hufford2013genomic]. Bien que l'étude de l'adaptation locale puisse être menée de façon expérimentale^[par le biais de la *transplantation réciproque* [@kawecki2004conceptual].], nous proposons ici d'exploiter les données de séquençage de génômes afin d'appréhender ce problème de façon plus quantitative.
 
 ## Données de polymorphismes génétiques
 
-Le séquençage de l'ADN consiste à déterminer l'ordre dans lequel sont agencées les paires de bases pour un fragment d'ADN donné. Son apparition a offert de nouvelles voies d'exploration en biologie évolutive. Les variations génétiques étaient jusqu'alors appréciées par le biais des différences phénotypiques. En phylogénie par exemple, le séquençage de l'ADN a donné naissance à la phylogénétique moléculaire, qui se distingue de la phylogénétique traditionnelle en ce qu'elle ne considère que les séquences de nucléotides pour évaluer la proximité entre deux espèces. Et c'est précisément l'accès à ces séquences qui va permettre à toute une population de méthodologies statistiques de voir le jour et de se développer. 
+Avant d'aborder la partie sur les méthodes développées au cours de cette thèse, nous donnons une rapide présentation du type de données que nous traitons, à savoir des données de séquençage. Le séquençage de l'ADN consiste à déterminer l'ordre dans lequel sont agencées les paires de bases pour un fragment d'ADN donné. Son apparition a offert de nouvelles voies d'exploration en biologie évolutive. Les variations génétiques étaient jusqu'alors appréciées par le biais des différences phénotypiques. En phylogénie par exemple, le séquençage de l'ADN a donné naissance à la phylogénétique moléculaire, qui se distingue de la phylogénétique traditionnelle en ce qu'elle ne considère que les séquences de nucléotides pour évaluer la proximité entre deux espèces. Et c'est précisément l'accès à ces séquences qui va permettre à toute une population de méthodologies statistiques de voir le jour et de se développer.
 
-### Des données en grande dimension 
+### Des données en grande dimension
 
-Le séquençage nouvelle génération (appelé encore séquençage à haut débit) a connu un essor considérable au cours des dernières décennies. Si bien que les prouesses techniques et les progrès technologiques réalisés dans ce domaine ont permis de réduire d'un facteur 100,000 les coûts de séquençage en l'espace de seulement 15 ans \@ref(fig:wetterstrand). 
+Le séquençage nouvelle génération (appelé encore séquençage à haut débit) a connu un essor considérable au cours des dernières décennies. Si bien que les prouesses techniques et les progrès technologiques réalisés dans ce domaine ont permis de réduire d'un facteur 100,000 les coûts de séquençage en l'espace de seulement 15 ans (Figure \@ref(fig:wetterstrand)).
 
-(ref:wetterstrand-cap) Évolution des coûts de séquençage depuis 2001 [@wetterstrand2013dna]. 
+(ref:wetterstrand-cap) Évolution des coûts de séquençage depuis 2001 [@wetterstrand2013dna].
 
 ```{r wetterstrand, fig.cap='(ref:wetterstrand-cap)', fig.height=4}
 df <- read.csv("data/seqcost2015_4.csv")
-df %>% 
-  mutate(log10CpG = log10(Cost.per.Genome)) %>% 
-  ggplot(aes(x = as.Date(Date), y = log10CpG)) + 
+df %>%
+  mutate(log10CpG = log10(Cost.per.Genome)) %>%
+  ggplot(aes(x = as.Date(Date), y = log10CpG)) +
   geom_line(color = cbbPalette[6], size = 1.5) +
-  scale_y_continuous(breaks = 1:8, 
+  scale_y_continuous(breaks = 1:8,
                      labels = c("10",
                                 "100",
                                 "1K",
@@ -210,12 +213,12 @@ df %>%
                                 "10M",
                                 "100M")) +
   xlab("Année") +
-  ylab("Coût par génôme (en dollars)") + 
+  ylab("Coût par génôme (en dollars)") +
   scale_x_date(date_minor_breaks = "1 year") +
   theme_bw()
 ```
 
-Toutefois, compte tenu de la popularité croissante des technologies NGS [@muir2016real] et des considérables volumes de données qu'elles génèrent, de nouvelles problèmatiques se posent quant à leur stockage et leur analyse, nécessitant l'utilisation de puissantes ressources de calcul ainsi que le développement d'algorithmes plus adaptés [@gogol2012overview]. 
+Toutefois, compte tenu de la popularité croissante des technologies NGS [@muir2016real] et des considérables volumes de données qu'elles génèrent, de nouvelles problèmatiques se posent quant à leur stockage et leur analyse, nécessitant l'utilisation de puissantes ressources de calcul ainsi que le développement d'algorithmes plus adaptés [@gogol2012overview].
 
 D'un point de vue statistique, l'accumulation de données, aussi bien en termes d'observations qu'en termes de variables, tend à opacifier la limite, si elle existe, entre ce qui relève du signal que l'on cherche à détecter, et ce qui n'en relève pas. Ce phénomène bien connu en statistiques porte le nom de *fléau de la dimension* [@giraud2014introduction].
 
@@ -244,7 +247,7 @@ nuclA1 <- sample(c("A", "C", "G", "T"), size = N, replace = TRUE)
 nuclB1 <- sample(c("A", "C", "G", "T"), size = N, replace = TRUE)
 idx.microsatA <- 3:11
 idx.microsatB <- 10:17
-nuclA1[idx.microsatA] <- c("C", "C", "G") 
+nuclA1[idx.microsatA] <- c("C", "C", "G")
 nuclB1[idx.microsatB] <- c("C", "A")
 nuclA2 <- pair_base(nuclA1)
 nuclB2 <- pair_base(nuclB1)
@@ -257,7 +260,7 @@ tB[c(idx.microsatB, idx.microsatB + N)] <- "X"
 microsatA.df <- data.frame(x1 = rep(1:N, 2),
                            x2 = rep(2:(N + 1), 2),
                            y1 = c(rep(1, N), rep(3, N)),
-                           y2 = c(rep(2, N), rep(4, N)),  
+                           y2 = c(rep(2, N), rep(4, N)),
                            t = tA,
                            r = c(nuclA1, nuclA2),
                            type = "3 répétitions du motif CCG")
@@ -265,41 +268,41 @@ microsatA.df <- data.frame(x1 = rep(1:N, 2),
 microsatB.df <- data.frame(x1 = rep(1:N, 2),
                            x2 = rep(2:(N + 1), 2),
                            y1 = c(rep(1, N), rep(3, N)),
-                           y2 = c(rep(2, N), rep(4, N)),  
+                           y2 = c(rep(2, N), rep(4, N)),
                            t = tB,
                            r = c(nuclB1, nuclB2),
                            type = "4 répétitions du motif CA")
 
-rbind(microsatA.df, microsatB.df) %>% 
-  mutate(t = factor(t, 
-                    levels = c("DNA", 
-                               "X"), 
+rbind(microsatA.df, microsatB.df) %>%
+  mutate(t = factor(t,
+                    levels = c("DNA",
+                               "X"),
                     ordered = TRUE)) %>%
-  ggplot() + 
-  ggtitle("Microsatellite") + 
+  ggplot() +
+  ggtitle("Microsatellite") +
   facet_wrap(~type, ncol = 1, scales = "free_x") +
   coord_fixed(ratio = 1) +
   scale_y_continuous(limits = c(-0.5, 5.5)) +
   scale_fill_manual(values = cbbPalette[c(3, 7)]) +
-  geom_rect(mapping = aes(xmin = x1, 
-                          xmax = x2, 
-                          ymin = y1, 
-                          ymax = y2, 
-                          fill = t), 
-            color = "black", 
+  geom_rect(mapping = aes(xmin = x1,
+                          xmax = x2,
+                          ymin = y1,
+                          ymax = y2,
+                          fill = t),
+            color = "black",
             alpha = 0.75) +
-  geom_text(aes(x = x1 + (x2 - x1) / 2, 
-                y = y1 + (y2 - y1) / 2, 
-                label = r), 
+  geom_text(aes(x = x1 + (x2 - x1) / 2,
+                y = y1 + (y2 - y1) / 2,
+                label = r),
             size = 4) +
-  annotate("text", 
+  annotate("text",
            x = 3.25,
-           y = 2.55, 
-           label = "paire de bases", 
-           size = 3, 
-           colour = "black") + 
-  geom_segment(aes(x = 1.5, y = 2, xend = 1.5, yend = 3), 
-               colour = "black", 
+           y = 2.55,
+           label = "paire de bases",
+           size = 3,
+           colour = "black") +
+  geom_segment(aes(x = 1.5, y = 2, xend = 1.5, yend = 3),
+               colour = "black",
                size = 0.3,
                arrow = arrow(length = unit(4, "pt"),
                              type = "closed",
@@ -336,7 +339,7 @@ tB[c(idx.SNP, idx.SNP + N)] <- "X"
 indelA.df <- data.frame(x1 = rep(1:N, 2),
                         x2 = rep(2:(N + 1), 2),
                         y1 = c(rep(1, N), rep(3, N)),
-                        y2 = c(rep(2, N), rep(4, N)),  
+                        y2 = c(rep(2, N), rep(4, N)),
                         t = tA,
                         r = c(nuclA1, nuclA2),
                         marker.type = "Indel")
@@ -344,56 +347,56 @@ indelA.df <- data.frame(x1 = rep(1:N, 2),
 indelB.df <- data.frame(x1 = rep(1:N, 2),
                         x2 = rep(2:(N + 1), 2),
                         y1 = c(rep(7, N), rep(9, N)),
-                        y2 = c(rep(8, N), rep(10, N)),  
+                        y2 = c(rep(8, N), rep(10, N)),
                         t = tB,
                         r = c(nuclB1, nuclB2),
                         marker.type = "Indel")
 
 rbind(indelA.df, indelB.df) %>%
-  mutate(t = factor(t, 
-                    levels = c("DNA1", 
-                               "DNA2", 
-                               "X"), 
+  mutate(t = factor(t,
+                    levels = c("DNA1",
+                               "DNA2",
+                               "X"),
                     ordered = TRUE)) %>%
-  ggplot() + 
-  ggtitle("Insertion/Délétion") + 
+  ggplot() +
+  ggtitle("Insertion/Délétion") +
   coord_fixed() +
   scale_fill_manual(values = cbbPalette[c(3, 6, 7)]) +
-  geom_rect(mapping = aes(xmin = x1, 
-                          xmax = x2, 
-                          ymin = y1, 
-                          ymax = y2, 
-                          fill = t), 
-            color = "black", 
+  geom_rect(mapping = aes(xmin = x1,
+                          xmax = x2,
+                          ymin = y1,
+                          ymax = y2,
+                          fill = t),
+            color = "black",
             alpha = 0.75) +
-  geom_text(aes(x = x1 + (x2 - x1) / 2, 
-                y = y1 + (y2 - y1) / 2, 
-                label = r), 
+  geom_text(aes(x = x1 + (x2 - x1) / 2,
+                y = y1 + (y2 - y1) / 2,
+                label = r),
             size = 4) +
-  annotate("text", 
-           x = 3.25, 
-           y = 8.55, 
-           label = "paire de bases", 
-           size = 3, 
-           colour = "black") + 
-  geom_segment(aes(x = 1.5, y = 8, xend = 1.5, yend = 9), 
-               colour = "black", 
-               size = 0.3,
-               arrow = arrow(length = unit(4, "pt"),
-                             type = "closed",
-                             ends = "both")) +  
-  annotate("text", 
+  annotate("text",
            x = 3.25,
-           y = 2.55, 
-           label = "paire de bases", 
-           size = 3, 
-           colour = "black") + 
-  geom_segment(aes(x = 1.5, y = 2, xend = 1.5, yend = 3), 
-               colour = "black", 
+           y = 8.55,
+           label = "paire de bases",
+           size = 3,
+           colour = "black") +
+  geom_segment(aes(x = 1.5, y = 8, xend = 1.5, yend = 9),
+               colour = "black",
                size = 0.3,
                arrow = arrow(length = unit(4, "pt"),
                              type = "closed",
-                             ends = "both")) +  
+                             ends = "both")) +
+  annotate("text",
+           x = 3.25,
+           y = 2.55,
+           label = "paire de bases",
+           size = 3,
+           colour = "black") +
+  geom_segment(aes(x = 1.5, y = 2, xend = 1.5, yend = 3),
+               colour = "black",
+               size = 0.3,
+               arrow = arrow(length = unit(4, "pt"),
+                             type = "closed",
+                             ends = "both")) +
   theme_bw() +
   theme(axis.text.x = element_blank(),
         axis.text.y = element_blank(),
@@ -418,7 +421,7 @@ if (nuclA1[idx.SNP] == "A" || nuclA1[idx.SNP] == "T") {
   nuclB1[idx.SNP] <- sample(c("C", "G"), size = 1)
 } else if (nuclA1[idx.SNP] == "C" || nuclA1[idx.SNP] == "G") {
   nuclB1[idx.SNP] <- sample(c("A", "T"), size = 1)
-} 
+}
 nuclB2 <- pair_base(nuclB1)
 
 tA <- rep("DNA1", 2 * N)
@@ -429,7 +432,7 @@ tB[c(idx.SNP, idx.SNP + N)] <- "X"
 SNPA.df <- data.frame(x1 = rep(1:N, 2),
                       x2 = rep(2:(N + 1), 2),
                       y1 = c(rep(1, N), rep(3, N)),
-                      y2 = c(rep(2, N), rep(4, N)),  
+                      y2 = c(rep(2, N), rep(4, N)),
                       t = tA,
                       r = c(nuclA1, nuclA2),
                       marker.type = "SNP")
@@ -437,56 +440,56 @@ SNPA.df <- data.frame(x1 = rep(1:N, 2),
 SNPB.df <- data.frame(x1 = rep(1:N, 2),
                       x2 = rep(2:(N + 1), 2),
                       y1 = c(rep(7, N), rep(9, N)),
-                      y2 = c(rep(8, N), rep(10, N)),  
+                      y2 = c(rep(8, N), rep(10, N)),
                       t = tB,
                       r = c(nuclB1, nuclB2),
                       marker.type = "SNP")
 
-rbind(SNPA.df, SNPB.df) %>% 
-  mutate(t = factor(t, 
-                    levels = c("DNA1", 
-                               "DNA2", 
-                               "X"), 
+rbind(SNPA.df, SNPB.df) %>%
+  mutate(t = factor(t,
+                    levels = c("DNA1",
+                               "DNA2",
+                               "X"),
                     ordered = TRUE)) %>%
-  ggplot() + 
-  ggtitle("Polymorphisme d'un seul nucléotide") + 
+  ggplot() +
+  ggtitle("Polymorphisme d'un seul nucléotide") +
   coord_fixed() +
   scale_fill_manual(values = cbbPalette[c(3, 6, 7)]) +
-  geom_rect(mapping = aes(xmin = x1, 
-                          xmax = x2, 
-                          ymin = y1, 
-                          ymax = y2, 
-                          fill = t), 
-            color = "black", 
+  geom_rect(mapping = aes(xmin = x1,
+                          xmax = x2,
+                          ymin = y1,
+                          ymax = y2,
+                          fill = t),
+            color = "black",
             alpha = 0.75) +
-  geom_text(aes(x = x1 + (x2 - x1) / 2, 
-                y = y1 + (y2 - y1) / 2, 
-                label = r), 
+  geom_text(aes(x = x1 + (x2 - x1) / 2,
+                y = y1 + (y2 - y1) / 2,
+                label = r),
             size = 4) +
-  annotate("text", 
+  annotate("text",
            x = 3.25,
-           y = 8.55, 
-           label = "paire de bases", 
-           size = 3, 
-           colour = "black") + 
-  geom_segment(aes(x = 1.5, y = 8, xend = 1.5, yend = 9), 
-               colour = "black", 
+           y = 8.55,
+           label = "paire de bases",
+           size = 3,
+           colour = "black") +
+  geom_segment(aes(x = 1.5, y = 8, xend = 1.5, yend = 9),
+               colour = "black",
                size = 0.3,
                arrow = arrow(length = unit(4, "pt"),
                              type = "closed",
-                             ends = "both")) +  
-  annotate("text", 
+                             ends = "both")) +
+  annotate("text",
            x = 3.25,
-           y = 2.55, 
-           label = "paire de bases", 
-           size = 3, 
-           colour = "black") + 
-  geom_segment(aes(x = 1.5, y = 2, xend = 1.5, yend = 3), 
-               colour = "black", 
+           y = 2.55,
+           label = "paire de bases",
+           size = 3,
+           colour = "black") +
+  geom_segment(aes(x = 1.5, y = 2, xend = 1.5, yend = 3),
+               colour = "black",
                size = 0.3,
                arrow = arrow(length = unit(4, "pt"),
                              type = "closed",
-                             ends = "both")) +  
+                             ends = "both")) +
   theme_bw() +
   theme(axis.text.x = element_blank(),
         axis.text.y = element_blank(),
@@ -497,20 +500,120 @@ rbind(SNPA.df, SNPB.df) %>%
         plot.title = element_text(hjust = 0.5))
 ```
 
-## Introgression adaptative
-
-### Qu'est-ce que l'introgression ?
-
-Avant de s'intéresser à la notion d'introgression, intéressons-nous d'abord à celle d'hybridation. L'hybridation peut être définie comme la reproduction entre deux individus appartenant à deux espèces ou à deux populations différentes. Cette définition nous amène à nous poser deux questions. La première, relative à la notion d'espèce, est souvent sujette à controverse. La seconde concerne quant à elle la désignation de populations différentes. Qu'est-ce qui fait que deux groupes d'individus sont différents ? Harrison suggère en 1990 que deux individus issus de populations différentes doivent chacun posséder des traits héritables qui les différencient [@harrison1990hybrid]. 
-
-Nous parlons d'introgression lorsqu'un certain nombre de gènes est transféré d'une population à une autre.
-
-L'étude de régions génomiques présentant des caractéristiques d'introgression ou de divergence peut se révéler intéressante pour plusieurs raisons. 
-
-
 ## Les motivations de la thèse
 
-La production de données génétiques, volumineuses par la quantité d'information qu'elles renferment, laisse présager le meilleur pour les domaines de la médecine clinique et de la biologie évolutive. En génétique des populations, leur acquisition offre de nombreuses perspectives d'étude, notamment concernant la mise en évidence de marqueurs génétiques impliqués dans les processus évolutifs. Les méthodes répondant à cette problématique portent le nom de *scans génomiques*. 
+La production de données génétiques, volumineuses par la quantité d'information qu'elles renferment, laisse présager le meilleur pour les domaines de la médecine clinique et de la biologie évolutive. En génétique des populations, leur acquisition offre de nombreuses perspectives d'étude, notamment concernant la mise en évidence de marqueurs génétiques impliqués dans les processus évolutifs ou associés à certains phénotypes. Les méthodes répondant à cette problématique portent le nom de *scans génomiques*. Les scans génomiques pour la sélection, destinés à isoler des loci sous sélection, se sont largement répandus au cours des dernières années, principalement grâce au développement fulgurant qu'ont connu les technologies NGS. Pour illustrer le principe des scans génomiques pour la sélection, nous reprenons l'exemple des Tibétains dont l'adaptation à la haute altitude est largement repris dans la littérature.
 
-Toutefois, certains outils statistiques ayant été développés ne sont plus adaptés. La raison principale étant que les temps de calculs requis pour l'analyse de ces données massives sont souvent prohibitifs. Une méthode d'analyse exploratoire nécessite parfois d'être 
-expérimentée plusieurs fois. D'une part parce que le prétraitement des données peut être est amené à changer au cours de l'étude. Des marqueurs génétiques ou des individus peuvent par exemple être retirés du jeu de données si ceux-ci présentent une proportion trop importante (le degré d'importance étant fixé par un seuil fixé de façon arbitraire) de données manquantes. D'autre part car les méthodes d'analyse proposent généralement un éventail de paramètres dont le choix ne s'impose pas spontanément. La possibilité d'expérimenter une même méthode avec différents critères de qualité et différents paramètres est donc primordiale pour minimiser les biais d'utilisation. Bien évidemment cela ne dépend pas uniquement des algorithmes utilisés et il faut aussi tenir compte des ressources de calcul mises à disposition des utilisateurs. Nous avons néanmoins pris le parti de proposer un outil permettant de réaliser des scans génomiques pour la sélection sur des données pouvant contenir jusqu'à plusieurs millions de marqueurs génétiques génotypés pour plusieurs milliers d'individus, sans que cela ne requiert une utilisation démesurée de mémoire vive.
+(ref:tibetan-scan-cap) [@xu2010genome]
+
+```{r tibetan-scan, results='asis', fig.cap='(ref:tibetan-scan-cap)'}
+include_graphics("figure/tibetan_fst.png")
+```
+
+(ref:tibetan-introgression-cap) [@hu2017evolutionary].
+
+```{r tibetan-introgression, results='asis', message=FALSE}
+Chr <- c(7, 2, 2, 5, 12, 4)
+start <- c(26800001, 46400001, 47600001, 200001, 8800001, 100400001)
+end <- c(27000000, 46600000, 47800000, 400000, 9000000, 100600000)
+D <- c(6.25, 6.15, 5.92, 4.99, 4.63, 4.58)
+Genes <- c("SKAP2", "PRKCE, EPAS1", "MIR559, MSH2, EPCAM, KCNK12", "CCDC127, PDCD6, SDHA", "MFAP5, RIMKLB, A2ML1", "TRMT10A, C4orf17, MTTP")
+data.frame(Chr = Chr,
+           start = start,
+           end = end,
+           D = D,
+           Genes = Genes) %>%
+  knitr::kable(col.names = c("Chr",
+                             "start",
+                             "end",
+                             "D*",
+                             "Genes in the regions"),
+               caption = '(ref:tibetan-introgression-cap)',
+               longtable = TRUE,
+               booktabs = TRUE)
+```
+
+
+Principalement réalisés sur des données humaines, les scans génomiques se sont progressivement étendus à d'autres espèces, modèles et non-modèles [@haasl2016detecting], tout en amorçant la transition vers des marqueurs génétiques de type SNP (Figure \@ref(fig:gwss)).
+
+(ref:gwss-cap) Évolution de la proportion d'articles scientifiques s'intéressant à des espèces non humaines et de la proportion de ceux dont l'étude est réalisée sur des données de SNPs, dans le cadre des scans génomiques pour la sélection [@haasl2016detecting].
+
+```{r gwss, fig.cap = '(ref:gwss-cap)', fig.height=3}
+df <- read.csv2("data/NIHMS785639-supplement-Supplemental_Table_1.csv") %>%
+  mutate(Recent = (Year >= 2010))
+snp <- strsplit(as.character(df$Markers), split = " ")
+df$Methodology <- as.character(df$Methodology)
+df$Methodology[108] <- "recombination, and LD"
+df$Methodology[128] <- "extreme Tajima's D; searching for balancing selection"
+df$Methodology <- as.factor(df$Methodology)
+fst_6 <- strsplit(as.character(df$Methodology), split = "-")
+fst_space <- strsplit(as.character(df$Methodology), split = " ")
+df$var <- unlist(lapply(snp, FUN = function(x){("SNP" %in% x) || ("SNPs" %in% x)}))
+
+snp.df <- df %>%
+  group_by(Recent, var) %>%
+  summarise(count = n()) %>%
+  mutate(freq = count / sum(count)) %>%
+  filter(var)
+
+snp.df$data <- "SNP"
+
+word.list <- c("Homo sapiens",
+               "Homo sapiens and Pan troglodytes",
+               "Homo sapiens, Pan troglodytes",
+               "Homo sapiens, Pan troglodytes, Mus musculus",
+               "Homo sapiens, Pan troglodytes, oragutan, Rhesus macaque")
+
+h.df <- df %>% mutate(var = Species %in% word.list) %>%
+  group_by(Recent, var) %>%
+  summarise(count = n()) %>%
+  mutate(freq = count / sum(count)) %>%
+  filter(!var)
+
+h.df$data <- "Human"
+
+bool_6 <- unlist(lapply(fst_6, FUN = function(x){"FST" %in% x}))
+bool_space <- unlist(lapply(fst_space, FUN = function(x){"FST" %in% x}))
+df$var <- (bool_6 | bool_space)
+
+fst.df <- df %>%
+  group_by(Recent, var) %>%
+  summarise(count = n()) %>%
+  mutate(freq = count / sum(count)) %>%
+  filter(var)
+
+fst.df$data <- "FST"
+
+df <- rbind(snp.df, h.df, fst.df)
+df$Recent[df$Recent] <- "2010-2016"
+df$Recent[df$Recent == FALSE] <- "1999-2009"
+df$Recent <- factor(df$Recent, levels = sort(unique(df$Recent), decreasing = TRUE))
+
+df %>% ggplot(aes(x = Recent,
+                  y = freq,
+                  fill = factor(data))) +
+  ylim(0, 1) +
+  coord_flip() +
+  geom_bar(stat = "identity",
+           colour = "black",
+           position = "dodge",
+           width = 0.5) +
+  scale_fill_manual(labels = c("Proportion de scans à sélection utilisant l'indice de fixation",
+                               "Proportion de scans à sélection pour des espèces non humaines",
+                               "Proportion de scans à sélection utilisant des données de SNPs"),
+                    values = cbbPalette[c(8, 6, 5)]) +
+  theme_bw() +
+  theme(axis.ticks.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        legend.position = "bottom",
+        legend.title = element_blank(),
+        legend.direction = "vertical")
+```
+
+Toutefois, certains outils statistiques ayant été développés ne sont plus adaptés. La raison principale étant que les temps de calculs requis par ces outils pour l'analyse de données massives sont souvent prohibitifs. Les méthodes d'analyse exploratoire nécessitent souvent d'être expérimentées plusieurs fois. D'une part parce que le prétraitement des données peut être est amené à changer au cours de l'étude (filtration de marqueurs génétiques présentant une proportion trop élevée de données manquantes, retrait d'individus marginaux, etc.). D'autre part car les méthodes d'analyse proposent généralement un éventail de paramètres dont le choix ne s'impose pas spontanément. Expérimenter une même méthode avec différents critères de qualité et différents paramètres est souvent nécessaire pour minimiser les biais d'utilisation. Tout ceci justifie le recours à des méthodes rapides et adaptées à ces nouveaux volumes de données.
+Pour satisfaire à ces critères, des méthodes basées sur l'Analyse en Composantes Principales ont été proposées pour étudier l'adaptation locale [@duforet2015detecting; @galinsky2016fast]. Sur la base du travail de thèse de Nicolas Duforet-Frebourg [@duforet2014statistiques], nous avons cherché dans un premier temps à améliorer la méthodologie statistique implémentée dans le logiciel PCAdapt, ainsi que les performances computationnelles, afin de garantir la possibilité de l'utiliser sur des génômes plus denses et disposant d'une plus grande résolution.
+
+Dans un premier temps, nous définirons les différents modèles, historiques et contemporains, utilisés pour réaliser des scans génomiques pour la sélection. Ce premier chapitre sera conclu par l'emploi de l'Analyse en Composantes Principales en génétique des populations. Les chapitres suivants seront consacrées aux approches statistiques basées sur l'ACP qui ont été implémentées dans le package R que nous avons développé au cours de cette thèse. Ils illustreront comment l'ACP peut être exploitée de façon à détecter des signaux de sélection ainsi que des régions d'introgression adaptative. Enfin, nous terminerons avec les aspects computationnels et numériques qui nous ont préoccupé tout au long de la thèse, en présentant quelques comparatifs de performances réalisées avec divers algorithmes.
+
+

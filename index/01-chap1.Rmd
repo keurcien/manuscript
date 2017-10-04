@@ -8,148 +8,255 @@ The {#rmd-basics} text after the chapter declaration will allow us to link throu
 
 # État de l'art
 
+Cette section sera divisée en deux parties. La première partie traitera des méthodes destinées à identifier des loci sous sélection. Nous y présenterons l'heuristique des méthodes classiques de scan génomique pour la sélection. La seconde partie sera consacrée à la détection de signaux d'introgression. Par souci de clarté, nous ne considérerons ici que des espèces diploïdes, bien qu'une grande partie des résultats présentés ici puisse être adaptée au cas d'espèces haploïdes. Les loci seront par ailleurs supposés bi-alléliques, c'est-à-dire que pour un locus donné, au plus deux allèles sont observés sur ce locus à l'échelle de la population étudiée.
+
 ## Adaptation locale
 
-### Les scans génomiques
+### Modèles démographiques
 
-Les scans génomiques pour la sélection se sont largement répandus au cours des dernières années, principalement grâce au développement fulgurant qu'ont connu les technologies NGS. Principalement réalisés sur des données humaines, les scans génomiques se sont progressivement étendus à d'autres espèces, modèles et non-modèles [@haasl2016detecting], tout en amorçant la transition vers des marqueurs génétiques de type SNP (Figure \@ref(fig:gwss)).
+Afin de mieux comprendre l'heuristique des méthodes de scan génomique présentées ici, nous donnons dans ce paragraphe une brève description des modèles démographiques fréquemment utilisés en génétique des populations. En effet l'idée de sélection dans une population est généralement relative à (au moins) une autre population, et la distribution des fréquences alléliques pour chacune de ces populations varie selon l'histoire démographique qu'elles ont connue.
 
-(ref:gwss-cap) Évolution de la proportion d'articles scientifiques s'intéressant à des espèces non humaines et de la proportion de ceux dont l'étude est réalisée sur des données de SNPs, dans le cadre des scans génomiques pour la sélection [@haasl2016detecting].
+#### Modèle en îles
 
-```{r gwss, fig.cap = '(ref:gwss-cap)', fig.height=3}
-df <- read.csv2("data/NIHMS785639-supplement-Supplemental_Table_1.csv") %>% 
-  mutate(Recent = (Year >= 2010))
-snp <- strsplit(as.character(df$Markers), split = " ")
-df$Methodology <- as.character(df$Methodology)
-df$Methodology[108] <- "recombination, and LD" 
-df$Methodology[128] <- "extreme Tajima's D; searching for balancing selection" 
-df$Methodology <- as.factor(df$Methodology)
-fst_6 <- strsplit(as.character(df$Methodology), split = "-")
-fst_space <- strsplit(as.character(df$Methodology), split = " ")
-df$var <- unlist(lapply(snp, FUN = function(x){("SNP" %in% x) || ("SNPs" %in% x)}))
+Dans un modèle en îles, les différentes populations échangent entre elles des individus au cours du temps (Figure \@ref(fig:demographic-models)). La proportion d'individus échangée est appelée taux de migration. De forts taux de migration vont avoir tendance à homogénéiser les variations génétiques entre les populations. Des faibles taux de migration vont en revanche conduire à une différenciation plus forte. Les différences de taux de migration peuvent par exemple être expliquées par l'existence de barrières naturelles [@landguth2010relationships].
 
-snp.df <- df %>% 
-  group_by(Recent, var) %>%
-  summarise(count = n()) %>%
-  mutate(freq = count / sum(count)) %>%
-  filter(var)
+#### Modèle *star-like*
 
-snp.df$data <- "SNP"
+Le modèle *star-like* suppose l'existence d'une population ancestrale de laquelle sont issues différentes populations (Figure \@ref(fig:demographic-models)). Contrairement au modèle en îles, les populations évoluent de façon indépendante sans s'échanger d'individus, et se différencient éventuellement sous l'effet de la dérive génétique et de mutations aléatoires. Le modèle de divergence instantanée est un modèle *star-like* particulier, dans lequel les populations ont divergé au même moment (Figure \@ref(fig:demographic-models)).
 
-word.list <- c("Homo sapiens", 
-               "Homo sapiens and Pan troglodytes",
-               "Homo sapiens, Pan troglodytes",
-               "Homo sapiens, Pan troglodytes, Mus musculus",
-               "Homo sapiens, Pan troglodytes, oragutan, Rhesus macaque")
+------
 
-h.df <- df %>% mutate(var = Species %in% word.list) %>%
-  group_by(Recent, var) %>%
-  summarise(count = n()) %>%
-  mutate(freq = count / sum(count)) %>%
-  filter(!var)
+(ref:demographic-models-cap) Modèles démographiques. En haut à gauche, une représentation schématique d'un modèle en îles à trois populations. En haut à droite, une représentation schématique d'un modèle *star-like* à trois populations où les *branches* ont des longueurs inégales. En bas à gauche, une représentation schématique d'un modèle de divergence instantanée à trois populations où chaque branche a la même longueur.
 
-h.df$data <- "Human"
+```{r demographic-models, fig.cap='(ref:demographic-models-cap)'}
+circleFun <- function(center = c(0, 0),
+                      diameter = 1,
+                      npoints = 100,
+                      start = 0,
+                      end = 2,
+                      filled = TRUE){
+  tt <- seq(start * pi, end * pi, length.out = npoints)
+  df <- data.frame(
+    x = center[1] + diameter / 2 * cos(tt),
+    y = center[2] + diameter / 2 * sin(tt)
+  )
 
-bool_6 <- unlist(lapply(fst_6, FUN = function(x){"FST" %in% x}))
-bool_space <- unlist(lapply(fst_space, FUN = function(x){"FST" %in% x}))
-df$var <- (bool_6 | bool_space)
+  if (filled) { #add a point at the center so the whole 'pie slice' is filled
+    df <- rbind(df, center)
+  }
 
-fst.df <- df %>% 
-  group_by(Recent, var) %>%
-  summarise(count = n()) %>%
-  mutate(freq = count / sum(count)) %>%
-  filter(var)
+  return(df)
+}
 
-fst.df$data <- "FST"
+### Figure A
+triangle.x <- c(0, 1, 2)
+triangle.y <- c(0, sqrt(3), 0)
+df.triangle <- data.frame(x = triangle.x, y = triangle.y)
+df.branch <- data.frame(x1 = 0, x2 = 2, y1 = 0, y2 = 0)
 
-df <- rbind(snp.df, h.df, fst.df) 
-df$Recent[df$Recent] <- "2010-2016"
-df$Recent[df$Recent == FALSE] <- "1999-2009"
-df$Recent <- factor(df$Recent, levels = sort(unique(df$Recent), decreasing = TRUE))
+diam <- 0.75
+fullCircle.1 <- circleFun(c(0, 0), diam, start = 0, end = 2, filled = TRUE)
+fullCircle.2 <- circleFun(c(1, sqrt(3)), diam, start = 0, end = 2, filled = TRUE)
+fullCircle.3 <- circleFun(c(2, 0), diam, start = 0, end = 2, filled = TRUE)
 
-df %>% ggplot(aes(x = Recent, 
-                  y = freq, 
-                  fill = factor(data))) +
-  ylim(0, 1) +
-  coord_flip() +
-  geom_bar(stat = "identity", 
-           colour = "black", 
-           position = "dodge",
-           width = 0.5) +
-  scale_fill_manual(labels = c("Proportion de scans à sélection utilisant l'indice de fixation",
-                               "Proportion de scans à sélection pour des espèces non humaines",
-                               "Proportion de scans à sélection utilisant des données de SNPs"),
-                    values = cbbPalette[c(8, 6, 5)]) +
+p1 <- ggplot(df.triangle, aes(x = x, y = y)) +
+  geom_line(size = 4, colour = "#E69F00") +
+  geom_segment(data = df.branch,
+               aes(x = x1, y = y1, xend = x2, yend = y2),
+               size = 4,
+               colour = "#E69F00") +
+  geom_polygon(data = fullCircle.1, aes(x, y), color = "#56B4E9", fill = "#56B4E9") +
+  geom_polygon(data = fullCircle.2, aes(x, y), color = "#56B4E9", fill = "#56B4E9") +
+  geom_polygon(data = fullCircle.3, aes(x, y), color = "#56B4E9", fill = "#56B4E9") +
+  coord_equal() +
+  annotate("text",
+           x = triangle.x,
+           y = triangle.y,
+           label = c("bold(P)[1]", "bold(P)[2]", "bold(P)[3]"),
+           parse = TRUE, size = 5) +
+  xlim(-1.5, 3.5) +
+  ylim(-1.5, 2.5) +
+  xlab("") +
+  ylab("") +
   theme_bw() +
-  theme(axis.ticks.y = element_blank(),
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank(),
-        legend.position = "bottom",
-        legend.title = element_blank(), 
-        legend.direction = "vertical")
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank())
+
+### Figure B
+triangle.x <- c(0.25, 1, 2)
+triangle.y <- c(sqrt(3) / 4, sqrt(3), 0)
+df.triangle <- data.frame(x = triangle.x, y = triangle.y)
+df.branch <- data.frame(x1 = 1, x2 = 1, y1 = -1, y2 = sqrt(3))
+fullCircle.4 <- circleFun(c(0.25, sqrt(3) / 4), diam, start = 0, end = 2, filled = TRUE)
+fullCircle.5 <- circleFun(c(1, -1), diam, start = 0, end = 2, filled = TRUE)
+
+p2 <- ggplot(df.triangle, aes(x = x, y = y)) +
+  geom_line(size = 4, colour = "#E69F00") +
+  geom_segment(data = df.branch,
+               aes(x = x1, y = y1, xend = x2, yend = y2),
+               size = 4,
+               colour = "#E69F00") +
+  geom_polygon(data = fullCircle.4, aes(x, y), color = "#56B4E9", fill = "#56B4E9") +
+  geom_polygon(data = fullCircle.5, aes(x, y), color = "#56B4E9", fill = "#56B4E9") +
+  geom_polygon(data = fullCircle.3, aes(x, y), color = "#56B4E9", fill = "#56B4E9") +
+  coord_equal() +
+  annotate("text",
+           x = c(0.25, 1, 2),
+           y = c(sqrt(3) / 4, -1, 0),
+           label = c("bold(P)[1]", "bold(P)[2]", "bold(P)[3]"),
+           parse = TRUE, size = 5) +
+  xlim(-1.5, 3.5) +
+  ylim(-1.5, 2.5) +
+  xlab("") +
+  ylab("") +
+  theme_bw() +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank())
+
+### Figure C
+triangle.x <- c(0, 1, 2)
+triangle.y <- c(0, sqrt(3), 0)
+df.triangle <- data.frame(x = triangle.x, y = triangle.y)
+df.branch <- data.frame(x1 = 1, x2 = 1, y1 = sqrt(3) - 2, y2 = sqrt(3))
+fullCircle.6 <- circleFun(c(1, sqrt(3) - 2), diam, start = 0, end = 2, filled = TRUE)
+
+p3 <- ggplot(df.triangle, aes(x = x, y = y)) +
+  geom_line(size = 4, colour = "#E69F00") +
+  geom_segment(data = df.branch,
+               aes(x = x1, y = y1, xend = x2, yend = y2),
+               size = 4,
+               colour = "#E69F00") +
+  geom_polygon(data = fullCircle.1, aes(x, y), color = "#56B4E9", fill = "#56B4E9") +
+  geom_polygon(data = fullCircle.6, aes(x, y), color = "#56B4E9", fill = "#56B4E9") +
+  geom_polygon(data = fullCircle.3, aes(x, y), color = "#56B4E9", fill = "#56B4E9") +
+  coord_equal() +
+  annotate("text",
+           x = c(0, 1, 2),
+           y = c(0, sqrt(3) - 2, 0),
+           label = c("bold(P)[1]", "bold(P)[2]", "bold(P)[3]"),
+           parse = TRUE, size = 5) +
+  xlim(-1.5, 3.5) +
+  ylim(-1.5, 2.5) +
+  xlab("") +
+  ylab("") +
+  theme_bw() +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank())
+
+cowplot::plot_grid(p1, p2, p3, labels = c("A", "B", "C"), ncol = 2)
 ```
 
 ### L'indice de fixation
 
-En se différenciant génétiquement, les populations voient leurs fréquences d'allèles évoluer de façon indépendante. L'indice de fixation est une statistique permettant de quantifier pour un allèle donné, l'écart de la fréquence observée dans une sous-population à la fréquence théorique
+Indépendamment de l'histoire démographique, un allèle sélectionné voit généralement sa prévalence augmenter au sein d'une population. Si bien que l'observation d'une fréquence allélique anormalement élevée dans une population relativement aux autres suggère fortement que cet allèle a été favorablement sélectionné. De ce constat, il semble alors naturel de proposer une statistique testant si au moins deux populations présentent des fréquences alléliques significativement différentes l'une de l'autre [@holsinger2009genetics]. L'indice de fixation, ou encore $F_{ST}$ en abrégé, est une statistique basée sur cette heuristique. Pour un locus donné, dénotant $N$ le nombre de populations considérées et ($p_1, p_2, \dots, p_N$) les fréquences d'un des deux allèles existant, la $F_{ST}$ est définie par la relation suivante :
 
-### Modèle de FLK
-
-Le modèle de FLK estime le modèle neutre d'un SNP bi-allélique lorsque celui-ci est uniquement soumis à la dérive génétique. À l'instant $t = 0$, le SNP a une fréquence $p_0$. Notant $F_t$ l'indice de fixation de cet allèle, $p(t)$ sa fréquence après $t$ générations, et en supposant que $F_t$ soit suffisamment petit, ce qui devrait être vérifié dans le cas neutre. [@nicholson2002assessing] : 
-
-\begin{equation} 
-  p(t) \sim N(p_0, F_t p_0 (1-p_0)) 
-  (\#eq:frequency-law)
+\begin{equation}
+  F_{ST} = \frac{\frac{1}{N-1}\sum_{i = 1}^N (p_i - \bar{p})^2}{\bar{p}(1 - \bar{p})}
+  (\#eq:fst-definition)
 \end{equation}
 
-De la loi \@ref(eq:frequency-law) nous tirons $\text{Var}(p(t)) = F_t p_0 (1-p_0)$.
+où $\bar{p} = \frac{1}{N-1}\sum_{i = 1}^N p_i$. Le numérateur correspond à la variance génétique interpopulationnelle tandis que le dénominateur correspond à la variance génétique mesurée à l'échelle de la *métapopulation*^[ensemble de populations d'individus appartenant à la même espèce.]. La variance génétique est appelée aussi *degré d'hétérozygotie*. Relativement à l'hétérozygotie, la $F_{ST}$ peut être vue comme la réduction d'hétérozygotie due à la structure de population. Autrement dit, on regarde si le fait de grouper les individus dans des populations a une incidence ou non sur le degré d'hétérozygotie.
 
-La statistique FLK [@bonhomme2010detecting] requiert d'estimer au préalable deux paramètres que sont la fréquence allélique initiale $p_0$ et la matrice d'apparentement $V$, $V \in M_K(\mathbb{R})$ où $K$ est le nombre de populations observées. Notant : 
+### Test de Lewontin-Krakauer
 
-- $\boldsymbol{p} = (p_1, p_2, \dots, p_K) \in \mathbb{R}^K$, 
+Comme expliqué plus haut, la détection de loci sous sélection passe généralement par la caractérisation d'un modèle décrivant l'évolution de loci sous l'effet de processus neutres tels que la dérive génétique. Ce principe renvoie en statistiques à la notion de test d'hypothèse. Les tests d'hypothèse sont particulièrement intéressants lorsque l'on cherche à évaluer la probabilité qu'un évènement a de se produire. Dans le cas des scans génomiques, il s'agit d'estimer la distribution neutre de la statistique de test (calculée en chaque locus), afin d'identifier les loci qui s'en écartent le plus.
 
-- $\boldsymbol{p_0} = (p_0, p_0, \dots, p_0) \in \mathbb{R}^K$, 
+Suivant ce principe, Lewontin et Krakauer proposent pour la $F_{ST}$ un test d'adéquation du $\chi^2$  [@lewontin1973distribution] :
 
-- $\boldsymbol{r} = N(0, V)$, 
-
-le modèle neutre pour $\boldsymbol{p}$ est donné par la relation suivante : 
-
-\begin{equation} 
-  \boldsymbol{p} = \boldsymbol{p_0} + \boldsymbol{r} 
-  (\#eq:flk-neutral-model)
+\begin{equation}
+  T_{LK} = \frac{N - 1}{\bar{F}_{ST}} F_{ST}
+  (\#eq:LK-test)
 \end{equation}
 
-Bonhomme \textit{et al.} proposent pour ce modèle de mesurer une statistique de qualité de l'ajustement pour quantifier la déviance d'un allèle par rapport au modèle neutre : 
+Dans un scénario de divergence instantanée (Figure \@ref(fig:demographic-models)), sous l'hypothèse que les fréquences alléliques sont distribuées selon une loi normale ou binomiale, $T_{LK}$ suit une loi du $\chi^2$ à $N-1$ degrés de libertés [@lewontin1973distribution]. En effet, en utilisant la définition de la $F_{ST}$ \@ref(eq:fst-definition) et en remarquant que :
 
-\begin{equation} 
-  FLK = (\boldsymbol{p - \hat{p}_0})^T V (\boldsymbol{p - \hat{p}_0})                               
+\begin{equation}
+  (N-1)F_{ST} = \frac{1}{\bar{p}(1 - \bar{p})}\sum_{i = 1}^N (p_i - \bar{p})^2 = \left(\frac{\boldsymbol{p} - \bar{p}}{\sqrt{\bar{p}(1-\bar{p})}}\right) \left(\frac{\boldsymbol{p} - \bar{p}}{\sqrt{\bar{p}(1-\bar{p})}}\right) ^T
+  (\#eq:LK-chi2)
+\end{equation}
+
+il est possible de réécrire $T_{LK}$ sous la forme d'une somme quadratique de lois normales.
+Cependant, les contraintes sur le modèle démographique sous-jacent sont extrêmement fortes et il est raisonnable de penser que celles-ci ne seront vraisemblablement pas toujours vérifiées. Des variantes de ce test ont donc été proposées pour s'adapter à des modèles plus généraux.
+
+#### Estimation du nombre de degrés de liberté effectif
+
+Dans le cas où les populations n'évoluent pas de façon indépendante (ce qui peut être le cas s'il y a eu de l'isolement par la distance par la distance), la statistique $T_{LK}$ n'est plus distribuée selon un $\chi^2$ à $N-1$ degrés de liberté. Ce test peut cependant être rendu valable en estimant le nombre de degrés effectif $\text{df}$ de la statistique $T_{LK}$ [@whitlock2015reliable]. Pour estimer $\text{df}$, Whitlock, *et al* dérivent un modèle de vraisemblance basé sur la distribution de la $F_{ST}$. Partant de la densité d'une variable aléatoire suivant un $\chi^2$ à $\text{df}$ degrés de libertés, la densité de la $F_{ST}$ s'écrit :
+
+\begin{equation}
+  f(F_{ST}) = \frac{\text{df}}{\bar{F}_{ST}} \times \frac{1}{2^{\frac{\text{df}}{2}}\Gamma\left(\frac{\text{df}}{2}\right)} \times  \left(\frac{\text{df}}{\bar{F}_{ST}}F_{ST}\right)^{-1+\frac{\text{df}}{2}}
+  (\#eq:OutFLANK-f)
+\end{equation}
+
+Notant $\hat{\text{df}} = \text{argmin}_{\text{df}} \; \sum_{i=1}^p \log(f(F_{ST}^i))$ l'estimateur du maximum de vraisemblance (où $F_{ST}^i$ désigne la $F_{ST}$ observée pour l'allèle $i$), la correction du test de Lewontin-Krakauer consiste à tester l'adéquation de $\frac{\hat{\text{df}}}{\bar{F}_{ST}}F_{ST}$ à un $\chi^2$ à $\hat{\text{df}}$ degrés de liberté.
+
+#### Dérivation du test de Lewontin-Krakauer dans le cas de populations structurées
+
+Dans le cas de populations structurées, l'hypothèse de divergence instantanée ne tient plus. Pour tenir compte de la structure, Bonhomme, *et al.* proposent de corriger la statistique pour l'apparentement génétique^[kinship.] des populations, modélisé par une matrice $\mathcal{F} = (f_{ij})_{1 \leq i,j \leq N} \in M_N(\mathbb{R})$, où $f_{ij}$ mesure la corrélation entre $p_i$ et $p_j$ et peut être interprétée comme la probabilité qu'un individu de la population $i$ et un individu de la population $j$ aient hérité de cet allèle d'un même ancêtre commun. 
+
+La statistique de test $T_{F-LK}$, correspondant au test de Lewontin-Krakauer corrigé pour l'apparentement génétique $\mathcal{F}$, garde une forme analogue à celle développée en \@ref(eq:LK-chi2) :
+
+\begin{equation}
+   T_{F-LK} = \left(\frac{\boldsymbol{p} - \hat{p}_0}{\sqrt{\hat{p}_0(1-\hat{p}_0)}}\right) \mathcal{F}^{-1} \left(\frac{\boldsymbol{p} - \hat{p}_0}{\sqrt{\hat{p}_0(1-\hat{p}_0)}}\right)^T
   (\#eq:flk-statistic)
 \end{equation}
 
-Sous l'hypothèse neutre et suivant \@ref(eq:flk-statistic), $FLK \sim \chi^2 (K - 1)$.
-
-### Modèle de OutFLANK
-
-En reprenant le modèle proposé par Lewontin et Krakauer [@lewontin1973distribution] et en y apportant les corrections nécessaires afin de prendre en compte les erreurs d'échantillonnage, 
-Whitlock \textit{et al.} proposent une méthode permettant de détecter les allèles sous sélection en environnement hétérogène [@whitlock2015reliable]. Ainsi, la quantité 
-
-\begin{equation} 
-  k \frac{F_{ST}^{\prime}}{\bar{{F_{ST}^{\prime}}}}  
-  (\#eq:OutFLANK-statistic)
-\end{equation}
-
-où $k$ représente le nombre de degrés de libertés.
+où $\hat{p}_0$ désigne un estimateur de la fréquence $p_0$ de l'allèle dans la population ancestrale. 
+Dans le cas où les loci sont soumis uniquement à la dérive génétique, $T_{F-LK} \sim \chi_{N - 1}^2$ [@bonhomme2010detecting]. En pratique, la méthode implémentée dans le logiciel hapflk cherche à estimer les paramètres $p_0$ et $\mathcal{F}$.
 
 ### Modèle du logiciel Bayescan
 
-Bayescan est aujourd'hui encore un des logiciels les plus utilisés pour détecter l'adaptation locale. Le modèle employé suppose que les sous-populations observées proviennent toutes d'une même population ancestrale. Pour une sous-population donnée et un SNP donné, la statistique de $F_{ST}$ peut être estimée en utilisant la
-vraisemblance d’un modèle multinomial-Dirichlet [@beaumont2004identifying].
-$F_{ST} \in [0, 1]$ est une quantité qui peut être interprété comme proportionnel à la probabilité que deux individus aient un ancêtre commun dans la sous-population
+Une autre l'idée consiste à affirmer qu'en l'absence de sélection, dans un modèle en îles où des individus migrent d'une population à une autre, la proportion $\lambda$ d'allèles dans une population donnée provenant d'une autre population doit être la même pour tous les loci [@beaumont2004identifying]. Un locus présentant une proportion d'allèles migrants anormalement plus basse serait alors considéré comme potentiellement sous sélection [@petry1983effect; @bazin2010likelihood]. Sous l'hypothèse que les fréquences alléliques suivent une distribution bêta, la $F_{ST}$ peut se réécrire en fonction de la proportion $\lambda$ d'allèles migrants [@balding2003likelihood; @balding2008handbook] :
 
-\begin{equation} 
-  \log \left( \frac{F_{ST}}{1 - F_{ST}} \right) = \alpha_j + \beta_i + \gamma_{ij}
-  (\#eq:Bayescan-statistic)
+\begin{equation}
+  F_{ST} = \frac{1}{1 + \lambda}
+  (\#eq:fst-balding)
 \end{equation}
+
+DEMO EN ANNEXE
+
+Réécrite de cette manière, elle peut être interprétée comme étant proportionnelle à la probabilité que deux individus aient un ancêtre commun dans la sous-population $j$. La façon la plus simple serait de modéliser à l'aide d'une régression linéaire la proportion $\lambda_{ij}$ en fonction d'effets $\alpha_i$ spécifiques au locus (*i.e.* taux de mutation, sélection) et d'effets $\beta_j$ spécifiques à la population (*i.e.* taille de population effective, taux de migration) :
+
+\begin{equation}
+  \lambda_{ij} = \alpha_i + \beta_j + \gamma_{ij}
+  (\#eq:fst-linear-regression)
+\end{equation}
+
+où $\gamma_{ij}$ correspond à un terme d'erreur spécifique au locus $i$ et à la sous-population $j$. Cette formulation \@ref(eq:fst-linear-regression) n'est cependant pas satisfaisante [@beaumont2004identifying]. Si l'effet d'une population est très fort, les valeurs de $F_{ST}$ relativement à cette population se retrouveraient très faibles pour tous les loci, ce qui n'est pas désirable pour la détection de loci *outliers*. Pour contrer cet effet, Beaumont, *et al.* se tournent vers un modèle de régression logistique pour la $F_{ST}$ :
+
+\begin{equation}
+  \log \left( \frac{F_{ST}}{1 - F_{ST}} \right) = \alpha_i + \beta_j + \gamma_{ij}
+  (\#eq:Bayescan-statistic-implicit)
+\end{equation}
+
+ce qui donne en version explicite :
+
+\begin{equation}
+  F_{ST} = \frac{\exp(\alpha_i + \beta_j + \gamma_{ij})}{1 + \exp(\alpha_i + \beta_j + \gamma_{ij})}
+  (\#eq:Bayescan-statistic-explicit)
+\end{equation}
+
+```{r, eval=FALSE}
+x <- seq(0, 10, by = 0.05)
+data.frame(x = c(x, x),
+           y = c(1 / (1 + 0.5 + x), exp(0.5 + x) / (1 + exp(0.5 + x))),
+           model = c(rep("linear", length(x)), rep("logistic", length(x)))) %>%
+  ggplot(aes(x = x, y = y, color = model)) +
+  xlab(expression(beta)) +
+  ylab(expression(F[ST])) +
+  geom_line() +
+  facet_grid(~model) +
+  theme_bw()
+```
+
 
 ### Fast PCA
 
@@ -162,13 +269,13 @@ L'utilisation de l'Analyse en Composantes Principales en génétique des populat
 ```{r popres, fig.cap = '(ref:popres-cap)', out.width='\\textwidth'}
 obj.popres <- readRDS("data/popres.rds")
 
-ggdf <- data.frame(PC1 = -obj.popres$u[, 1], 
+ggdf <- data.frame(PC1 = -obj.popres$u[, 1],
                    PC2 = -obj.popres$u[, 2],
                    pop = obj.popres$pop.fr)
 
-ggplot(ggdf, aes(x = PC2, y = PC1, fill = pop)) + 
-  geom_point(size = 2.5, shape = 21, stroke = 1) + 
-  scale_fill_manual(labels = sort(unique(ggdf$pop)), 
+ggplot(ggdf, aes(x = PC2, y = PC1, fill = pop)) +
+  geom_point(size = 2.5, shape = 21, stroke = 1) +
+  scale_fill_manual(labels = sort(unique(ggdf$pop)),
                     values = as.character(obj.popres$palette.fr)) +
   guides(fill = guide_legend(nrow = 5)) +
   theme_bw() +
@@ -181,11 +288,29 @@ ggplot(ggdf, aes(x = PC2, y = PC1, fill = pop)) +
         legend.position = "bottom")
 ```
 
+(ref:hapmap-cap) ACP réalisée sur la phase 3 du jeu de données HapMap [@gibbs2003international].
 
+```{r hapmap, fig.cap = '(ref:hapmap-cap)', out.width='\\textwidth'}
+obj.hapmap <- readRDS("data/hapmap.rds")
 
-### Analyse en Composantes Principales parcimonieuse
+ggdf <- data.frame(PC1 = obj.hapmap$u[, 1],
+                   PC2 = obj.hapmap$u[, 2],
+                   pop = obj.hapmap$pop)
 
-### Bootstrap ACP
+ggplot(ggdf, aes(x = PC1, y = PC2, fill = pop)) +
+  geom_point(size = 2.5, shape = 21, stroke = 1) +
+  scale_fill_manual(labels = sort(unique(ggdf$pop)),
+                    values = as.character(obj.popres$palette.fr[1:length(unique(obj.hapmap$pop))])) +
+  guides(fill = guide_legend(nrow = 1)) +
+  theme_bw() +
+  theme(axis.text = element_text(face = "bold"),
+        legend.text = element_text(size = 7.5),
+        legend.key.height = unit(0.75, "line"),
+        legend.key.width = unit(0.5, "line"),
+        legend.title = element_blank(),
+        legend.direction = "horizontal",
+        legend.position = "bottom")
+```
 
 ### Contexte
 
@@ -193,10 +318,10 @@ ggplot(ggdf, aes(x = PC2, y = PC1, fill = pop)) +
 
 ### Contrôle du taux de fausse découverte
 
-Le taux de fausse découverte, correspond à la proportion de faux positifs parmi les positifs. En notant $FP$ le nombre de faux positifs, $FP$ le nombre de vrais positifs, on définit le taux de fausse découverte $FDR$ par : 
+Le taux de fausse découverte, correspond à la proportion de faux positifs parmi les positifs. En notant $FP$ le nombre de faux positifs, $FP$ le nombre de vrais positifs, on définit le taux de fausse découverte $FDR$ par :
 
-\begin{equation} 
-  FDR = \mathbb{E}\Big[\frac{FP}{TP + FP} 1_{FP+TP > 0}\Big] 
+\begin{equation}
+  FDR = \mathbb{E}\Big[\frac{FP}{TP + FP} 1_{FP+TP > 0}\Big]
   (\#eq:FDR-def)
 \end{equation}
 
@@ -215,7 +340,7 @@ L'introgression peut être détectée de différentes façons. Une première app
 
 ### Lien entre Analyse en Composantes Principales et métissage global.
 
-L'un des premiers articles à établir un lien entre l'ACP et les coefficients de métissage global fut sur l'interprétation généalogique de l'ACP de Gil McVean [@mcvean2009genealogical]: 
+L'un des premiers articles à établir un lien entre l'ACP et les coefficients de métissage global fut sur l'interprétation généalogique de l'ACP de Gil McVean [@mcvean2009genealogical]:
 
 (ref:mcvean-cap) Coefficients de métissage et ACP [@mcvean2009genealogical].
 
@@ -223,7 +348,7 @@ L'un des premiers articles à établir un lien entre l'ACP et les coefficients d
 include_graphics("figure/mcvean.png")
 ```
 
-Pour chacun des 22 chromosomes, 
+Pour chacun des 22 chromosomes,
 
 ### Analyse en Composantes Principales locale
 
@@ -251,7 +376,7 @@ Pour comprendre la récente méthode proposée par [@rosenzweig2016powerful], il
 
 &nbsp;
 
-- $d_{xy}$ est la distance de Hamming entre la séquence $X$ de la population $1$ et la séquence $Y$ de la population $2$. Ainsi, si $x = (x_i)_{1 \leq i \leq n}$ et $y = (y_i)_{1 \leq i \leq n}$, alors : 
+- $d_{xy}$ est la distance de Hamming entre la séquence $X$ de la population $1$ et la séquence $Y$ de la population $2$. Ainsi, si $x = (x_i)_{1 \leq i \leq n}$ et $y = (y_i)_{1 \leq i \leq n}$, alors :
 
 $$d_{xy} = \text{Card}(\{i \in [|1, n|] \; | \; x_i \neq y_i \})$$
 
@@ -261,7 +386,7 @@ Pour pallier à ce problème, considérer la distance minimale entre les deux en
 
 [Expliquer pourquoi on définit $d_{\text{out}}$ et $RND$]
 
-En définissant $d_{out} = \frac{1}{2}(d_{XO} + d_{YO})$, il est possible de définir de la même 
+En définissant $d_{out} = \frac{1}{2}(d_{XO} + d_{YO})$, il est possible de définir de la même
 façon $RND_{min}$ :
 
 $$RND_{\text{min}} = \frac{d_{\text{min}}}{d_{\text{out}}}$$

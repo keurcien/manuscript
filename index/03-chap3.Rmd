@@ -1,5 +1,50 @@
 # Détection d'outliers 
 
+Nous avons vu dans la partie précédente que la communalité avait tendance à accorder beaucoup d'importance aux premières composantes principales, du fait de la pondération de chaque composante par la proportion de variance expliquée. Pour remédier à cela, la statistique $h^{\prime}$ a été introduite. La distribution des *loadings* n'étant pas gaussienne, du fait de leur normalisation ($\sum_{j=1}^p V_{jk}^2 = 1$), il n'est pas clair que la statistique $h^{\prime}$ suive une distribution connue.
+
+Ainsi, ne pas normaliser les loadings permet de produire des $t$-scores, si l'on considère que les loadings non-normalisés résultent de la régression de la matrice $G$ par les scores de l'ACP.
+
+\begin{equation} 
+  G = U \Sigma V^T
+  (\#eq:svd-G)
+\end{equation}
+
+
+$V$, la matrice des loadings, peut être vue comme la solution du problème d'optimisation sous contrainte suivant :
+
+\begin{equation} 
+  \min_{V} ||G - U \Sigma V^T||_{2} \\
+  \sum_{j=1}^p V_{jk}^2 = 1, \;  k = 1, \dots, K
+  (\#eq:minimization-G)
+\end{equation}
+
+En retirant cette contrainte, le problème de minimisation est équivalent à un problème de régression linéaire multiple,
+dont la distribution des coefficients de régression est bien mieux connue.
+La solution au problème de régression linéaire multiple est explicite :
+
+\begin{equation} 
+  \beta = U(U^T U)^{-1}U^TG
+  (\#eq:linReg-solution)
+\end{equation}
+
+Ce qui dans notre cas donne, grâce à l'orthonormalité de $U$ :
+
+\begin{equation} 
+  \beta = UU^TG
+  (\#eq:linReg-solution-simplifiee)
+\end{equation}
+
+Ici, nous cherchons à tester l'hypothèse $\beta_j = 0$ contre l'hypothèse $\beta_j \neq 0$,
+pour chaque $\beta_j$, nous pouvons écrire le $z$-score de la régrssion associé :
+
+\begin{equation} 
+  z_j = \frac{\beta_j}{\sqrt{\frac{||G_j - U_k \beta_j||}{n - p - 1}}}
+  (\#eq:linReg-zscore)
+\end{equation}
+
+
+
+
 ## Article 2
 
 ```{r, results='asis', out.width='\\textwidth'}

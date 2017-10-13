@@ -1,5 +1,7 @@
 ** Résumé **  \par
 
-La nécessité de développer des outils d'analyse exploratoire capables de traiter de larges volumes de données.
+L'identification de gènes ayant permis à des populations de s'adapter à leur environnement local constitue une des problématiques importantes du domaine de la génétique des populations. Le développement récent des nouvelles technologies de séquençage génomique donne désormais accès à des génômes denses et bénéficiant d'une haute résolution. Nous proposons dans cette thèse de nouvelles méthodes statistiques basées sur l'Analyse en Composantes Principales et adaptées à de larges volumes de données génomiques. 
 
 ** Abstract **
+
+In population genetics, the detection of genes that led populations to adapt to their environment is of major interest. The development of

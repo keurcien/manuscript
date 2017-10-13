@@ -9,9 +9,9 @@ title: 'THÈSE'
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 output: 
-  #thesisdown::thesis_pdf: default
-  bookdown::gitbook:
-   css: style.css
+  thesisdown::thesis_pdf: default
+  #bookdown::gitbook:
+  # css: style.css
   # thesisdown::thesis_gitbook: default
   # thesisdown::thesis_epub: default
   # thesisdown::thesis_word: default
@@ -84,7 +84,8 @@ knitr::opts_chunk$set(echo = FALSE,
                       results = 'hide',
                       cache = TRUE,
                       out.width = '\\textwidth')
-# knitr::opts_knit$set(kable.force.latex = TRUE)
+#knitr::opts_knit$set(kable.force.latex = TRUE)
+
 
 # The palette with black:
 cbbPalette <- c("#000000", 

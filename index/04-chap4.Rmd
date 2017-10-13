@@ -8,7 +8,7 @@ Le premier jeu de données est issu d'une étude d'introgression adaptative chez
 
 Chacune des simulations est constituée de $50$ haplotypes de la souche continentale, de $50$ haplotyêpes de la souche boréale, ainsi que de $50$ haplotypes d'individus hybrides générés à partir des haplotypes ancestraux. Ces haplotypes ancestraux ont été estimés à l'aide du logiciel Beagle. A partir des positions en paires de base, une carte de recombinaison génétique est générée en utilisant le taux de recombinaison moyen chez le peuplier. Le taux de recombinaison, noté $\tau_r$, correspond au nombre moyen de paires de bases à parcourir pour qu'ait lieu un épisode de recombinaison génétique, *i.e.*, notant $L$ la longueur du chromosome en Morgans ($M$), et $N_{bp}$ le nombre de paires de bases le constituant, le taux de recombinaison génétique pour ce chromosome est donné par la relation:
 
-$$\tau_r = \frac{L}{N_{bp}}$$ 
+$$\tau_r = \frac{L}{N_{bp}}$$
 
 Dans ce scénario, les simulations ont été produites en utilisant un taux de recombinaison génétique moyen $\tau_r$ de $0.05$ centiMorgans par million de paire de bases, correspondant à la valeur utilisée par les auteurs de l'étude avec le logiciel RASPberry (\textit{Recombination via Ancestry Switch Probability}). A partir de la donnée de la position physique en paires de bases ainsi que du taux de recombinaison moyen, nous générons une carte de recombinaison génétique adaptée à nos simulations.
 
@@ -40,13 +40,13 @@ intro.size <- 500
 global.ancestry <- 0.1
 inverted.ancestry <- 0.5
 
-info.map <- as.matrix(fread(paste0(path, output.name, ".map"), 
+info.map <- as.matrix(fread(paste0(path, output.name, ".map"),
                             data.table = FALSE))
-H1 <- as.matrix(fread(paste0(path, output.name, "_H1"), 
+H1 <- as.matrix(fread(paste0(path, output.name, "_H1"),
                       data.table = FALSE))
-H2 <- as.matrix(fread(paste0(path, output.name, "_H2"), 
+H2 <- as.matrix(fread(paste0(path, output.name, "_H2"),
                       data.table = FALSE))
-n.hyb <- ncol(H1) / 2 
+n.hyb <- ncol(H1) / 2
 
 ### Introgression region
 idx <- sample(1:nSNP, size = 1)
@@ -60,13 +60,13 @@ intro.reg <- beg.reg:end.reg
 
 ```{r, eval = FALSE, echo = FALSE, fig.width = 7, fig.height = 4, fig.align = 'center', fig.cap = "$\\lambda = 0.1$"}
 lambda <- 0.1
-res <- simulate::generate_hybrid_matrix(H1, 
-                                        H2, 
-                                        alpha = global.ancestry, 
-                                        beta = inverted.ancestry, 
+res <- simulate::generate_hybrid_matrix(H1,
+                                        H2,
+                                        alpha = global.ancestry,
+                                        beta = inverted.ancestry,
                                         n.hyb = n.hyb,
-                                        gen_map = info.map[, 2], 
-                                        lambda = lambda, 
+                                        gen_map = info.map[, 2],
+                                        lambda = lambda,
                                         ancestry.switch = intro.reg)
 simulate::display.ancestry(res$true.ancestry.matrix)
 im <- matrix(0, ncol = ncol(res$true.ancestry.matrix), nrow = nrow(res$true.ancestry.matrix))
@@ -78,13 +78,13 @@ image(im, axes = FALSE, xlab = "", ylab = "")
 
 ```{r, eval = FALSE, echo = FALSE, fig.width = 7, fig.height = 4, fig.align = 'center', fig.cap = "$\\lambda = 10$"}
 lambda <- 10
-res <- simulate::generate_hybrid_matrix(H1, 
-                                        H2, 
-                                        alpha = global.ancestry, 
-                                        beta = inverted.ancestry, 
+res <- simulate::generate_hybrid_matrix(H1,
+                                        H2,
+                                        alpha = global.ancestry,
+                                        beta = inverted.ancestry,
                                         n.hyb = n.hyb,
-                                        gen_map = info.map[, 2], 
-                                        lambda = lambda, 
+                                        gen_map = info.map[, 2],
+                                        lambda = lambda,
                                         ancestry.switch = intro.reg)
 simulate::display.ancestry(res$true.ancestry.matrix)
 im <- matrix(0, ncol = ncol(res$true.ancestry.matrix), nrow = nrow(res$true.ancestry.matrix))
@@ -97,13 +97,13 @@ image(im, axes = FALSE, xlab = "", ylab = "")
 
 ```{r, eval = FALSE, echo = FALSE, fig.width = 7, fig.height = 4, fig.align = 'center', fig.cap = "$\\lambda = 50$"}
 lambda <- 50
-res <- simulate::generate_hybrid_matrix(H1, 
-                                        H2, 
-                                        alpha = global.ancestry, 
-                                        beta = inverted.ancestry, 
+res <- simulate::generate_hybrid_matrix(H1,
+                                        H2,
+                                        alpha = global.ancestry,
+                                        beta = inverted.ancestry,
                                         n.hyb = n.hyb,
-                                        gen_map = info.map[, 2], 
-                                        lambda = lambda, 
+                                        gen_map = info.map[, 2],
+                                        lambda = lambda,
                                         ancestry.switch = intro.reg)
 simulate::display.ancestry(res$true.ancestry.matrix)
 im <- matrix(0, ncol = ncol(res$true.ancestry.matrix), nrow = nrow(res$true.ancestry.matrix))
@@ -116,15 +116,15 @@ image(im, axes = FALSE, xlab = "", ylab = "")
 
 ### Simulations à partir de ms et Seq-Gen
 
-Dans le scénario d'introgression via flux de gènes, nous nous inspirons des modèles de simulation décrits dans [@martin2014evaluating]. Ces modèles sont largement repris dans la littérature pour l'évaluation de statistiques telles que $RND_{min}$ [@rosenzweig2016powerful] et $Bd_f$ [@pfeifer2017estimates]. Chaque simulation est constituée de 100 individus. Un individu est généré en concaténant un certain nombre de séquences de nucléotides, d'une longueur fixée à 5000 paires de bases par séquence. Chacune de ces séquences est elle-même simulée suivant un modèle neutre ou alternatif. Le modèle neutre décrit un scénario démographique classique de populations divergentes. Le modèle alternatif décrit quant à lui un scénario légèrement différent, et servira à caractériser les séquences *introgressées*. Les lignes de commande *ms* permettant de générer les séquences de nucléotides pour le modèle neutre ainsi que pour le modèle alternatif sont données ci-dessous : 
+Dans le scénario d'introgression via flux de gènes, nous nous inspirons des modèles de simulation décrits dans [@martin2014evaluating]. Ces modèles sont largement repris dans la littérature pour l'évaluation de statistiques telles que $RND_{min}$ [@rosenzweig2016powerful] et $Bd_f$ [@pfeifer2017estimates]. Chaque simulation est constituée de 100 individus. Un individu est généré en concaténant un certain nombre de séquences de nucléotides, d'une longueur fixée à 5000 paires de bases par séquence. Chacune de ces séquences est elle-même simulée suivant un modèle neutre ou alternatif. Le modèle neutre décrit un scénario démographique classique de populations divergentes. Le modèle alternatif décrit quant à lui un scénario légèrement différent, et servira à caractériser les séquences *introgressées*. Les lignes de commande *ms* permettant de générer les séquences de nucléotides pour le modèle neutre ainsi que pour le modèle alternatif sont données ci-dessous :
 
 &nbsp;
 
 - Modèle neutre :
 
 ```
-./ms 200 1 -I 4 50 50 50 50 -ej 1 2 1 -ej 2 3 1 -ej 3 4 1 
--r 50 5000 -T 
+./ms 200 1 -I 4 50 50 50 50 -ej 1 2 1 -ej 2 3 1 -ej 3 4 1
+-r 50 5000 -T
 ```
 
 ```{r background, results="asis", echo=FALSE, out.extra="scale=0.5", fig.align = 'center', fig.cap="Modèle neutre. $12N$ genérations auparavant, premier épisode de divergence donnant naissance à P1 et à O. $8N$ générations auparavant, deuxième épisode de divergence voyant l'apparition de P3. $4N$ générations auparavant, dernier épisode de divergence et apparition de P2."}
@@ -136,7 +136,7 @@ include_graphics("figure/background.png")
 - Modèle alternatif :
 
 ```
-./ms 200 1 -I 4 50 50 50 50 -ej 1 2 1 -ej 2 3 1 -ej 3 4 1 
+./ms 200 1 -I 4 50 50 50 50 -ej 1 2 1 -ej 2 3 1 -ej 3 4 1
 -es 0.1 2 0.8 -ej 0.1 5 3 -r 50 5000 -T
 ```
 
@@ -154,17 +154,17 @@ im.df <- data.frame(methods = c("Bdf", "D", "f_d", "pcadapt", "RNDmin"),
                     nb_of_pop = c("4", "4", "4", ">= 3", "3"),
                     outgroup = c("Oui", "Oui", "Oui", "Oui", "Oui"))
 
-knitr::kable(im.df, 
-             col.names = c("Statistique", 
+knitr::kable(im.df,
+             col.names = c("Statistique",
                            "Format",
-                           "Nombre de populations", 
-                           "Dont Outgroup"), 
+                           "Nombre de populations",
+                           "Dont Outgroup"),
              format = "latex")
 ```
 
 ##### Scénario de métissage
 
-Nous comparons ici notre méthode au logiciel RFMix destiné à la détermination de coefficients de métissage local. 
+Nous comparons ici notre méthode au logiciel RFMix destiné à la détermination de coefficients de métissage local.
 
 ```{r ras10g, results="asis", echo=FALSE, fig.cap="10 generations", out.width="500px"}
 include_graphics("figure/facet_admixture_setting_10_gen.pdf")
@@ -309,17 +309,17 @@ triangle.y <- c(-0.15, 1.05, -0.15)
 df.triangle <- data.frame(x = triangle.x, y = triangle.y)
 df.branch <- data.frame(x1 = 1.6, x2 = 0.95, y1 = 0.5, y2 = -0.15)
 
-p1 <- df.triangle %>% 
-  ggplot(aes(x = x, y = y)) + 
-  geom_line(size = 4, colour = "#56B4E9") + 
-  geom_segment(data = df.branch, 
-               aes(x = x1, y = y1, xend = x2, yend = y2), 
-               size = 4, 
+p1 <- df.triangle %>%
+  ggplot(aes(x = x, y = y)) +
+  geom_line(size = 4, colour = "#56B4E9") +
+  geom_segment(data = df.branch,
+               aes(x = x1, y = y1, xend = x2, yend = y2),
+               size = 4,
                colour = "#56B4E9") +
-  ylim(-1.1, 1.1) + 
-  xlim(-0.75, 3) + 
-  annotate("text", 
-           x = c(-0.5, 0.75, 2, 
+  ylim(-1.1, 1.1) +
+  xlim(-0.75, 3) +
+  annotate("text",
+           x = c(-0.5, 0.75, 2,
                  rep(-0.5, 6),
                  rep(0.75, 8),
                  rep(2, 8)),
@@ -327,8 +327,8 @@ p1 <- df.triangle %>%
                  -0.35, -0.45, -0.55, -0.65, -0.75, -0.85,
                  -0.35, -0.45, -0.55, -0.65, -0.75, -0.85, -0.95, -1.05,
                  -0.35, -0.45, -0.55, -0.65, -0.75, -0.85, -0.95, -1.05),
-           label = c("bold(Diplotaxodon)", 
-                     "bold(Deep~benthic)", 
+           label = c("bold(Diplotaxodon)",
+                     "bold(Deep~benthic)",
                      "bold(Shallow~benthic)",
                      "italic(Diplotaxodon~greenwoodi)",
                      "italic(Diplotaxodon~limnothrissa)",
@@ -342,7 +342,7 @@ p1 <- df.triangle %>%
                      "italic(Aulonocara~minutus)",
                      "italic(Alticorpus~geoffreyi)",
                      "italic(Aulonocara~yellow)",
-                     "italic(Aulonocara~steveni)", 
+                     "italic(Aulonocara~steveni)",
                      "italic(Aulonocara~stuartgranti)",
                      "italic(Nimbochromis~linni)",
                      "italic(Nimbochromis~livingstoni)",
@@ -358,19 +358,19 @@ p1 <- df.triangle %>%
   theme_bw() +
   theme(axis.text = element_blank(),
         axis.ticks = element_blank(),
-        panel.grid.major = element_blank(), 
+        panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.background = element_blank())
 
 obj.diplo <- readRDS("data/diplotaxodon.rds")
 
-ggdf <- data.frame(PC1 = obj.diplo$u[, 1], 
+ggdf <- data.frame(PC1 = obj.diplo$u[, 1],
                    PC2 = obj.diplo$u[, 2],
                    pop = obj.diplo$pop)
 
-p2 <- ggplot(ggdf, aes(x = PC1, y = PC2, fill = pop)) + 
-  geom_point(size = 2.5, shape = 21, stroke = 1) + 
-  scale_fill_manual(labels = sort(unique(ggdf$pop)), 
+p2 <- ggplot(ggdf, aes(x = PC1, y = PC2, fill = pop)) +
+  geom_point(size = 2.5, shape = 21, stroke = 1) +
+  scale_fill_manual(labels = sort(unique(ggdf$pop)),
                     values = c("#D55E00", "#E69F00", "#56B4E9")) +
   guides(fill = guide_legend(nrow = 5)) +
   theme_bw() +
@@ -378,7 +378,7 @@ p2 <- ggplot(ggdf, aes(x = PC1, y = PC2, fill = pop)) +
         legend.text = element_text(face = "bold", size = 10),
         legend.key.height = unit(2, "line"),
         legend.key.width = unit(2, "line"),
-        legend.justification = c(0, 1), 
+        legend.justification = c(0, 1),
         legend.position = c(0, 1),
         legend.key = element_rect(fill = NA),
         legend.title = element_blank(),

@@ -2,6 +2,8 @@
 
 ## La génétique des populations
 
+« Il est bon de rappeler que ce qui nous rend semblables est plus important que ce qui nous rend différents. Les milliards d'êtres humains éparpillés sur toute la planète se différencient par la couleur de la peau et par la forme du corps, par la langue et par la culture. Et cette variété, qui témoigne de notre capacité à changer, à nous adapter à des milieux différents et à y développer des modes de vie originaux, est la meilleure garantie pour l'avenir de l'espèce humaine. Les connaissances que nous avons acquises sur nous-mêmes montrent cependant que toute cette diversité, comme la surface changeante des océans ou de la voûte du ciel, est bien peu de chose par rapport à cet immense patrimoine que nous avons en commun, nous, les humains. » [@cavalli1994francesco]
+
 ### L'évolution comme point de départ
 
 « La génétique est la science de l'hérédité. Elle est la clé de toute la biologie, parce qu'elle explique les mécanismes qui sont responsables de la reproduction des êtres vivants, du fonctionnement et de la transmission du matériel héréditaire, des différences entre les individus, de l'évolution biologique. » 
@@ -55,8 +57,9 @@ L'approbation de cette théorie, bien que conceptuellement intéressante, aura u
 ### Forces évolutives
 
 Ce changement de paradigme nous invite de ce fait à observer la sélection naturelle à travers le prisme de la théorie neutraliste, et donc à identifier les mutations sélectives comme des mutations dont les origines ne peuvent être uniquement expliquées par des processus biologiquement neutres. La génétique des populations distingue trois types de processus neutres qui, tout comme la sélection naturelle, constituent les principales *forces évolutives*. 
+« La mutation propose, la sélection dispose. » [@cavalli1994francesco]
 
-1. La dérive génétique
+#### La dérive génétique {-}
 
 La dérive génétique correspond à tout ce qu'il y a d'aléatoire dans l'évolution d'une population. C'est le *hasard des choses*. Le nombre de descendants ou le choix de partenaire sexuel sont des exemples de phénomènes aléatoires participant à la dérive génétique. Le principe de dérive génétique est illustré en figure \@ref(fig:drift), à l'aide du modèle de Wright-Fisher tel qu'il est présenté dans l'ouvrage *Population Genetics* [@gillespie2010population]. Ce modèle simpliste suppose que la taille de la population est constante et que chaque individu de la ${n+1}^\text{ème}$ génération est issu du brassage génétique de deux individus tirés aléatoirement de la $n^\text{ème}$ génération.
 
@@ -113,28 +116,28 @@ En particulier, la figure \@ref(fig:drift) met en évidence deux caractéristiqu
 
 - Pour un nombre de générations fixé, la dérive génétique entraîne une perte de diversité allélique plus rapidement au sein des populations de plus petite taille. Dans le modèle de Wright-Fisher, les fréquences alléliques finissent éventuellement par atteindre les états dits absorbants que sont 0 et 1.
 
-2. Les mutations aléatoires
+#### Les mutations aléatoires {-}
 
 Si la dérive génétique entraîne une perte de diversité allélique, les mutations favorisent quant à elles le maintien des variations génétiques entre les populations [@gillespie2010population]. Les mutations apparaissent principalement lors de la phase de réplication de l'ADN. Une mutation peut survenir à un locus donné avec une probabilité spécifique à chaque espèce [@drake1998rates], appelée *taux de mutation*.
 
 (ref:mutationRate-cap) Exemples de taux de mutation par paire de base et par réplication chez différentes espèces [@drake1998rates].
 
 ```{r mutationRate, results='asis', message=FALSE}
-species <- c("E. coli", "C. elegans", "Drosophile", "Souris", "Homme")
+species <- c(paste("$E.$", "$coli$"), paste("$C.$", "$elegans$"), "Drosophile", "Souris", "Homme")
 rates <- c("5.4e-10", "2.3e-10", "3.4e-10", "1.8e-10", "5.0e-11")
 data.frame(Species = species, Rates = rates) %>%
   knitr::kable(col.names = c("Espèce", "Taux de mutation"),
                caption = '(ref:mutationRate-cap)',
-               longtable = TRUE,
-               booktabs = TRUE) %>%
+               booktabs = TRUE,
+               escape = FALSE) %>%
   kable_styling(full_width = T)
 ```
 
-3. Le flux de gène
+#### Le flux de gène {-}
 
 Le flux de gène est généralement le résultat d'évènements migratoires (bien que ce ne soit pas nécessairement toujours le cas [@tigano2016genomics]), initiés par des individus appartenant à une population donnée, vers une seconde population dont le pool génique diffère éventuellement de la population d'origine. Le flux de gène influe sur la diversité génétique initialement présente si par exemple, parmi les allèles *migrants* figurent des allèles qui n'existaient pas dans la population receveuse.
 
-4. La sélection naturelle
+#### La sélection naturelle {-}
 
 En biologie évolutive, la sélection naturelle est la force évolutive qui tend à préserver les allèles conférant des avantages quant à la survie d'un individu ou d'une espèce. Elle agit sur les traits qui sont héritables. La grande majorité de ces traits sont transmis aux descendants en suivant le mécanisme d'hérédité génétique. Cependant, d'autres aspects de la biologie d'un organisme peuvent se transmettre via des mécanismes différents, comme certains comportements culturels ou caractéristiques de l'environnement qui ont été façonnées par les populations ancestrales [@gerbault2011evolution].
 
@@ -162,7 +165,6 @@ traits <- c("Augmentation du taux d'hémoglobine",
 data.frame(Traits = traits, Andean = andean, Tibetan = tibetan) %>%
   knitr::kable(col.names = c("Trait", "Andins", "Tibétains"),
                caption = '(ref:andeanvstibetan-cap)',
-               longtable = TRUE,
                booktabs = TRUE) %>%
   kable_styling(full_width = T)
 ```
@@ -171,7 +173,7 @@ Chez l'Homme moderne, les habitudes alimentaires et les modes de vie constituent
 
 #### L'hybridation et le flux de gène comme sources d'adaptation
 
-Un caractère peut être sélectionné au sein d'une population de différentes manières :
+Un caractère peut être sélectionné au sein d'une population de différentes manières : 
 
 - le caractère y est déjà présent^[standing genetic variation.].
 
@@ -181,7 +183,7 @@ Un caractère peut être sélectionné au sein d'une population de différentes 
 
 Cette dernière possibilité est d'ailleurs très intéressante pour une espèce d'un point de vue de la diversité génétique. Pour enrichir le catalogue d'allèles, nous avons vu plus haut que le flux de gène constituait un processus clé. La reproduction sexuée est connue pour jouer un rôle important dans la sélection naturelle, offrant aux individus la possibilité, par le biais du brassage allélique, d'hériter des "meilleurs allèles" que possèdent leurs parents. Augmenter la diversité génétique augmente ainsi les chances de voir se transmettre des allèles favorables.
 
-Nous parlons d'hybridation ou de métissage lorsque deux individus, appartenant à deux populations différentes, se reproduisent entre eux. Pour ce qui est de la distinction de populations, nous nous en tiendrons à la suggestion faite par Harrison, considérant que deux individus issus de populations différentes doivent chacun posséder des traits héritables qui les différencient [@harrison1990hybrid]. Ainsi, l'hybridation constitue un excellent moyen pour permettre à une espèce d'intégrer de nouveaux allèles [@stevison2008hybridization]. Bien que l'hybridation conduise fréquemment à la naissance d'individus à la valeur sélective hautement diminuée voire d'individus non fertiles, il arrive que certains descendants aient tout de même la capacité de se reproduire et ainsi être à l'origine de l'apparition de nouveaux allèles. La sélection de tels allèles transmis par flux de gène ou par hybridation correspond à ce que l'on appelle *l'introgression adaptative*. Des exemples d'introgression sont observés à la fois dans la nature (*introgression naturelle*) et à la fois chez des espèces domestiquées (*introgression délibérée*). Nous pouvons citer l'exemple de la souris domestique, *Mus musculus domesticus*, qui a hérité d'un gène de résistance à la coumadine (communément appelée « mort aux rats ») en s'hybridant avec une espèce sauvage, *Mus spretus* [@song2011adaptive]. Ce gène de résistance est localisé sur le chromosome 7 de la souris domestique et appartient à une région qui a été identifiée comme provenant effectivement de la souris sauvage.
+Nous parlons d'hybridation ou de métissage lorsque deux individus, appartenant à deux populations différentes, se reproduisent entre eux. Pour ce qui est de la distinction de populations, nous nous en tiendrons à la suggestion faite par @harrison1990hybrid, considérant que deux individus issus de populations différentes doivent chacun posséder des traits héritables qui les différencient. Ainsi, l'hybridation constitue un excellent moyen pour permettre à une espèce d'intégrer de nouveaux allèles [@stevison2008hybridization]. Bien que l'hybridation conduise fréquemment à la naissance d'individus à la valeur sélective hautement diminuée voire d'individus non fertiles, il arrive que certains descendants aient tout de même la capacité de se reproduire et ainsi être à l'origine de l'apparition de nouveaux allèles. La sélection de tels allèles transmis par flux de gène ou par hybridation correspond à ce que l'on appelle *l'introgression adaptative*. Des exemples d'introgression sont observés à la fois dans la nature (*introgression naturelle*) et à la fois chez des espèces domestiquées (*introgression délibérée*). Nous pouvons citer l'exemple de la souris domestique, *Mus musculus domesticus*, qui a hérité d'un gène de résistance à la coumadine (communément appelée « mort aux rats ») en s'hybridant avec une espèce sauvage, *Mus spretus* [@song2011adaptive]. Ce gène de résistance est localisé sur le chromosome 7 de la souris domestique et appartient à une région qui a été identifiée comme provenant effectivement de la souris sauvage.
 
 ------
 
@@ -226,7 +228,7 @@ D'un point de vue statistique, l'accumulation de données, aussi bien en termes 
 
 Le séquençage de l'ADN a également permis de faire évoluer le concept de *marqueur génétique*. Un marqueur génétique correspondait autrefois à un gène *polymorphe*^[présentant des variations à l'échelle de l'espèce.] identifié sur la base d'observations phénotypiques. Grâce au séquençage de l'ADN, une nouvelle définition tenant compte de la position sur le chromosome a été adoptée pour caractériser un marqueur génétique. Différents types de marqueurs génétiques ont été identifiés, parmi lesquels figurent les microsatellites, les insertions, les délétions et les SNPs^[SNP *(Single-Nucleotide Polymorphism)* : polymorphisme d'un seul nucléotide.]. La structure spatiale de l'ADN n'étant pas prise en compte dans les travaux présentés ici, nous en garderons une représentation unidimensionnelle.
 
-- Microsatellite :
+#### Microsatellite {-}
 
 Jusqu'à présent, les microsatellites ont connu un succès important, notamment grâce à la popularisation de techniques telles que la PCR (*Réaction en Chaîne par Polymérase*). Cependant, grâce aux nouvelles avancées technologiques que nous évoquerons un peu plus loin, ils sont progressivement délaissés au détriment des SNPs.
 
@@ -317,8 +319,7 @@ rbind(microsatA.df, microsatB.df) %>%
         plot.title = element_text(hjust = 0.5))
 ```
 
-
-- Insertion/Délétion (Indel) :
+#### Insertion/Délétion (Indel) {-}
 
 (ref:indel-cap) L'insertion ou la délétion d'une base constituent également des polymorphismes génétiques. Relativement à une séquence de nucléotides de référence, une insertion consiste en la présence d'une base supplémentaire tandis que la délétion consiste en l'absence d'une base.
 
@@ -407,7 +408,7 @@ rbind(indelA.df, indelB.df) %>%
         plot.title = element_text(hjust = 0.5))
 ```
 
-- Polymorphisme d'un seul nucléotide (SNP) :
+#### Polymorphisme d'un seul nucléotide (SNP) {-}
 
 (ref:snp-cap) Le polymorphisme d'un seul nucléotide correspond au polymorphisme génétique le plus simple, et correspond à l'emplacement d'un nucléotide présentant des variations appréciables à l'échelle d'une population.
 
@@ -500,17 +501,158 @@ rbind(SNPA.df, SNPB.df) %>%
         plot.title = element_text(hjust = 0.5))
 ```
 
+### Encodage des données génétiques
+
+Dans ce paragraphe nous présentons le format des données sur lesquelles nous travaillons et définissons quelques notations qui seront utilisées par la suite. Conformément à l'usage qui en est fait par @gillespie2010population, nous emploierons le terme d'allèle pour désigner la version d'un nucléotide à un locus donné. Dans le cadre de nos travaux, nous considèrerons que pour un locus donné, il n'existe que deux nucléotides possibles (SNP bi-allélique),
+dont l'un sera considéré comme *l'allèle de référence* et l'autre comme *l'allèle alternatif*. Pour un locus donné, l'encodage des données de SNPs consiste à attribuer à chaque individu (Figure \@ref(fig:snp-encoding)) :
+
+- la valeur $0$  s'il est homozygote pour l'allèle de référence.
+
+- la valeur $1$  s'il est hétérozygote.
+
+- la valeur $2$  s'il est homozygote pour l'allèle alternatif.
+
+Une base de données de génômes constituée de séquences de nucléotides pourra donc en pratique être encodée par une matrice, appelée *matrice de génotypes*, composée uniquement de $0$, $1$ et $2$.
+
+(ref:snp-encoding-cap) Exemple d'encodage de données de SNPs. **A**. Chaque ligne de la matrice correspond à un SNP et chaque individu est représenté par une paire de colonnes (de la même couleur). **B**. Matrice de génotypes résultant de l'encodage. **C**. Chaque ligne de la matrice correspond à un SNP. La première colonne indique quel allèle est considéré comme allèle de référence. La seconde colonne indique quel allèle est considéré comme allèle alternatif.
+
+```{r snp-encoding, fig.cap='(ref:snp-encoding-cap)', fig.height=3}
+N <- 6
+SNP.lab <- c("A", "T", "A", "A", "A", "A",
+             "C", "C", "C", "A", "A", "A",
+             "G", "T", "T", "G", "G", "G")
+SNP.x <- rep(1:6, 3)
+SNP.y <- c(rep(1, 6), rep(2, 6), rep(3, 6))
+
+geno.lab <- c("1", "0", "0",
+              "0", "1", "2",
+              "1", "1", "0")
+geno.x <- rep(1:3, 3)
+geno.y <- c(rep(1, 3), rep(2, 3), rep(3, 3))
+
+ind <- rep(as.character(c(1, 1, 2, 2, 3, 3)), 3)
+
+SNP.df <- data.frame(x1 = SNP.x,
+                     x2 = SNP.x + 1,
+                     y1 = SNP.y,
+                     y2 = SNP.y + 1,
+                     lab = SNP.lab,
+                     ind = ind)
+
+geno.df <- data.frame(x1 = geno.x,
+                      x2 = geno.x + 1,
+                      y1 = geno.y,
+                      y2 = geno.y + 1,
+                      lab = geno.lab,
+                      ind = rep(as.character(1:3), 3))
+
+BIM.df <- data.frame(x1 = c(1, 2, 1, 2, 1, 2),
+                     x2 = c(1, 2, 1, 2, 1, 2) + 1,
+                     y1 = c(1, 1, 2, 2, 3, 3),
+                     y2 = c(1, 1, 2, 2, 3, 3) + 1,
+                     lab = c("A", "T", "C", "A", "G", "T"),
+                     ind = rep(c("4", "5"), 3),
+                     data = "bim")
+
+p1 <- SNP.df %>% 
+  ggplot() +
+  coord_fixed() +
+  geom_rect(mapping = aes(xmin = x1,
+                          xmax = x2,
+                          ymin = y1,
+                          ymax = y2,
+                          fill = ind),
+            color = "black",
+            alpha = 0.75) +
+  geom_text(aes(x = x1 + (x2 - x1) / 2,
+                y = y1 + (y2 - y1) / 2,
+                label = lab),
+            size = 5) +
+  scale_fill_manual(values = cbbPalette[c(3, 6, 7)]) +
+  xlab("Individus") +
+  ylab("SNPs") +
+  theme_bw() +
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = "none",
+        plot.title = element_text(hjust = 0.5))
+
+p2 <- geno.df %>% 
+  ggplot() +
+  coord_fixed() +
+  geom_rect(mapping = aes(xmin = x1,
+                          xmax = x2,
+                          ymin = y1,
+                          ymax = y2,
+                          fill = ind),
+            color = "black",
+            alpha = 0.75) +
+  geom_text(aes(x = x1 + (x2 - x1) / 2,
+                y = y1 + (y2 - y1) / 2,
+                label = lab),
+            size = 5) +
+  scale_fill_manual(values = cbbPalette[c(3, 6, 7)]) +
+  xlab("Individus") +
+  ylab("SNPs") +
+  theme_bw() +
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        legend.position = "none",
+        plot.title = element_text(hjust = 0.5))
+
+p3 <- BIM.df %>% 
+  ggplot() +
+  coord_fixed() +
+  scale_fill_manual(name = "Allèle",
+                    labels = c("Référence", "Alternatif"),
+                    values = c("#E69F00", "#009E73")) +
+  geom_rect(mapping = aes(xmin = x1,
+                          xmax = x2,
+                          ymin = y1,
+                          ymax = y2,
+                          fill = ind),
+            color = "black",
+            alpha = 0.75) +
+  geom_text(aes(x = x1 + (x2 - x1) / 2,
+                y = y1 + (y2 - y1) / 2,
+                label = lab),
+            size = 5) +
+  theme_bw() +
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        plot.title = element_text(hjust = 0.5))  
+
+
+plot_grid(p1, p2, p3, labels = c("A", "B", "C"))
+
+```
+
+Dans la mesure du possible, l'allèle de référence (resp. alternatif) est choisi de façon à correspondre à l'allèle ancestral (resp. dérivé). En pratique, le choix de l'allèle de référence et de l'allèle alternatif peut se faire de façon totalement arbitraire sans que cela n'influe sur les méthodes statistiques basées sur la variance des allèles, ce qui sera généralement le cas pour celles qui sont présentées ici. 
+
+Les matrices de génotypes seront généralement notées $G$ et seront considérées comme des éléments de $M_{pn}(\{0,1,2\})$, où $p$ désigne le nombre de loci et $n$ le nombre d'individus. Ainsi, $G_{.,i}$ désignera le vecteur de taille $p$ composé des génotypes de l'individu $i$. De même, $G_{j,.}$ désignera le vecteur de taille $n$ contenant le génotype des individus pour le locus $j$. À la matrice $G$ sera associée la matrice $\tilde{G}$, normalisée pour les lignes (c'est-à-dire pour les SNPs). Notant $f_j$ la fréquence allélique de l'allèle alternatif (ou de l'allèle de référence), nous définissons $\tilde{G}_{j,.}$ par :
+
+\begin{equation}
+  \tilde{G}_{j,.} = \frac{G_{j,.} - 2f_j}{\sqrt{2f_j(1-f_j)})}
+\end{equation}
+
+Le choix de cette normalisation sera discuté plus tard.
+
 ## Les motivations de la thèse
 
-La production de données génétiques, volumineuses par la quantité d'information qu'elles renferment, laisse présager le meilleur pour les domaines de la médecine clinique et de la biologie évolutive. En génétique des populations, leur acquisition offre de nombreuses perspectives d'étude, notamment concernant la mise en évidence de marqueurs génétiques impliqués dans les processus évolutifs ou associés à certains phénotypes. Les méthodes répondant à cette problématique portent le nom de *scans génomiques*. Les scans génomiques pour la sélection, destinés à isoler des loci sous sélection, se sont largement répandus au cours des dernières années, principalement grâce au développement fulgurant qu'ont connu les technologies NGS. Pour illustrer le principe des scans génomiques pour la sélection, nous reprenons l'exemple des Tibétains dont l'adaptation à la haute altitude est largement repris dans la littérature.
+La production de données génétiques, volumineuses par la quantité d'information qu'elles renferment, laisse présager le meilleur pour les domaines de la médecine clinique et de la biologie évolutive. En génétique des populations, leur acquisition offre de nombreuses perspectives d'étude, notamment concernant la mise en évidence de marqueurs génétiques impliqués dans les processus évolutifs ou associés à certains phénotypes. Les méthodes répondant à cette problématique portent le nom de *scans génomiques*. Les scans génomiques pour la sélection, destinés à isoler des loci sous sélection, se sont largement répandus au cours des dernières années, principalement grâce au développement fulgurant qu'ont connu les technologies NGS. Pour illustrer le principe des scans génomiques, nous reprenons l'exemple des Tibétains dont l'adaptation locale à la haute altitude est suspectée d'avoir été rendue possible grâce à l'introgression de gènes hérités de l'Homme de Denisova [@hu2017evolutionary].
 
-(ref:tibetan-scan-cap) [@xu2010genome]
+(ref:tibetan-scan-cap) Scan génomique utilisant la $F_{ST}$ (mesure de différenciation génétique de référence) que nous introduirons dans le chapitre suivant. Deux régions génomiques présentant des valeurs de $F_{ST}$ significativement élevées ont été identifiées sur les chromosomes 1 et 2 [@xu2010genome].
 
 ```{r tibetan-scan, results='asis', fig.cap='(ref:tibetan-scan-cap)'}
 include_graphics("figure/tibetan_fst.png")
 ```
 
-(ref:tibetan-introgression-cap) [@hu2017evolutionary].
+(ref:tibetan-introgression-cap) Scan génomique pour l'introgression utilisant la statistique $D$ ($D^{*}$ correspond à la normalisation de la statistique $D$ que nous introduirons dans le chapitre [A COMPLETER]) [@hu2017evolutionary].
 
 ```{r tibetan-introgression, results='asis', message=FALSE}
 Chr <- c(7, 2, 2, 5, 12, 4)
@@ -526,11 +668,12 @@ data.frame(Chr = Chr,
   knitr::kable(col.names = c("Chr",
                              "start",
                              "end",
-                             "D*",
+                             "$D^{*}$",
                              "Genes in the regions"),
                caption = '(ref:tibetan-introgression-cap)',
-               longtable = TRUE,
-               booktabs = TRUE)
+               booktabs = TRUE,
+               escape = FALSE) %>%
+  kable_styling(full_width = T)
 ```
 
 
@@ -611,8 +754,9 @@ df %>% ggplot(aes(x = Recent,
         legend.direction = "vertical")
 ```
 
-Toutefois, certains outils statistiques ayant été développés ne sont plus adaptés. La raison principale étant que les temps de calculs requis par ces outils pour l'analyse de données massives sont souvent prohibitifs. Les méthodes d'analyse exploratoire nécessitent souvent d'être expérimentées plusieurs fois. D'une part parce que le prétraitement des données peut être est amené à changer au cours de l'étude (filtration de marqueurs génétiques présentant une proportion trop élevée de données manquantes, retrait d'individus marginaux, etc.). D'autre part car les méthodes d'analyse proposent généralement un éventail de paramètres dont le choix ne s'impose pas spontanément. Expérimenter une même méthode avec différents critères de qualité et différents paramètres est souvent nécessaire pour minimiser les biais d'utilisation. Tout ceci justifie le recours à des méthodes rapides et adaptées à ces nouveaux volumes de données.
-Pour satisfaire à ces critères, des méthodes basées sur l'Analyse en Composantes Principales ont été proposées pour étudier l'adaptation locale [@duforet2015detecting; @galinsky2016fast]. Sur la base du travail de thèse de Nicolas Duforet-Frebourg [@duforet2014statistiques], nous avons cherché dans un premier temps à améliorer la méthodologie statistique implémentée dans le logiciel PCAdapt, ainsi que les performances computationnelles, afin de garantir la possibilité de l'utiliser sur des génômes plus denses et disposant d'une plus grande résolution.
+Toutefois, certains outils statistiques ayant été développés ne sont plus adaptés. La raison principale étant que les temps de calculs requis par ces outils pour l'analyse de données massives sont souvent prohibitifs. Les méthodes d'analyse exploratoire nécessitent souvent d'être expérimentées plusieurs fois. D'une part parce que le prétraitement des données peut être est amené à changer au cours de l'étude (filtration de marqueurs génétiques présentant une proportion trop élevée de données manquantes, retrait d'individus marginaux, etc.). D'autre part car les méthodes d'analyse proposent généralement un éventail de paramètres dont le choix ne s'impose pas spontanément. Expérimenter une même méthode avec différents critères de qualité et différents paramètres est souvent nécessaire pour minimiser les biais d'utilisation. Tout ceci justifie le recours à des méthodes rapides et adaptées à ces nouveaux volumes de données. Pour satisfaire à ces critères, des méthodes basées sur l'Analyse en Composantes Principales ont été proposées pour étudier l'adaptation locale [@duforet2015detecting; @galinsky2016fast]. 
+
+Sur la base du travail de thèse de Nicolas Duforet-Frebourg [@duforet2014statistiques], nous avons cherché dans un premier temps à améliorer la méthodologie statistique implémentée dans le logiciel PCAdapt, ainsi que les performances computationnelles, afin de garantir la possibilité de l'utiliser sur des génômes plus denses et disposant d'une plus grande résolution.
 
 Dans un premier temps, nous définirons les différents modèles, historiques et contemporains, utilisés pour réaliser des scans génomiques pour la sélection. Ce premier chapitre sera conclu par l'emploi de l'Analyse en Composantes Principales en génétique des populations. Les chapitres suivants seront consacrées aux approches statistiques basées sur l'ACP qui ont été implémentées dans le package R que nous avons développé au cours de cette thèse. Ils illustreront comment l'ACP peut être exploitée de façon à détecter des signaux de sélection ainsi que des régions d'introgression adaptative. Enfin, nous terminerons avec les aspects computationnels et numériques qui nous ont préoccupé tout au long de la thèse, en présentant quelques comparatifs de performances réalisées avec divers algorithmes.
 

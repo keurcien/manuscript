@@ -6,13 +6,13 @@
 
 
 
-# Supplementary Information 
+# Supplementary Information
 
 ## Article 1 {-}
 
 ## Article 2 {-}
 
-(ref:FigureSI1-cap) Schematic description of the island and divergence model. For the island model, adaptation occurs simultaneously in each population. For the island model, adaptation takes place in the branch leading to the second population. 
+(ref:FigureSI1-cap) Schematic description of the island and divergence model. For the island model, adaptation occurs simultaneously in each population. For the island model, adaptation takes place in the branch leading to the second population.
 
 ```{r FigureSI1, results='asis', fig.cap='(ref:FigureSI1-cap)'}
 include_graphics("figure/FigureSI1.png")
@@ -24,9 +24,9 @@ include_graphics("figure/FigureSI1.png")
 dt <- readRDS("data/rexp.rds")
 p <- ncol(data)
 K <- 4:9
-df <- data.frame(values = vector(mode = "numeric", 
+df <- data.frame(values = vector(mode = "numeric",
                                  length = 2 * length(K)),
-                 type = c(rep("FDR", length(K)), 
+                 type = c(rep("FDR", length(K)),
                           rep("Power", length(K))),
                  K = rep(K, 2))
 
@@ -44,20 +44,20 @@ for (k in 1:length(K)) {
   df$values[df$type == "Power"][k] <- sum(rnk %in% dt$ground.truth)/length(dt$ground.truth)
 }
 
-ggplot(data = df) + 
+ggplot(data = df) +
   geom_line(size = 2,
             aes(x = K,
                 y = values,
                 colour = type,
-                linetype = type)) + 
-  ylim(0,1) + 
+                linetype = type)) +
+  ylim(0,1) +
   scale_colour_manual("Curve",
                       values = cbbPalette[c(7, 3)]) +
   scale_linetype_manual(name = "Curve",
                         values = c(3, 1)) +
-  guides(colour = guide_legend(nrow = 1), 
+  guides(colour = guide_legend(nrow = 1),
          linetype = guide_legend(nrow = 1)) +
-  theme_bw() + 
+  theme_bw() +
   theme(legend.position = "bottom",
         legend.direction = "vertical",
         axis.title.y = element_blank(),
@@ -69,7 +69,7 @@ ggplot(data = df) +
 (ranging between 0% and 50%) for the island model.
 
 ```{r FigureSI3, fig.height=4, fig.cap='(ref:FigureSI3-cap)'}
-readRDS("data/isldivrexp.rds") %>% 
+readRDS("data/isldivrexp.rds") %>%
   filter(model == "isl") %>%
   ggplot(aes(x = software,
              y = measure,
@@ -85,8 +85,8 @@ readRDS("data/isldivrexp.rds") %>%
                               "OutFLANK",
                               "pcadapt",
                               "sNMF")) +
-  xlab("Software") + 
-  ylab("Power") + 
+  xlab("Software") +
+  ylab("Power") +
   theme_bw() +
   theme(axis.text.x = element_text(face = "italic"),
         legend.title = element_blank(),
@@ -107,10 +107,10 @@ df %>%
   ggplot(aes(x = fdr,
              y = power)) +
   facet_wrap(~model, ncol = 1) +
-  geom_line(aes(linetype = software, 
+  geom_line(aes(linetype = software,
                 color = software),
             size = 1.5, na.rm = TRUE) +
-  scale_color_manual("Software", 
+  scale_color_manual("Software",
                      values = cbbPalette[c(7, 2, 4, 3, 8)],
                      labels = c("BayeScan",
                                 "hapflk",
@@ -123,14 +123,14 @@ df %>%
                                    "OutFLANK",
                                    "pcadapt",
                                    "sNMF"),
-                        values = c("dotdash", 
+                        values = c("dotdash",
                                    "dotted",
                                    "longdash",
                                    "solid",
                                    "dashed")) +
-  xlim(0, 0.6) + 
+  xlim(0, 0.6) +
   ylim(0, 1) +
-  guides(colour = guide_legend(nrow = 2), 
+  guides(colour = guide_legend(nrow = 2),
          linetype = guide_legend(nrow = 2)) +
   xlab("FDR") +
   ylab("Power") +
@@ -155,10 +155,10 @@ df %>%
   ggplot(aes(x = fdr,
              y = power)) +
   facet_wrap(~model, ncol = 1) +
-  geom_line(aes(linetype = software, 
+  geom_line(aes(linetype = software,
                 color = software),
             size = 1.5, na.rm = TRUE) +
-  scale_color_manual("Software", 
+  scale_color_manual("Software",
                      values = cbbPalette[c(7, 2, 4, 3, 8)],
                      labels = c("BayeScan",
                                 "hapflk",
@@ -171,14 +171,14 @@ df %>%
                                    "OutFLANK",
                                    "pcadapt",
                                    "sNMF"),
-                        values = c("dotdash", 
+                        values = c("dotdash",
                                    "dotted",
                                    "longdash",
                                    "solid",
                                    "dashed")) +
-  xlim(0, 0.6) + 
+  xlim(0, 0.6) +
   ylim(0, 1) +
-  guides(colour = guide_legend(nrow = 2), 
+  guides(colour = guide_legend(nrow = 2),
          linetype = guide_legend(nrow = 2)) +
   xlab("FDR") +
   ylab("Power") +
@@ -203,10 +203,10 @@ levels(df$model) <- c("No admixture", "With admixture")
 df %>%
   ggplot(aes(x = fdr,
              y = power)) +
-  geom_line(aes(linetype = software, 
+  geom_line(aes(linetype = software,
                 color = software),
             size = 1.5, na.rm = TRUE) +
-  scale_color_manual("Software", 
+  scale_color_manual("Software",
                      values = cbbPalette[c(7, 2, 4, 3, 8)],
                      labels = c("BayeScan",
                                 "hapflk",
@@ -219,14 +219,14 @@ df %>%
                                    "OutFLANK",
                                    "pcadapt",
                                    "sNMF"),
-                        values = c("dotdash", 
+                        values = c("dotdash",
                                    "dotted",
                                    "longdash",
                                    "solid",
                                    "dashed")) +
-  xlim(0, 0.6) + 
+  xlim(0, 0.6) +
   ylim(0, 1) +
-  guides(colour = guide_legend(nrow = 2), 
+  guides(colour = guide_legend(nrow = 2),
          linetype = guide_legend(nrow = 2)) +
   xlab("FDR") +
   ylab("Power") +
@@ -245,15 +245,15 @@ readRDS("data/runtime-molecol.rds") %>%
   mutate(Runtime = log10(Runtime + 1)) %>%
   ggplot(aes(x = nSNP,
              y = Runtime,
-             colour = Software)) + 
+             colour = Software)) +
   scale_y_continuous(breaks = 0:3, labels = c(0, 10, 100, 1000)) +
   scale_color_manual(values = cbbPalette[c(2, 4, 3, 8)]) +
-  guides(colour = guide_legend(nrow = 1)) + 
-  geom_point(size = 5) + 
-  geom_line(size = 2) + 
+  guides(colour = guide_legend(nrow = 1)) +
+  geom_point(size = 5) +
+  geom_line(size = 2) +
   ylab("Running time (seconds)") +
   xlab("Number of SNPs") +
-  theme_bw() + 
+  theme_bw() +
   theme(legend.position = "bottom",
         legend.direction = "vertical",
         legend.title.align = 0.5,
@@ -322,7 +322,7 @@ adm.df %>%
 
 ```{r GF-power-top-hits, fig.cap='(ref:GF-power-top-hits-cap)'}
 gf.df <- readRDS("data/GF_power_top_hits.rds")
-gf.df %>% 
+gf.df %>%
   filter(mutationRate == "Constant mutation rate", GF <= 0.5) %>%
   ggplot(aes(x = NumberOfTopHits,
              y = Power,
@@ -372,19 +372,19 @@ include_graphics("figure/admixture.png")
 (ref:annotation-cap) Transcripts detected with pcadapt in chromosome 6 and not detected in [@suarez2016] located in regions with excess of *Populus balsamifera* ancestry.
 
 ```{r annotation, results='asis', message=FALSE}
-name <- c("Potri.006G156000.1", 
-          "Potri.006G156100.1", 
+name <- c("Potri.006G156000.1",
+          "Potri.006G156100.1",
           "Potri.006G156200.1",
           "Potri.006G161800.1",
           "Potri.006G161900.1")
 
-region <- c("14266001:14305734", 
+region <- c("14266001:14305734",
         "14266001:14305734",
         "14266001:14305734",
         "15556790:15791830",
         "15556790:15791830")
 
-func <- c("Sulfate transporter", 
+func <- c("Sulfate transporter",
         "Not named",
         "Not named",
         "Not named",
@@ -410,7 +410,7 @@ data.frame(name = name,
 
 Nous mettons ici à disposition une partie des codes qui ont servi à produire les simulations et à leur exploitation.
 
-### Modèle en île  
+### Modèle en île
 
 (ref:island-pca-cap) Exemple de simulation réalisée à l'aide de *ms* [@hudson2002generating].
 
@@ -441,11 +441,11 @@ for (k in 1:nb_demes){
   for (j in 1:nb_demes){
     if ((k == j) && (k > 1)){
       mig_rate_neutral_string <- paste(mig_rate_neutral_string, "x")
-      mig_rate_adaptive_string <- paste(mig_rate_adaptive_string, "x")      
+      mig_rate_adaptive_string <- paste(mig_rate_adaptive_string, "x")
     } else if (k != j) {
-      mig_rate_neutral_string <- paste(mig_rate_neutral_string, 
+      mig_rate_neutral_string <- paste(mig_rate_neutral_string,
                                        mig_rate_neutral)
-      mig_rate_adaptive_string <- paste(mig_rate_adaptive_string, 
+      mig_rate_adaptive_string <- paste(mig_rate_adaptive_string,
                                         mig_rate_adaptive)
     }
   }
@@ -459,7 +459,7 @@ cmd_neutral <- paste("ms/./ms",
                      nCHR_per_POP_string,
                      "-ma",
                      mig_rate_neutral_string,
-                     ">", 
+                     ">",
                      "data/neutral.txt")
 
 cmd_adaptive <- paste("ms/./ms",
@@ -471,14 +471,14 @@ cmd_adaptive <- paste("ms/./ms",
                       "-ma",
                       mig_rate_adaptive_string,
                       ">",
-                      "data/adaptive.txt") 
+                      "data/adaptive.txt")
 
 system(cmd_neutral)
 system(cmd_adaptive)
 
-file.neutral <- scan(file = "data/neutral.txt", 
-              what = "character", 
-              sep = "\n", 
+file.neutral <- scan(file = "data/neutral.txt",
+              what = "character",
+              sep = "\n",
               skip = 2)
 
 g.neutral <- NULL
@@ -489,9 +489,9 @@ for (locus in 1:nb_neutral){
   g.neutral <- cbind(g.neutral, as.numeric(as.factor(res.locus1)))
 }
 
-file.adaptive <- scan(file = "data/adaptive.txt", 
-                      what = "character", 
-                      sep = "\n", 
+file.adaptive <- scan(file = "data/adaptive.txt",
+                      what = "character",
+                      sep = "\n",
                       skip = 2)
 
 g.adaptive <- NULL
@@ -531,11 +531,11 @@ from simuPOP.utils import *
 from simuPOP.sampling import drawRandomSample
 
 def simulate(Ne, Nsam, T1, T2, T3, s10, s11):
-    pop = Population(size = Ne, 
-                     ploidy = 2, 
-                     loci = [1], 
+    pop = Population(size = Ne,
+                     ploidy = 2,
+                     loci = [1],
                      infoFields = ['fitness', 'migrate_to'])
-                     
+
     def getfitness10(geno):
         if geno[0] + geno[1] == 0 :
             return 1 - 2 * s10
@@ -551,64 +551,64 @@ def simulate(Ne, Nsam, T1, T2, T3, s10, s11):
             return 1 - s11
         else :
             return 1
-            
-    pop.evolve( 
+
+    pop.evolve(
         initOps = [
             InitSex(),
-            InitGenotype(loci = ALL_AVAIL, 
-                         freq = [0.5, 0.5],  
-                         begin = 0, 
+            InitGenotype(loci = ALL_AVAIL,
+                         freq = [0.5, 0.5],
+                         begin = 0,
                          end = 1)
         ],
-        
+
         preOps = [
-            # resize the ancestral population at the time immediatly 
+            # resize the ancestral population at the time immediatly
             # before the split
-            ResizeSubPops([0], 
-                          sizes = [Ne + Ne], 
+            ResizeSubPops([0],
+                          sizes = [Ne + Ne],
                           at = T1 - 1),
-                              
-            ResizeSubPops(["S1_1"], 
-                          sizes = [Ne + Ne], 
+
+            ResizeSubPops(["S1_1"],
+                          sizes = [Ne + Ne],
                           at = T1 + T2 - 1),
-                              
-            # split populations in 2 subpopulations 
-            SplitSubPops(subPops = [0], 
-                         sizes = [Ne, Ne], 
-                         names = ["S1_0", "S1_1"], 
+
+            # split populations in 2 subpopulations
+            SplitSubPops(subPops = [0],
+                         sizes = [Ne, Ne],
+                         names = ["S1_0", "S1_1"],
                          at = T1),
-                             
-            SplitSubPops(subPops = ["S1_1"], 
-                         sizes = [Ne, Ne], 
-                         at = T1 + T2, 
+
+            SplitSubPops(subPops = ["S1_1"],
+                         sizes = [Ne, Ne],
+                         at = T1 + T2,
                          names = ["S2_0", "S2_1"]),
-                         
+
             # apply selection by invoking function getfitness
-            PySelector(loci = [0], 
-                       func = getfitness11, 
+            PySelector(loci = [0],
+                       func = getfitness11,
                        begin = T1 + T2,
                        subPops = ["S2_1"]),
-                   
+
             PySelector(loci = [0],
-                       func = getfitness10, 
-                       begin = T1, 
-                       subPops = ["S1_0"], 
+                       func = getfitness10,
+                       begin = T1,
+                       subPops = ["S1_0"],
                        end = T1 + T2 + T3 - 1)
         ],
-        
+
         matingScheme = RandomMating(ops = [
                                         Recombinator(intensity = 1)
                                     ]),
-                       
-        gen = T1 + T2 + T3 
-      
+
+        gen = T1 + T2 + T3
+
     )
-    
+
     sample = drawRandomSample(pop, sizes = [Nsam, Nsam, Nsam])
-    
+
     return sample
 
-    
+
 Ne = 1000
 Nsam = 25
 T1 = 10
@@ -633,13 +633,13 @@ for i in range(nSNP):
     for j in range(3):
         Sj = res.genotype(j)
         for k in range(int(len(Sj) / 2)):
-            idx = j * int(len(Sj) / 2) + k 
+            idx = j * int(len(Sj) / 2) + k
             G[idx][i] = Sj[2 * k] + Sj[2 * k + 1]
-            
+
 np.savetxt('data/simuPOP.pcadapt', G, fmt = '%i')
 ```
 
-## Détails 
+## Détails
 
 ### Données manquantes
 

@@ -1,25 +1,29 @@
-# La communalité : une statistique proche de la $F_{ST}$
+# Statistiques de test basées sur l'Analyse en Composantes Principales
 
+Dans le cadre des scans génomiques, nous présentons dans cette partie des statistiques basées sur l'Analyse en Composantes Principales. Les raisons pour lesquelles nous nous sommes intéressés à l'ACP sont multiples. Tout d'abord, l'ACP est particulièrement adaptée au traitement de données en grande dimension, justement parce qu'elle permet de les résumer à l'aide d'un nombre réduit de variables. De plus, comme expliqué précédemment, l'ACP permet de retrouver la structure génétique de façon non paramétrique et sans prior sur l'appartenance individuelle. Grâce à cette propriété, nous montrons la possibilité d'étendre la $F_{ST}$ au cas de populations structurées sans information populationnelle. L'idée de notre démarche repose sur l'hypothèse que les axes principaux reflètent la structure génétique et que les marqueurs génétiques les plus corrélés à ces axes sont des candidats crédibles pour l'adaptation locale. Cette partie sera dédiée à la présentation des méthodes statistiques développées à partir de cette hypothèse de travail. Leur présentation sera accompagnée de validations numériques conduites sur des simulations ainsi que de justifications théoriques quant aux similarités qu'elles présentent avec les méthodes classiques de scan génomique. 
 
-### Analyse en Composantes Principales parcimonieuse
+La communalité est la première statistique conçue à partir de l'Analyse en Composantes Principales. La communalité est une notion empruntée à l'analyse factorielle et s'interprète comme la proportion de variance expliquée par le modèle à facteurs. L'article 1 sera consacré à l'utilisation de la communalité en tant que statistique de test pour la détection de signaux d'adaptation locale. Nous justifierons également d'un point de vue théorique les observations établissant la corrélation entre l'indice de fixation et la communalité. Pour ce faire, nous démontrerons dans le cas de deux populations que la $F_{ST}$ peut être vue comme une statistique de communalité dans le cas de facteurs discrets, nous invitant de ce fait à considérer la communalité comme une extension de la $F_{ST}$ à l'échelle individuelle. Cette généralisation est particulièrement intéressante lorsqu'il est difficile de définir des populations de façon claire comme cela peut être le cas en présence d'individus métissés. Cependant, de la même manière que la $F_{ST}$, la communalité n'est pas adaptée au cas de populations structurées. 
+Plusieurs approches ont été développées afin d'adapter la communalité au cas de populations structurées. L'approche statistique qui sera finalement retenue est basée sur la distance robuste de Mahalanobis, à laquelle sera consacré l'article 2. Enfin nous établirons le lien entre cette nouvelle statistique et le test de Lewontin-Krakauer corrigé pour l'apparentement génétique \@ref(eq:flk-statistic), ce qui permettra de conclure quant à la généralisation de la statistique de test $T_{F-LK}$ par cette nouvelle statistique.
 
-### Bootstrap ACP
-
-## Contributions
-
-Par souci de portabilité et de simplification d'utilisation, nous avons opté pour le développement d'un package R reprenant les algorithmes implémentés dans le logiciel *PCAdapt fast* par Nicolas Duforet-Frebourg [@duforet2014statistiques]. J'ai pu également adapté les travaux de Nicolas Duforet-Frebourg pour la production et l'analyse des diverses simulations étudiées dans l'article qui suit.
-
-## Résumé de l'article
-
-De nombreuses méthodes analytiques ont été développées dans le but de détecter des régions génomiques mettant en évidence un évènement de sélection naturelle. Dans cet article nous abordons la possibilité de réaliser des scans génomiques pour la sélection en utilisant l'Analyse en Composantes Principales (ACP). Nous expliquons comment l'indice de différenciation génétique, communément appelé $F_{ST}$, peut être vu comme la proportion de variance expliquée par les composantes principales. La corrélation entre les variants génétiques et les composantes principales donne un cadre conceptuel permettant la détection de variants génétiques impliqués dans les processus d'adaptation locale sans qu'il n'y ait besoin de définir de populations *a priori*. Afin de valider notre approche, nous considérons 850 individus qui ont été échantillonnées en Afrique, en Asie et en Europe. Le nombre de variants génétiques est de l'ordre de 36 millions obtenus avec une faible couverture (3x). La corrélation entre la variation génétique et chaque composante principale permet d'identifier des gènes connus pour avoir été sélectionnés positivement (EDAR, SLC24A5, SLC45A2, DARC), mais également de nouveaux gènes candidats (APPBPP2, TP1A1, RTTN, KCNMA, MYO5C) et de l'ARN non-codant. Nous identifions deux mécanismes biologiques responsables de l'adaptation polygénique et qui sont associés au système immunitaire inné ($\beta$-défensines) et au métabolisme lipidiques^[ensemble des mécanismes grâce auxquels un organisme est capable de dégrader les graisses et de les assimiler] (oxydation des acides gras). Une analyse supplémentaire de données européennes montre que le scan génomique à partir de l'ACP permet de retrouver des exemples classiques d'adaptation locale même en l'absence de population explicitement définies. Les statistiques basées sur l'ACP, implémentées dans le package R *PCAdapt* ainsi que dans le logiciel libre *PCAdapt fast*, exhibent des signaux connus d'adaptation chez l'Homme, ce qui s'avère prometteur pour de futurs projets de séquençage de génome entier, notamment lorsque la définition de populations est impossible.
+Ce travail a notamment abouti sur le développement d'un module R implémentant ces statistiques, appelé pcadapt. L'aspect computationnel de ces méthodes sera cependant traité dans le chapitre correspondant, et permettra notamment de discuter des problématiques liées à la présence de données manquantes ainsi que de la complexité algorithmique.
 
 \newpage
 
-## Article 1
+## La communalité
+
+### Contributions {-}
+
+Par souci de portabilité et de simplification d'utilisation, nous avons opté pour le développement d'un package R reprenant les algorithmes implémentés dans le logiciel *PCAdapt fast* par Nicolas Duforet-Frebourg [@duforet2014statistiques]. J'ai pu également adapté les travaux de Nicolas Duforet-Frebourg pour la production et l'analyse des diverses simulations étudiées dans l'article qui suit.
+
+### Article 1 {-}
 
 ```{r, results='asis', out.width='\\textwidth'}
 include_graphics("figure/ndf.png")
 ```
+
+### Résumé {-}
+
+De nombreuses méthodes analytiques ont été développées dans le but de détecter des régions génomiques mettant en évidence un évènement de sélection naturelle. Dans cet article nous abordons la possibilité de réaliser des scans génomiques pour la sélection en utilisant l'Analyse en Composantes Principales (ACP). Nous expliquons comment l'indice de différenciation génétique, communément appelé $F_{ST}$, peut être vu comme la proportion de variance expliquée par les composantes principales. La corrélation entre les variants génétiques et les composantes principales donne un cadre conceptuel permettant la détection de variants génétiques impliqués dans les processus d'adaptation locale sans qu'il n'y ait besoin de définir de populations *a priori*. Afin de valider notre approche, nous considérons 850 individus qui ont été échantillonnées en Afrique, en Asie et en Europe. Le nombre de variants génétiques est de l'ordre de 36 millions obtenus avec une faible couverture (3x). La corrélation entre la variation génétique et chaque composante principale permet d'identifier des gènes connus pour avoir été sélectionnés positivement (EDAR, SLC24A5, SLC45A2, DARC), mais également de nouveaux gènes candidats (APPBPP2, TP1A1, RTTN, KCNMA, MYO5C) et de l'ARN non-codant. Nous identifions deux mécanismes biologiques responsables de l'adaptation polygénique et qui sont associés au système immunitaire inné ($\beta$-défensines) et au métabolisme lipidique^[ensemble des mécanismes grâce auxquels un organisme est capable de dégrader les graisses et de les assimiler] (oxydation des acides gras). Une analyse supplémentaire de données européennes montre que le scan génomique à partir de l'ACP permet de retrouver des exemples classiques d'adaptation locale même en l'absence de population explicitement définies. Les statistiques basées sur l'ACP, implémentées dans le package R *PCAdapt* ainsi que dans le logiciel libre *PCAdapt fast*, exhibent des signaux connus d'adaptation chez l'Homme, ce qui s'avère prometteur pour de futurs projets de séquençage de génome entier, notamment lorsque la définition de populations est impossible.
 
 ### Abstract {-}
 
@@ -43,15 +47,15 @@ The advantages of performing a genome scan based on PCA are multiple: it does no
 
 #### New Statistics for Genome Scan {-}
 
-We denote by $Y$ the $(n \times p)$ centered and scaled genotype matrix where $n$ is the number of individuals and $p$ is the number of loci. The new statistics for genome scan are based on PCA. The objective of PCA is to find a new set of orthogonal variables called the principal components, which are linear combinations of (centered and standardized) allele counts, such that the projections of the data onto these axes lead to an optimal summary of the data. To present the method, we introduce the truncated singular value decomposition (SVD) that approximates the data matrix $Y$ by a matrix of smaller rank  
+We denote by $Y$ the $(n \times p)$ centered and scaled genotype matrix where $n$ is the number of individuals and $p$ is the number of loci. The new statistics for genome scan are based on PCA. The objective of PCA is to find a new set of orthogonal variables called the principal components, which are linear combinations of (centered and standardized) allele counts, such that the projections of the data onto these axes lead to an optimal summary of the data. To present the method, we introduce the truncated singular value decomposition (SVD) that approximates the data matrix $Y$ by a matrix of smaller rank
 
-\begin{equation} 
+\begin{equation}
   Y \approx U \Sigma V^T,
   (\#eq:svd)
 \end{equation}
 
 where $U$ is a $(n \times K)$ orthonormal matrix, $V$ is a $(p \times K)$ orthonormal matrix, $\Sigma$ is a diagonal $(K \times K)$ matrix and $K$ corresponds to the rank of the approximation. The solution of PCA with $K$ components can be obtained using the truncated SVD: the $K$ columns of $V$ contain the coefficients of the new orthogonal variables, the $K$ columns of $U$ contain the projections (called "scores") of the original variables onto the principal components and capture population structure (supplementary fig. S1, Supplementary Material online), and the squares of the elements of $\Sigma$ are proportional to the proportion of variance explained by each principal component [@jolliffe1986principal]. We denote the diagonal elements of $\Sigma$ by $\sqrt{\lambda_k}, \; k = 1, \dots, K$ where the $\lambda_k$'s are the ranked eigenvalues of the matrix $YY^T$. Denoting by $V_{jk}$, the entry of $V$ at the $j^{th}$ line and $k^{th}$ column, then the correlation $\rho_{jk}$ between the  $j^{th}$ SNP and the $k^{th}$ principal component is given by $\rho_{jk} = \sqrt{\lambda_{jk}}V_{jk}/\sqrt{n-1}$ [@cadima1995loading]. In the following, the statistics $\rho_{jk}$ are referred to as "loadings" and will be used for detecting selection.
-The second statistic we consider for genome scan corresponds to the proportion of variance of a SNP that is explained by the first $K$ PCs. It is called the communality in exploratory factor analysis because it is the variance of observed variables accounted for by the common factors, which correspond to the first $K$ PCs. Because the principal components are orthogonal to each other, the proportion of variance explained by the first $K$ principal components is equal to the sum of the squared correlations with the first $K$ principal components. Denoting by $h_j^2$ the communality of the $j^{th}$ SNP, we have  
+The second statistic we consider for genome scan corresponds to the proportion of variance of a SNP that is explained by the first $K$ PCs. It is called the communality in exploratory factor analysis because it is the variance of observed variables accounted for by the common factors, which correspond to the first $K$ PCs. Because the principal components are orthogonal to each other, the proportion of variance explained by the first $K$ principal components is equal to the sum of the squared correlations with the first $K$ principal components. Denoting by $h_j^2$ the communality of the $j^{th}$ SNP, we have
 
 \begin{equation}
   h_j^2 = \sum_{k=1}^K \rho_{jk}^2.
@@ -133,43 +137,43 @@ include_graphics("figure/ndf-fig5.png")
 
 The 1000 Genome data contain many low-frequency SNPs; 82% of the SNPs have a minor allele frequency smaller than 5%. However, these low-frequency variants are not found among outlier SNPs. There are no SNP with a minor allele frequency smaller than 5% among the 0.1% of the SNPs most correlated with PC1 or with PC2.
 
-The 100 SNPs that are the most correlated with the first PC are located in 24 genomic regions (supplementary table S2, Supplementary Material online). Most of the regions contain just one or a few SNPs except a peak in the gene APPBP2 that contains 33 out of the 100 top SNPs, a peak encompassing the RTTN and CD226 genes containing 17 SNPS and a peak in the ATP1A1 gene containing seven SNPs (fig. \@ref(fig:ndf-fig4)). Confirming a larger clustering for PC2 outliers, the 100 SNPs that are the most correlated with PC2 cluster in fewer genomic regions (supplementary table S3, Supplementary Material online). They are located in 14 genomic regions including a region overlapping with EDAR contains 44 top hits, two regions containing eight SNPs and located in the pigmentation genes SLC24A5 and SLC45A2, and two regions with seven top hit SNPs, one in the gene KCNMA1 and another one encompassing the RGLA/MYO5C genes (fig. \@ref(fig:ndf-fig5)). 
+The 100 SNPs that are the most correlated with the first PC are located in 24 genomic regions (supplementary table S2, Supplementary Material online). Most of the regions contain just one or a few SNPs except a peak in the gene APPBP2 that contains 33 out of the 100 top SNPs, a peak encompassing the RTTN and CD226 genes containing 17 SNPS and a peak in the ATP1A1 gene containing seven SNPs (fig. \@ref(fig:ndf-fig4)). Confirming a larger clustering for PC2 outliers, the 100 SNPs that are the most correlated with PC2 cluster in fewer genomic regions (supplementary table S3, Supplementary Material online). They are located in 14 genomic regions including a region overlapping with EDAR contains 44 top hits, two regions containing eight SNPs and located in the pigmentation genes SLC24A5 and SLC45A2, and two regions with seven top hit SNPs, one in the gene KCNMA1 and another one encompassing the RGLA/MYO5C genes (fig. \@ref(fig:ndf-fig5)).
 
 We perform Gene Ontology (GO) enrichment analyses using Gowinda for the SNPs that are the most correlated with PC1 and PC2. For PC1, we find, among others, enrichment ($\text{FDR} \leq 5 \%$) for ontologies related to the regulation of arterial blood pressure, the endocrine system and the immunity response (interleukin production, response to viruses) (supplementary table S4, Supplementary Material online). For PC2, we find enrichment ($\text{FDR} \leq 5 \%$) related to olfactory receptors, keratinocyte and epidermal cell differentiation, and ethanol metabolism (supplementary table S5, Supplementary Material online). We also search for polygenic adaptation by looking for biological pathways enriched with outlier genes [@daub2013evidence]. For PC1, we find one enriched ($\text{FDR} \leq 5 \%$) pathway consisting of the beta defensin pathway (supplementary table S6, Supplementary Material online). The beta defensin pathway contains mainly genes involved in the innate immune system consisting of 36 defensin genes and of two Toll-Like receptors (TLR1 and TLR2). There are additionally two chemokine receptors (CCR2 and CCR6) involved in the beta defensin pathway. For PC2, we also find one enriched pathway consisting of fatty acid omega oxidation ($\text{FDR} \leq 5 \%$, supplementary table S7, Supplementary Material online). This pathway consists of genes involved in alcohol oxidation (CYP, ALD, and ALDH genes). Performing a less stringent enrichment analysis which can find pathways containing overlapping genes, we find more enriched pathways: the beta defensin and the defensin pathways for PC1 and ethanol oxidation, glycolysis/gluconeogenesis and fatty acid omega oxidation for PC2 (supplementary table S8, Supplementary Material online).
 
 To further validate the proposed list of candidate SNPs involved in local adaptation, we test for an enrichment of genic or nonsynonymous SNP among the SNPs that are the most correlated with the PC. We measure the enrichment among outliers by computing odds ratio [@kudaravalli2008gene; @fagny2014exploring]. For PC1, we do not find significant enrichments (table \@ref(tab:ndf-table1)) except when measuring the enrichment of genic regions compared with nongenic regions (OR = 10.18 for the 100 most correlated SNPs, $P \leq 5 \%$ using a permutation procedure). For PC2, we find an enrichment of genic regions among outliers as well as an enrichment of nonsynonymous SNPs (table \@ref(tab:ndf-table1)). By contrast with the enrichment of genic regions for SNPs extremely correlated with the first PC, the enrichment for the variants extremely correlated with PC2 outliers is significant when using different thresholds to define outliers (table \@ref(tab:ndf-table1)).
 
-(ref:ndf-table1-cap) Enrichment Measured with Odds Ratio (OR) of the Variants Most Correlated with the Principal Components Obtained from the 1000 Genomes Data.
+(ref:ndf-table1-cap) Enrichment Measured with Odds Ratio (OR) of the Variants Most Correlated with the Principal Components Obtained from the 1000 Genomes Data. Enrichment significant at the 1% (resp. 5%) level are indicated with \*\* (resp. \*).
 
 ```{r ndf-table1, results='asis', message=FALSE, eval=TRUE}
-type <- c("pc1–genic/nogenic", 
-          "pc1–nonsyn/all", 
+type <- c("pc1–genic/nogenic",
+          "pc1–nonsyn/all",
           "pc1–UTR/all",
           "pc2–genic/nogenic",
           "pc2–nonsyn/all",
           "pc2–UTR/all")
-c1 <- c("1.60*", 
+c1 <- c("1.60*",
         "1.70",
         "1.37",
         "1.51*",
         "1.72",
         "1.68")
 
-c2 <- c("1.24", 
+c2 <- c("1.24",
         "1.18",
         "0.80",
         "2.27",
         "4.66*",
         "4.01*")
 
-c3 <- c("1.09", 
+c3 <- c("1.09",
         "2.42",
         "1.65",
         "4.73**",
         "7.40",
         "3.36")
 
-c4 <- c(" 1.93", 
+c4 <- c(" 1.93",
         "10.07*",
         " 3.44",
         " 4.44*",
@@ -187,13 +191,10 @@ data.frame(type = type,
                              "Top 0.005%",
                              "Top 100 SNPs"),
                caption = '(ref:ndf-table1-cap)',
-               longtable = TRUE,
                booktabs = TRUE,
                escape = TRUE) %>%
   kable_styling(full_width = T)
 ```
-
-Note: Enrichment significant at the 1% (resp. 5%) level are indicated with \*\* (resp. \*).
 
 ### Discussion {-}
 
@@ -215,7 +216,7 @@ include_graphics("figure/ndf-fig7.png")
 
 When there are clusters of populations, we have shown with simulations that genome scans based on $F_{ST}$ can be reproduced with PCA. Genome scans based on PCA have the additional advantage that a particular axis of genetic variation, which is related to adaptation, can be pinpointed. Bearing some similarities with PCA, performing a spectral decomposition of the kinship matrix has been proposed to pinpoint populations where adaptation took place [@fariello2013detecting]. However, despite of some advantages, the statistical problems related to genome scans with $F_{ST}$ remain. The drawbacks of $F_{ST}$ arise when there is hierarchical population structure or range expansion because $F_{ST}$ does not account for correlations of allele frequencies among subpopulations [@bierne2013pervasive; @lotterhos2014evaluation]. An alternative presentation of the issues arising with $F_{ST}$ is that it implicitly assumes either a model of instantaneous divergence between populations or an island-model [@bonhomme2010detecting]. Deviations from these models severely impact FDRs [@duforet2014genome]. Viewing $F_{ST}$ from the point of view of PCA provides a new explanation about why $F_{ST}$ does not provide an optimal ranking of SNPs for detecting selection. The statistic $F_{ST}$ or the proposed $h^2$ communality statistic are mostly influenced by the first principal component and the relative importance of the first PC increases with the difference between the first and second eigenvalues of the covariance matrix of the data. Because the first PC can represent ancient adaptive events, especially under population divergence models [@mcvean2009genealogical], it explains why $F_{ST}$ and the communality $h^2$ are biased toward ancient evolutionary events. Following recent developments of $F_{ST}$-related statistics that account for hierarchical population structure [@bonhomme2010detecting; @gunther2013robust; @foll2014widespread], we proposed an alternative statistic ${h^{\prime}_j}^2$, which should give equal weights to the different PCs. However, analyzing simulations and the 1000 Genomes data show that ${h^{\prime}_j}^2$ do not properly account for hierarchical population structure because outliers identified by ${h^{\prime}_j}^2$ are almost always related to the last PC kept in the analysis. To avoid to bias data analysis in favor of one principal component, it is possible to perform a genome scan for each principal component.
 
-In addition to ranking the SNPs when performing a genome scan, a threshold should be chosen to extract a list of outlier SNPs. We do not have addressed the question of how to choose the threshold and rather used empirical threshold such as the 99% quantile of the distribution of the test statistic (top 1%). If interested in controlling the FDR, we can assume that the loadings $\rho_{kj}$ are Gaussian with zero mean [@galinsky2016fast]. Because of the constraints imposed on the loadings when performing PCA, the variance of the $\rho_{kj}$'s is equal to the proportion of variance explained by the $k^{th}$ PC, which is given by $\lambda_k / (p \times (n - 1))$ where $\lambda_k$ is the $k^{th}$ eigenvalue of the matrix $YY^T$. Assuming a Gaussian distribution for the loadings, the communality can then be approximated by a weighted sum of chi-square distribution. Approximating a weighted sum of chi-square distribution with a chi-square distribution, we have [@yuan2010two] 
+In addition to ranking the SNPs when performing a genome scan, a threshold should be chosen to extract a list of outlier SNPs. We do not have addressed the question of how to choose the threshold and rather used empirical threshold such as the 99% quantile of the distribution of the test statistic (top 1%). If interested in controlling the FDR, we can assume that the loadings $\rho_{kj}$ are Gaussian with zero mean [@galinsky2016fast]. Because of the constraints imposed on the loadings when performing PCA, the variance of the $\rho_{kj}$'s is equal to the proportion of variance explained by the $k^{th}$ PC, which is given by $\lambda_k / (p \times (n - 1))$ where $\lambda_k$ is the $k^{th}$ eigenvalue of the matrix $YY^T$. Assuming a Gaussian distribution for the loadings, the communality can then be approximated by a weighted sum of chi-square distribution. Approximating a weighted sum of chi-square distribution with a chi-square distribution, we have [@yuan2010two]
 
 \begin{equation}
   h^2 \times K / c \leadsto \chi^2_K,
@@ -238,11 +239,11 @@ In conclusion, we propose a new approach to scan genomes for local adaptation th
 Simulations were performed with *ms* [@hudson2002generating]. We assume that there are three islands with 100 sampled individuals in each of them. There is a total of 1,400 neutral SNPs, and 100 adaptive SNPs. SNPs are assumed to be unlinked. To mimic adaptation, we consider that adaptive SNP have a migration rate smaller than the migration rate of neutral SNPs ($4N_0m = 4$ for neutral SNPs) (Bazin et al. 2010). The strength of selection is equal to the ratio of the migration rates of neutral and adaptive SNPs. Adaptation is assumed to occur in one population only. The *ms* command lines for neutral and adaptive SNPs are given below (assuming an effective migration rate of $4N_0m = 0.1$ for adaptive SNPs).
 
 ```{bash, eval=FALSE}
-./ms 300 1400 -s 1 -I 3 100 100 100 
+./ms 300 1400 -s 1 -I 3 100 100 100
 
 -ma x 4 4 4 x 4 4 4 x #neutral
 
-./ms 300 100 -s 1 -I 3 100 100 100 
+./ms 300 100 -s 1 -I 3 100 100 100
 
 -ma x 0.1 0.1 0.1 x 4 0.1 4 x #outlier
 ```
@@ -263,7 +264,7 @@ We downloaded the 1000 Genomes data (phase 1 v3) [@10002012integrated]. We kept 
 
 We used Gowinda [@kofler2012gowinda] to test for enrichment of GO. A gene is considered as a candidate if there is at least one of the most correlated SNPs (top 1%) that is mapped to the gene (within an interval of 50 kb upstream and downstream of the gene). Enrichment was computed as the proportion of genes containing at least one outlier SNPs among the genes of the given GO category that are present in the data set. In order to sample a null distribution for enrichment, *Gowinda* performs resampling without replacement of the SNPs. We used the `-gene` option of *Gowinda* that assumes complete linkage within genes.
 
-We performed a second enrichment analysis to determine if outlier SNPs are enriched for genic regions. We computed odds ratio [@kudaravalli2008gene]  
+We performed a second enrichment analysis to determine if outlier SNPs are enriched for genic regions. We computed odds ratio [@kudaravalli2008gene]
 
 \begin{equation}
   \text{OR} = \frac{\text{Pr(genic|outlier)}}{\text{Pr(not genic|outlier)}} \frac{\text{Pr(not genic|not outlier)}}{\text{Pr(genic|not outlier)}}
@@ -282,5 +283,865 @@ This work has been supported by the LabEx PERSYVAL-Lab (ANR-11-LABX-0025-01) and
 
 \newpage
 
-### Analyses supplémentaires
+### La communalité vue comme une généralisation de l'indice de fixation {-}
+
+De par sa définition \@ref(eq:fst-definition), le calcul de la $F_{ST}$ nécessite que soient connues les fréquences alléliques pour chacune des populations, ce qui suppose une définition préalable de celles-ci. Cette étape consiste à assigner chaque individu à l'une d'entre elles.
+(A COMPLETER)
+
+#### Rapport entre la communalité et l'indice de fixation {-}
+
+Pour établir le lien entre la $F_{ST}$ et la communalité, nous nous plaçons dans le cas de deux populations $A$ et $B$, composées respectivement de $n_1$ et $n_2$ individus. Nous rappelons que la communalité correspond à la somme quadratique des loadings pondérés par la variance des composantes principales. Notons $n = n_1 + n_2$, $\boldsymbol{G}$ la matrice de génotypes et $G$ le vecteur de taille $n$ contenant le génotype des individus pour un allèle donné (G correspond à une ligne de $\boldsymbol{G}$). En reprenant la définition de la $F_{ST}$ \@ref(eq:fst-definition) dans le cas $N = 2$, les fréquences alléliques $p_i$ s'écrivent $p_1 = \sum_{i=1}^n \delta_{1i} G_{i} / \sum_{i=1}^n \delta_{1i}$ et  $p_2 = \sum_{i=1}^n \delta_{2i} G_{i} / \sum_{i=1}^n \delta_{2i}$ où $\delta_{ki} = 1$ si l'individu $i$ appartient à la population $k$ et $0$ sinon. Commençons par exprimer la $F_{ST}$ en fonction des génotypes :
+
+\begin{equation}
+  \begin{split}
+  F_{ST} & = \frac{1}{2-1}\frac{\sum_{i=1}^2 (p_i - \bar{p})^2}{\bar{p}(1-\bar{p})} \\
+  & = \frac{1}{\bar{p}(1-\bar{p})} \left(\left(\frac{\sum_{i=1}^n \delta_{1i} G_{i}}{\sum_{i=1}^n \delta_{1i}} - \bar{p}\right)^2 + \left(\frac{\sum_{i=1}^n \delta_{2i} G_{i}}{\sum_{i=1}^n \delta_{2i}} - \bar{p}\right)^2\right)\\
+  & = \frac{1}{\bar{p}(1-\bar{p})} \left(\left(\frac{\sum_{i=1}^n \delta_{1i} (G_{i} - \bar{p})}{n_1}\right)^2 + \left(\frac{\sum_{i=1}^n \delta_{2i} (G_{i} - \bar{p})}{n_2}\right)^2\right)\\
+  \end{split}
+  (\#eq:fst-communality-proof)
+\end{equation}
+
+Notant $\tilde{G}_i = \frac{G_i - \bar{p}}{\sqrt{\bar{p}(1-\bar{p})}}$ :
+
+\begin{equation}
+  F_{ST} = \left(\sum_{i=1}^n \frac{\delta_{1i}}{n_1} \tilde{G_{i}}\right)^2 + \left(\sum_{i=1}^n \frac{\delta_{2i}}{n_2} \tilde{G_{i}}\right)^2\\
+  (\#eq:fst-communality-proof-2)
+\end{equation}
+
+ce qui peut se réécrire $F_{ST} = ||\tilde{G}^T U_{\delta}||_2^2$ où $U_{\delta}  = (\frac{\delta_{ji}}{n_j})_{1 \leq i \leq n, \; 1\leq j \leq 2} \in M_{n, 2}(\mathbb{R})$. Si le premier et le quatrième individu appartiennent à la population $A$ et que le deuxième et le troisième individu appartiennent à la population $B$, la matrice $U_{\delta}$ s'écrit :
+
+$$U_{\delta} = \begin{pmatrix}\frac{1}{n_1} & 0\\
+0 & \frac{1}{n_2}\\
+0 & \frac{1}{n_2}\\
+\frac{1}{n_1} & 0
+\end{pmatrix}$$
+
+Pour faire le parallèle avec la communalité, il est nécessaire de trouver une matrice colonne $U_{\delta}^{\prime} \in M_{n, 1}(\mathbb{R})$ telle que $F_{ST} = ||\tilde{G}^T U_{\delta}^{\prime}||_2^2$. Pour ce faire, nous allons chercher une matrice de rotation telle que $U_{\delta}R$ ait sa première colonne constante, c'est-à-dire telle que :
+
+\begin{equation}
+  \begin{pmatrix}\frac{1}{n_1} & 0\\
+    0 & \frac{1}{n_2}
+  \end{pmatrix}R =
+  \begin{pmatrix} a & x\\
+    a & y
+  \end{pmatrix}
+  (\#eq:condition-1)
+\end{equation}
+
+où $x, y, a$ sont des réels à déterminer. Soit $R \in M_2(\mathbb{R})$ une matrice de rotation :
+
+$$R = \begin{pmatrix}\cos\theta & -\sin\theta\\
+\sin\theta & \cos\theta
+\end{pmatrix}$$
+
+En injectant $R$ dans \@ref(eq:condition-1), on obtient :
+
+\begin{equation}
+  \begin{pmatrix}\frac{\cos\theta}{n_1} & -\frac{\sin\theta}{n_1}\\
+    \frac{\sin\theta}{n_2} & \frac{\cos\theta}{n_2}
+  \end{pmatrix} =
+  \begin{pmatrix} a & x\\
+    a & y
+  \end{pmatrix}
+  (\#eq:condition-2)
+\end{equation}
+
+\@ref(eq:condition-2) implique que l'angle de la rotation vérifie la relation $\frac{\cos\theta}{n_1} = \frac{\sin\theta}{n_2}$, qui a pour solution dans $]-\frac{\pi}{2}, \frac{\pi}{2}[$, $\theta = \arctan(\frac{n_2}{n_1})$. Nous en déduisons ainsi les valeurs de $x$ et de $y$ :
+
+\begin{equation}
+  \begin{split}
+  x & = -\frac{\sin(\arctan(\frac{n_2}{n_1}))}{n_1} \\
+  y & = \frac{\cos(\arctan(\frac{n_2}{n_1}))}{n_2} \\
+  \end{split}
+  (\#eq:xy)
+\end{equation}
+
+Or :
+
+\begin{equation}
+  \begin{split}
+  \sin(\arctan(x)) & = \frac{x}{\sqrt{1 + x^2}} \\
+  \cos(\arctan(x)) & = \frac{1}{\sqrt{1 + x^2}}
+  \end{split}
+  (\#eq:trigo)
+\end{equation}
+
+Notant $R$ la rotation d'angle $\arctan(\frac{n_2}{n_1})$, on a finalament :
+
+$$U_{\delta}R = \begin{pmatrix}a & -\delta_{11}  \frac{n_2}{\sqrt{n_1^2+n_2^2}} + \delta_{21} \frac{n_1}{\sqrt{n_1^2+n_2^2}}\\
+a & -\delta_{12}  \frac{n_2}{\sqrt{n_1^2+n_2^2}} + \delta_{22} \frac{n_1}{\sqrt{n_1^2+n_2^2}}\\
+\vdots & \vdots \\
+a & -\delta_{1n}  \frac{n_2}{\sqrt{n_1^2+n_2^2}} + \delta_{2n} \frac{n_1}{\sqrt{n_1^2+n_2^2}}
+\end{pmatrix}$$
+
+Puisque $R$ est une rotation, $||\tilde{G}^T U_{\delta}||_2 = ||\tilde{G}^T U_{\delta}R||_2$. En développant $\tilde{G}^T U_{\delta}R$, on obtient :
+
+\begin{equation}
+  \begin{split}
+   \tilde{G}^T U_{\delta}R = \left(\sum_{i=1}^n a \tilde{G}_i, \sum_{i=1}^n \left(-\delta_{1i}  \frac{n_2}{\sqrt{n_1^2+n_2^2}} + \delta_{2i} \frac{n_1}{\sqrt{n_1^2+n_2^2}}\right)\tilde{G}_i \right)
+  \end{split}
+\end{equation}
+
+Or $\sum_{i=1}^n \tilde{G}_i = 0$ par définition de $\tilde{G}$, ce qui permet d'écrire, en posant $U_{\delta}^{\prime} \in M_{n,1}(\mathbb{R})$ la matrice colonne correspondant à la deuxième colonne de $U_{\delta}R$ :
+
+\begin{equation}
+  \begin{split}
+    F_{ST} & = ||\tilde{G}^T U_{\delta}||_2^2 \\
+    & = ||\tilde{G}^T U_{\delta}R||_2^2 \\
+    & = ||\tilde{G}^T U_{\delta}^{\prime}||_2^2
+  \end{split}
+\end{equation}
+
+```{r}
+n1 <- 1/5
+n2 <- 1/8
+xx <- c(-1/4, 1/4)
+xx.2 <- c(-0.15, 0.15)
+yy.1 <- - n2 * xx / n1
+yy.2 <- n1 * xx.2 / n2
+n.x <- c(n1, 0)
+n.y <- c(0, n2)
+df.branch <- data.frame(x1 = n.x[1], x2 = n.x[2], y1 = n.y[1], y2 = n.y[2])
+df.axis.x <- data.frame(x1 = xx[1], x2 = xx[2], y1 = yy.1[1], y2 = yy.1[2])
+df.axis.y <- data.frame(x1 = xx.2[1], x2 = xx.2[2], y1 = yy.2[1], y2 = yy.2[2])
+data.frame(x = n.x, y = n.y) %>%
+  ggplot(aes(x = x, y = y)) +
+  coord_equal() +
+  geom_point(size = 2, color = "red") +
+  xlim(-1/4, 1/4) +
+  ylim(-1/4, 1/4) +
+  xlab("X") +
+  ylab("Y") +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  geom_segment(data = df.branch, aes(x = x1, y = y1, xend = x2, yend = y2)) +
+  geom_segment(data = df.axis.x, aes(x = x1, y = y1, xend = x2, yend = y2), color = "blue") +
+  geom_segment(data = df.axis.y, aes(x = x1, y = y1, xend = x2, yend = y2), color = "blue") +
+  annotate("text",
+           x = n.x + c(0, 0.01),
+           y = n.y + c(0.025, 0),
+           label = c("frac(1, n[1])", "frac(1, n[2])"),
+           parse = TRUE) +
+  theme_bw()
+
+```
+
+Notant $\tilde{\boldsymbol{G}} = U \Sigma V^T$ la SVD de rang 1, la communalité a pour expression $h^2 = (\Sigma V)^2 = ||\tilde{G}^TU||_2^2$.
+Remarquons que $U_{\delta}^{\prime}$ a une expression similaire à celle des scores de l'ACP exprimée dans @mcvean2009genealogical. Ceci nous permet de considérer la $F_{ST}$ comme un cas particulier de la communalité où les scores de l'ACP sont identiques pour tous les individus appartenant à une même population. À l'inverse, cela permet de voir la communalité comme une extension de la $F_{ST}$ à l'échelle individuelle.
+
+En réalité, il existe une interprétation géométrique quant au fait que la communalité ne convient en tant que statistique de test. Notons $X$ et $Y$ les variables aléatoires associées aux loadings des composantes $1$ et $2$.
+Pour rappel, les statistiques $h^2$ et $h^{\prime 2}$ s'écrivent : $h^2 = aX^2 + bY^2$ et $h^{\prime 2} = X^2 + Y^2$ avec $a > b$. En dimension 2, les lignes de niveaux de $h^2$ décrivent des ellipses et celles de $h^{\prime 2}$ décrivent des cercles. D'un point de vue géométrique, $h^2$ n'est pas adaptée à la détection d'outliers, étant donné que son grand axe est proportionnel à la seconde valeur singulière alors que son petit axe est proportionnel à la première (Figure \@ref(fig:ellipses)).
+
+(ref:ellipses-cap) Lignes de niveau des statistiques $h^2$ et $h^{\prime 2}$. Les loadings ont été calculés à partir de données simulées.
+
+```{r ellipses, fig.cap='(ref:ellipses-cap)'}
+d <- readRDS("data/div.rds")
+x <- pcadapt(d$geno, K = 2)
+s <- x$singular.values
+t <- seq(0, 2 * pi, length.out = 1000)
+x.coord <- 25 * (1 / 20) * cos(t)
+y.coord <- 25 * (1 / 10) * sin(t)
+df.data <- data.frame(x.coord = x$loadings[, 1],
+                      y.coord = x$loadings[, 2],
+                      type = "data")
+
+df.h <- data.frame(x.coord = x.coord,
+                   y.coord = y.coord,
+                   type = "h")
+
+x.coord <- 25 * (1 / 10) * cos(t)
+y.coord <- 25 * (1 / 10) * sin(t)
+df.hprime <- data.frame(x.coord = x.coord,
+                        y.coord = y.coord,
+                        type = "h'")
+
+rbind(df.data, df.h, df.hprime) %>%
+ggplot(aes(x = x.coord, y = y.coord)) + 
+  geom_point(aes(color = type), size = 1, na.rm = TRUE) +
+  coord_equal() +
+  xlab("Loadings PC1") +
+  ylab("Loadings PC2") +
+  theme_bw() +
+  #labs(title = paste0("Confidence: ", 100 * confidence, "%")) +
+  theme(axis.text = element_text(size = 15),
+        axis.title = element_text(size = 15, face = "bold"),
+        title = element_text(size = 15, face = "bold"),
+        legend.text = element_text(size = 15),
+        legend.key.height = unit(1, "line"),
+        legend.key.width = unit(3, "line"))
+```
+
+
+\newpage
+
+### Limites de la communalité
+
+Comme énoncé plus haut, de par sa ressemblance avec la $F_{ST}$, la communalité souffre des mêmes maux que l'indice de fixation dans le cas où les populations sont structurées. Nous avons vu dans l'article que la communalité est principalement influencée par les facteurs associés à la première composante principale, du fait de la pondération par la variance expliquée par celle-ci. À l'inverse, le retrait de cette pondération affecte la communalité de telle sorte que l'importance accordée à la première composante devient insuffisante. Nous présentons dans ce paragraphe différentes approches que nous avons essayées pour tenter de répondre à ce problème et que nous avons jugées intéressantes de référencer ici. Pour comprendre le problème, prenons l'exemple d'un modèle de divergence comme celui présenté en figure \@ref(fig:FigureSI1). Supposons que la population B se soit adaptée localement suite à la sélection d'un allèle. Supposons de plus que la variance expliquée par la première composante principale soit extrêmement élevée (qui peut par exemple être le résultat d'une longue dérive génétique de la population A). Nous nous attendons à ce que la corrélation de ce SNP avec la deuxième composante soit forte, mais pas assez forte pour compenser la proportion de variance expliquée par la première composante principale. 
+
+#### L'Analyse en Composantes Principales parcimonieuse
+
+Plus connue sous le nom anglais de *Sparse PCA*, l'Analyse en Composantes Principales parcimonieuse est utilisée pour donner une meilleure interprétabilité des composantes principales. Les composantes principales classiques sont des combinaisons linéaires de toutes les variables de départ, si bien que n'importe quelle composante principale renvoie potentiellement à toutes les variables du jeu de données. L'Analyse en Composantes Principales permet de contourner ce problème en ne sélectionnant qu'un certain nombre de variables pour construire ses composantes principales, attribuant des valeurs nulles aux autres variables.
+
+```{r}
+d <- readRDS("data/div.rds")
+x <- pcadapt(d$geno, K = 2)
+
+```
+
+### Ajouter le choix loadings vs z-scores
+
+### Ajouter le choix MCD vs classique vs OGK
+
+### Contrôle du taux de fausse découverte {-}
+
+Le taux de fausse découverte, correspond à la proportion de faux positifs parmi les positifs. En notant $FP$ le nombre de faux positifs, $FP$ le nombre de vrais positifs, on définit le taux de fausse découverte $FDR$ par :
+
+\begin{equation}
+  FDR = \mathbb{E}\Big[\frac{FP}{TP + FP} 1_{FP+TP > 0}\Big]
+  (\#eq:FDR-def)
+\end{equation}
+
+- Référence cours de Christophe Giraud
+
+q-value, bonferroni, benjamini-hochberg
+La figure suivante donne les comparaisons entre les différentes procédures de correction :
+
+
+
+
+
+### Bootstrap ACP
+
+\newpage
+
+## Détection d'outliers
+
+Nous avons vu dans la partie précédente que la communalité avait tendance à accorder beaucoup d'importance aux premières composantes principales, du fait de la pondération de chaque composante par la proportion de variance expliquée. Pour remédier à cela, la statistique $h^{\prime}$ a été introduite. La distribution des *loadings* n'étant pas gaussienne, du fait de leur normalisation ($\sum_{j=1}^p V_{jk}^2 = 1$), il n'est pas clair que la statistique $h^{\prime}$ suive une distribution connue.
+
+Ainsi, ne pas normaliser les loadings permet de produire des $t$-scores, si l'on considère que les loadings non-normalisés résultent de la régression de la matrice $G$ par les scores de l'ACP.
+
+\begin{equation}
+  G = U \Sigma V^T
+  (\#eq:svd-G)
+\end{equation}
+
+
+$V$, la matrice des loadings, peut être vue comme la solution du problème d'optimisation sous contrainte suivant :
+
+\begin{equation}
+  \min_{V} ||G - U \Sigma V^T||_{2} \\
+  \sum_{j=1}^p V_{jk}^2 = 1, \;  k = 1, \dots, K
+  (\#eq:minimization-G)
+\end{equation}
+
+En retirant cette contrainte, le problème de minimisation est équivalent à un problème de régression linéaire multiple,
+dont la distribution des coefficients de régression est bien mieux connue.
+La solution au problème de régression linéaire multiple est explicite :
+
+\begin{equation}
+  \beta = U(U^T U)^{-1}U^TG
+  (\#eq:linReg-solution)
+\end{equation}
+
+Ce qui dans notre cas donne, grâce à l'orthonormalité de $U$ :
+
+\begin{equation}
+  \beta = UU^TG
+  (\#eq:linReg-solution-simplifiee)
+\end{equation}
+
+Ici, nous cherchons à tester l'hypothèse $\beta_j = 0$ contre l'hypothèse $\beta_j \neq 0$,
+pour chaque $\beta_j$, nous pouvons écrire le $z$-score de la régrssion associé :
+
+\begin{equation}
+  z_j = \frac{\beta_j}{\sqrt{\frac{||G_j - U_k \beta_j||}{n - p - 1}}}
+  (\#eq:linReg-zscore)
+\end{equation}
+
+
+
+
+## Article 2
+
+```{r, results='asis', out.width='\\textwidth'}
+include_graphics("figure/molecol.png")
+```
+
+### Abstract {-}
+
+The R package *pcadapt* performs genome scans to detect genes under selection based on population genomic data. It assumes that candidate markers are outliers with respect to how they are related to population structure. Because population structure is ascertained with principal component analysis, the package is fast and works with large-scale data. It can handle missing data and pooled sequencing data. By contrast to population-based approaches, the package handle admixed individuals and does not require grouping individuals into populations. Since its first release, *pcadapt* has evolved in terms of both statistical approach and software implementation. We present results obtained with robust Mahalanobis distance, which is a new statistic for genome scans available in the 2.0 and later versions of the package. When hierarchical population structure occurs, Mahalanobis distance is more powerful than the communality statistic that was implemented in the first version of the package. Using simulated data, we compare *pcadapt* to other computer programs for genome scans (*BayeScan*, *hapflk*, *OutFLANK*, *sNMF*). We find that the proportion of false discoveries is around a nominal false discovery rate set at 10% with the exception of *BayeScan* that generates 40% of false discoveries. We also find that the power of *BayeScan* is severely impacted by the presence of admixed individuals whereas *pcadapt* is not impacted. Last, we find that *pcadapt* and *hapflk* are the most powerful in scenarios of population divergence and range expansion. Because *pcadapt* handles next-generation sequencing data, it is a valuable tool for data analysis in molecular ecology.
+
+### Introduction {-}
+
+Looking for variants with unexpectedly large differences of allele frequencies between populations is a common approach to detect signals of natural selection [@lewontin1973distribution]. When variants confer a selective advantage in the local environment, allele frequency changes are triggered by natural selection leading to unexpectedly large differences of allele frequencies between populations. To detect variants with large differences of allele frequencies, numerous test statistics have been proposed, which are usually based on chi-square approximations of $F_{ST}$-related test statistics [@franccois2016controlling].
+
+Statistical approaches for detecting selection should address several challenges. The first challenge is to account for hierarchical population structure that arises when genetic differentiation between populations is not identical between all pairs of populations. Statistical tests based on $F_{ST}$ that do not account for hierarchical structure, when it occurs, generate a large excess of false-positive loci [@excoffier2009detecting; @bierne2013pervasive].
+
+A second challenge arises because approaches based on $F_{ST}$-related measures require to group individuals into populations, although defining populations is a difficult task [@waples2006invited]. Individual sampling may not be population based but based on more continuous sampling schemes [@lotterhos2015relative]. Additionally assigning an admixed individual to a single population involves some arbitrariness because different regions of its genome might come from different populations [@pritchard2000inference]. Several individual-based methods of genome scans have already been proposed to address this challenge and they are based on related techniques of multivariate analysis including principal component analysis (PCA), factor models and non-negative matrix factorization [@duforet2014genome; @chen2016eigengwas; @duforet2015detecting; @galinsky2016fast; @hao2015probabilistic; @martins2016identifying].
+
+The last challenge arises from the nature of multilocus data sets generated from next-generation sequencing platforms. Because data sets are massive with a large number of molecular markers, Monte Carlo methods usually implemented in Bayesian statistics may be prohibitively slow [@lange2014next]. Additionally, next-generation sequencing data may contain a substantial proportion of missing data that should be accounted for [@arnold2013radseq; @gautier2013effect].
+
+To address the aforementioned challenges, we have developed the computer program *pcadapt* and the R package *pcadapt*. The computer program *pcadapt* is now deprecated and the R package only is maintained. *pcadapt* assumes that markers excessively related to population structure are candidates for local adaptation. Since its first release, *pcadapt* has substantially evolved in terms of both statistical approach and implementation (Table \@ref(tab:table1)).
+
+(ref:table1-cap) Summary of the different statistical methods and implementations of *pcadapt*. Pop. structure stands for population structure and dist. stands for distance
+
+```{r table1, results='asis', message=FALSE}
+stat <- c("Bayes factor", "Communality", "Mahalanobis dist.")
+structure <- c("Factor model", "PCA", "PCA")
+language <- c("C", "C and R", "R")
+command <- c("PCAdapt", "PCAdapt fast", "NA")
+version <- c("NA", "1. x", "2. x and 3. x")
+ref <- c("Duforet-Frebourg et al. (2014)",
+         "Duforet-Frebourg et al. (2016)",
+         "This study")
+data.frame(stat = stat,
+           structure = structure,
+           language = language,
+           command = command,
+           version = version,
+           ref = ref) %>%
+  knitr::kable(col.names = c("Test statistic",
+                             "Pop. structure",
+                             "Language",
+                             "Command line",
+                             "Versions of the R package",
+                             "References"),
+               caption = '(ref:table1-cap)',
+               booktabs = TRUE) %>%
+  kable_styling(full_width = T, font_size = 6)
+```
+
+The first release of *pcadapt* was a command line computer program written in C. It implemented a Monte Carlo approach based on a Bayesian factor model [@duforet2014genome]. The test statistic for outlier detection was a Bayes factor. Because Monte Carlo methods can be computationally prohibitive with massive NGS data, we then developed an alternative approach based on PCA. The first statistic based on PCA was the communality statistic, which measures the percentage of variation of a single-nucleotide polymorphism (SNP) explained by the first $K$ principal components [@duforet2015detecting]. It was initially implemented with a command line computer program (the *pcadapt fast* command) before being implemented in the *pcadapt* R package. We do not maintain C versions of *pcadapt* anymore. The whole analysis that goes from reading genotype files to detecting outlier SNPs can now be performed in R [@team2015r].
+
+The 2.0 and following versions of the R package implement a more powerful statistic for genome scans. The test statistic is a robust Mahalanobis distance. A vector containing $K$ $z$-scores measures to what extent a SNP is related to the first $K$ principal components. The Mahalanobis distance is then computed for each SNP to detect outliers for which the vector of $z$-scores does not follow the distribution of the main bulk of points. The term robust refers to the fact that the estimators of the mean and of the covariance matrix of $z$, which are required to compute the Mahalanobis distances, are not sensitive to the presence of outliers in the data set [@maronna2002robust]. In the following, we provide a comparison of statistical power that shows that Mahalanobis distance provides more powerful genome scans compared with the communality statistic and with the Bayes factor that were implemented in previous versions of *pcadapt*.
+
+In addition to comparing the different test statistics that were implemented in *pcadapt*, we compare statistic performance obtained with the 3.0 version of *pcadapt* and with other computer programs for genome scans. We use simulated data to compare computer programs in terms of false discovery rate (FDR) and statistical power. We consider data simulated under different demographic models including island model, divergence model and range expansion. To perform comparisons, we include programs that require to group individuals into populations: *BayeScan* [@foll2008genome], the $F_{LK}$ statistic as implemented in the *hapflk* computer program [@bonhomme2010detecting], and *OutFLANK* that provides a robust estimation of the null distribution of a $F_{ST}$ test statistic [@whitlock2015reliable]. We additionally consider the *sNMF* computer program that implements another individual-based test statistic for genome scans [@frichot2014fast; @martins2016identifying].
+
+### Statistical and computational approach {-}
+
+#### Input data {-}
+
+The R package can handle different data formats for the genotype data matrix. In the version 3.0 that is currently available on CRAN, the package can handle genotype data files in the *vcf*, *ped* and *lfmm* formats. In addition, the package can also handle a *pcadapt* format, which is a text file where each line contains the allele counts of all individuals at a given locus. When reading a genotype data matrix with the *read.pcadapt* function, a *.pcadapt* file is generated, which contains the genotype data in the *pcadapt* format.
+
+#### Choosing the number of principal components {-}
+
+In the following, we denote by $n$ the number of individuals, by $p$ the number of genetic markers and by $G$ the genotype matrix that is composed of $n$ lines and $p$ columns. The genotypic information at locus $j$ for individual $i$ is encoded by the allele count $G_{ij}$, $1 \leq i \leq n$ and $1 \leq j \leq p$, which is a value in 0,1 for haploid species and in 0,1,2 for diploid species. The current 3.0.2 version of the package can handle haploid and diploid data only.
+
+First, we normalize the genotype matrix columnwise. For diploid data, we consider the usual normalization in population genomics where $\tilde{G}_{ij} = (G_{ij} - p_j)/(2 \times p_j(1 - p_j))^{1/2}$, and $p_j$ denotes the minor allele frequency for locus $j$ [@patterson2006population]. The normalization for haploid data is similar except that the denominator is given by $(p_j(1 - p_j))^{1/2}$
+
+Then, we use the normalized genotype matrix math formula to ascertain population structure with PCA [@patterson2006population]. The number of principal components to consider is denoted $K$ and is a parameter that should be chosen by the user. In order to choose $K$, we recommend to consider the graphical approach based on the scree plot [@jackson1993stopping]. The scree plot displays the eigenvalues of the covariance matrix $\Omega$ in descending order. Up to a constant, eigenvalues are proportional to the proportion of variance explained by each principal component. The eigenvalues that correspond to random variation lie on a straight line whereas the ones corresponding to population structure depart from the line. We recommend to use Cattell's rule that states that components corresponding to eigenvalues to the left of the straight line should be kept [@cattell1966scree].
+
+#### Test statistic {-}
+
+We now detail how the package computes the test statistic. We consider multiple linear regressions by regressing each of the $p$ SNPs by the $K$ principal components $X_1, \dots, X_K$
+
+\begin{equation}
+  G_j = \sum_{k=1}^K \beta_{jk} X_k + \epsilon_j, \; j = 1, \dots, p,
+  (\#eq:multiple-reg)
+\end{equation}
+
+where $\beta_{jk}$ is the regression coefficient corresponding to the $j$-th SNP regressed by the $k$-th principal component, and $\epsilon_j$ is the residuals vector. To summarize the result of the regression analysis for the $j$-th SNP, we return a vector of $z$-scores $z_j = (z_{j1}, \dots, z_{jK})$ where $z_{jk}$ corresponds to the $z$-score obtained when regressing the $j$-th SNP by the $k$-th principal component.
+
+The next step is to look for outliers based on the vector of $z$-scores. We consider a classical approach in multivariate analysis for outlier detection. The test statistic is a robust Mahalanobis distance $D$ defined as
+
+\begin{equation}
+  D_j^2 = (z_j - \bar{z})^T \Sigma^{-1} (z_j - \bar{z}),
+  (\#eq:maha-def)
+\end{equation}
+
+where $\Sigma$ is the $(K \times K)$ covariance matrix of the $z$-scores and $\bar{z}$ is the vector of the $K$ $z$-score means [@maronna2002robust]. When $K > 1$, the covariance matrix $\Sigma$ is estimated with the orthogonalized Gnanadesikan–Kettenring method that is a robust estimate of the covariance able to handle large-scale data [@maronna2002robust] (*covRob* function of the *robust* R package). When $K = 1$, the variance is estimated with another robust estimate (*cov.rob* function of the *MASS* R package).
+
+#### Genomic inflation factor {-}
+
+To perform multiple hypothesis testing, Mahalanobis distances should be transformed into $P$-values. If the $z$-scores were truly multivariate Gaussian, the Mahalanobis distances $D$ should be chi-square distributed with $K$ degrees of freedom. However, as usual for genome scans, there are confounding factors that inflate values of the test statistic and that would lead to an excess of false positives [@franccois2016controlling]. To account for the inflation of test statistics, we divide Mahalanobis distances by a constant $\lambda$ to obtain a statistic that can be approximated by a chi-square distribution with $K$ degrees of freedom. This constant is estimated by the genomic inflation factor defined here as the median of the Mahalanobis distances divided by the median of the chi-square distribution with $K$ degrees of freedom [@devlin1999genomic].
+
+#### Control of the false discovery rate (FDR) {-}
+
+Once $P$-values are computed, there is a problem of decision-making related to the choice of a threshold for $P$-values. We recommend to use the FDR approach where the objective is to provide a list of candidate genes with an expected proportion of false discoveries smaller than a specified value. For controlling the FDR, we consider the $q$-value procedure as implemented in the *qvalue* R package that is less conservative than Bonferroni or Benjamini–Hochberg correction [@storey2003statistical]. The *qvalue* R package transforms the $P$-values into $q$-values and the user can control a specified value $\alpha$ of FDR by considering as candidates the SNPs with $q$-values smaller than $\alpha$.
+
+#### Numerical computations {-}
+
+PCA is performed using a C routine that allows to compute scores and eigenvalues efficiently with minimum RAM access [@duforet2015detecting]. Computing the covariance matrix $\Omega$ is the most computationally demanding part. To provide a fast routine, we compute the $n \times n$ covariance matrix $\Omega$ instead of the much larger $p \times p$ covariance matrix. We compute the covariance $\Omega$ incrementally by adding small storable covariance blocks successively. Multiple linear regression is then solved directly by computing an explicit solution, written as a matrix product. Using the fact that the $(n,K)$ score matrix $X$ is orthogonal, the $(p,K)$ matrix $\beta$ of regression coefficients is given by $G^TX$ and the $(n,p)$ matrix of residuals is given by $G-XX^TG$. The $z$-scores are then computed using the standard formula for multiple regression
+
+\begin{equation}
+  z_{jk} = \hat{\beta}_{jk}\sqrt{\frac{\sum_{i=1}^n x_{ik}^2}{\sigma_j^2}}
+  (\#eq:z-def)
+\end{equation}
+
+where $\sigma_j^2$ is an estimate of the residual variance for the $j^{th}$ SNP, and $x_{ik}$ is the score of the $k^{th}$ principal component for the $i^{th}$ individual.
+
+#### Missing data {-}
+
+Missing data should be accounted for when computing principal components and when computing the matrix of $z$-scores. There are many methods to account for missing data in PCA, and we consider the pairwise covariance approach [@dray2015principal]. It consists in estimating the covariance between each pair of individuals using only the markers that are available for both individuals. To compute $z$-scores, we account for missing data in formula \@ref(eq:z-def). The term in the numerator $\sum_{i=1}^n x_{ik}^2$ depends on the quantity of missing data. If there are no missing data, it is equal to 1 by definition of the scores obtained with PCA. As the quantity of missing data grows, this term and the $z$-score decrease such that it becomes more difficult to detect outlier markers.
+
+#### Pooled sequence data {-}
+
+When data are sequenced in pool, the Mahalanobis distance is based on the matrix of allele frequency computed in each pool instead of the matrix of z-scores.
+
+### Materials and methods {-}
+
+#### Simulated data {-}
+
+We simulated SNPs under an island model, under a divergence model and we downloaded simulations of range expansion [@lotterhos2015relative]. All data we simulated were composed of 3 populations, each of them containing 50 sampled diploid individuals (Table \@ref(tab:table2)). SNPs were simulated assuming no linkage disequilibrium. SNPs with minor allele frequencies lower than 5% were discarded from the data sets. The mean $F_{ST}$ for each simulation was comprised between 5% and 10%. Using the simulations based on an island and a divergence model, we also created data sets composed of admixed individuals. We assumed that an instantaneous admixture event occurs at the present time so that all sampled individuals are the results of this admixture event. Admixed individuals were generated by drawing randomly admixture proportions using a Dirichlet distribution of parameter $(\alpha, \alpha, \alpha)$ ($\alpha$ ranging from 0.005 to 1 depending on the simulation).
+
+(ref:table2-cap) Summary of the simulations. The table above shows the average number of individuals, of SNPs, of adaptive markers and the total number of simulations per scenario
+
+```{r table2, results='asis', message=FALSE}
+models <- c("Island model",
+            "Divergence model",
+            "Island model (hybrids)",
+            "Divergence model (hybrids)",
+            "Range expansion")
+individuals <- c(150, 150, 150, 150, 1200)
+snps <- c(472, 3000, 472, 3000, 9999)
+adaptive.snps <- c(27, 100, 30, 100, 99)
+simulations <- c(35, 6, 27, 9, 6)
+
+data.frame(models = models,
+           individuals = individuals,
+           snps = snps,
+           adaptive.snps = adaptive.snps,
+           simulations = simulations) %>%
+  knitr::kable(col.names = c(" ",
+                             "Individuals",
+                             "SNPs",
+                             "Adaptive SNPs",
+                             "Simulations"),
+               caption = '(ref:table2-cap)',
+               booktabs = TRUE) %>%
+  kable_styling(full_width = T)
+```
+
+#### Island model {-}
+
+We used *ms* to create simulations under an island model (Fig. \@ref(fig:FigureSI1)). We set a lower migration rate for the 50 adaptive SNPs compared with the 950 neutral ones to mimic diversifying selection [@bazin2010likelihood]. For a given locus, migration from population $i$ to $j$ was specified by choosing a value of the effective migration rate that is set to $M_{\text{neutral}} = 10$ for neutral SNPs and to $M_{\text{adaptive}}$ for adaptive ones. We simulated 35 data sets in the island model with different strengths of selection, where the strength of selection corresponds to the ratio $M_{\text{neutral}} / M_{\text{adaptive}}$ that varies from 10 to 1000. The *ms* command lines for neutral and adaptive SNPs are given by ($M_{\text{adaptive}} = 0.01$ and $M_{\text{neutral}} = 10$).
+
+```{bash, echo=TRUE, eval=FALSE}
+./ms 300 950 -s 1 -I 3 100 100 100
+
+-ma x 10 10 10 x 10 10 10 x
+
+./ms 300 50 -s 1 -I 3 100 100 100
+
+-ma x 0.01 0.01 0.01 x 0.01 0.01 0.01 x
+```
+
+#### Divergence model {-}
+
+To perform simulations under a divergence model, we used the package *simuPOP*, which is an individual-based population genetic simulation environment [@peng2005simupop]. We assumed that an ancestral panmictic population evolved during 20 generations before splitting into two subpopulations. The second subpopulation then split into subpopulations 2 and 3 at time $T > 20$. All 3 subpopulations continued to evolve until 200 generations have been reached, without migration between them (Figure \@ref(fig:FigureSI1)). A total of 50 diploid individuals were sampled in each population. Selection only occurred in the branch associated with population 2 and selection was simulated by assuming an additive model (fitness is equal to $1 - 2s$, $1 - s$, $1$ depending on the genotypes). We simulated a total of 3000 SNPs comprising of 100 adaptive ones for which the selection coefficient is of $s = 0.1$.
+
+#### Range expansion {-}
+
+We downloaded in the *Dryad Digital Repository* six simulations of range expansion with two glacial refugia [@lotterhos2015relative]. Adaptation occurred during the recolonization phase of the species range from the two refugia. We considered six different simulated data with 30 populations and a number of sampled individuals per location that varies from 20 to 60.
+
+#### Parameter settings for the different computer programs {-}
+
+When using *hapflk*, we set $K = 1$ that corresponds to the computation of the $F_{LK}$ statistic. When using *BayeScan* and *OutFLANK*, we used the default parameter values. For *sNMF*, we used $K = 3$ for the island and divergence model and $K = 5$ for range expansion as indicated by the cross-entropy criterion. The regularization parameter of *sNMF* was set to $\alpha = 1000$. For *sNMF* and *hapflk*, we used the genomic inflation factor to recalibrate $p$-values. When using population-based methods with admixed individuals, we assigned each individual to the population with maximum amount of ancestry.
+
+### Results {-}
+
+#### Choosing the number of principal components {-}
+
+We evaluate Cattell's graphical rule to choose the number of principal components. For the island and divergence model, the choice of $K$ is evident (Fig. \@ref(fig:choice)). For $K \geq 3$, the eigenvalues follow a straight line. As a consequence, Cattell's rule indicates $K = 2$, which is expected because there are three populations [@patterson2006population]. For the model of range expansion, applying Cattell's rule to choose $K$ is more difficult (Fig. \@ref(fig:choice)). Ideally, the eigenvalues that correspond to random variation lie on a straight line whereas the ones corresponding to population structure depart from the line. However, there is no obvious point at which eigenvalues depart from the straight line. Choosing a value of $K$ between 5 and 8 is compatible with Cattell's rule. Using the package qvalue to control 10% of FDR, we find that the actual proportion of false discoveries as well as statistical power is weakly impacted when varying the number of principal components from $K = 5$ to $K = 8$ (Figure \@ref(fig:FigureSI2)).
+
+
+(ref:choice-cap) Determining $K$ with the scree plot. To choose $K$, we recommend to use Cattell's rule that states that components corresponding to eigenvalues to the left of the straight line should be kept. According to Cattell's rule, the eigenvalues that correspond to random variation lie on the straight line whereas the ones corresponding to population structure depart from the line. For the island and divergence model, the choice of $K$ is evident. For the model or range expansion, a value of $K$ between 5 and 8 is compatible with Cattell's rule.
+
+\newpage
+
+```{r choice, fig.height=8, fig.cap='(ref:choice-cap)', out.width='\\textwidth'}
+K <- 15
+x.I <- readRDS("data/isl.rds")
+x.D <- readRDS("data/div.rds")
+x.R <- readRDS("data/rexp.rds")
+res.I <- pcadapt(x.I$geno, K = K)
+res.D <- pcadapt(x.D$geno, K = K)
+res.R <- pcadapt(x.R$geno, K = K)
+
+model <- c(rep("isl", K), rep("div", K), rep("rexp", K))
+df <- data.frame(model = model,
+                 x = c(1:K, 1:K, 1:K),
+                 values = c(res.I$singular.values^2 / length(res.I$maf),
+                            res.D$singular.values^2 / length(res.D$maf),
+                            res.R$singular.values^2 / length(res.R$maf)))
+
+p.I <- df %>%
+  filter(model == "isl") %>%
+  ggplot(aes(x = x, y = values)) +
+  geom_line(color = cbbPalette[3]) +
+  geom_point(color = cbbPalette[6]) +
+  xlab("PC") +
+  ylab("Proportion of explained variance") +
+  annotate("text",
+           x = 4,
+           y = df$values[df$model == "isl"][2],
+           label = "K = 2",
+           size = 3,
+           fontface = "italic",
+           colour = "black") +
+  geom_segment(aes(x = 3.25,
+                   y = df$values[df$model == "isl"][2],
+                   xend = 2,
+                   yend = df$values[df$model == "isl"][2]),
+               colour = "black",
+               size = 0.3,
+               arrow = arrow(length = unit(4, "pt"),
+                             type = "closed")) +
+  ggtitle("Island model") +
+  theme_bw(base_size = 8) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+p.D <- df %>%
+  filter(model == "div") %>%
+  ggplot(aes(x = x, y = values)) +
+  geom_line(color = cbbPalette[3]) +
+  geom_point(color = cbbPalette[6]) +
+  xlab("PC") +
+  ylab("Proportion of explained variance") +
+  annotate("text",
+           x = 4,
+           y = df$values[df$model == "div"][2],
+           label = "K = 2",
+           size = 3,
+           fontface = "italic",
+           colour = "black") +
+  geom_segment(aes(x = 3.25,
+                   y = df$values[df$model == "div"][2],
+                   xend = 2,
+                   yend = df$values[df$model == "div"][2]),
+               colour = "black",
+               size = 0.3,
+               arrow = arrow(length = unit(4, "pt"),
+                             type = "closed")) +
+  ggtitle("Divergence model") +
+  theme_bw(base_size = 8) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+p.R <- df %>%
+  filter(model == "rexp") %>%
+  ggplot(aes(x = x, y = values)) +
+  geom_line(color = cbbPalette[3]) +
+  geom_point(color = cbbPalette[6]) +
+  xlab("PC") +
+  ylab("Proportion of explained variance") +
+  annotate("text",
+           x = 8,
+           y = df$values[df$model == "rexp"][8] + 0.005,
+           label = "K = 8",
+           size = 3,
+           fontface = "italic",
+           colour = "black") +
+  geom_segment(aes(x = 8,
+                   y = df$values[df$model == "rexp"][8] + 0.004,
+                   xend = 8,
+                   yend = df$values[df$model == "rexp"][8]),
+               colour = "black",
+               size = 0.3,
+               arrow = arrow(length = unit(4, "pt"),
+                             type = "closed")) +
+  ggtitle("Range expansion") +
+  theme_bw(base_size = 8) +
+  theme(plot.title = element_text(hjust = 0.5))
+
+gridExtra::grid.arrange(p.I, p.D, p.R, ncol = 1)
+```
+
+#### An example of genome scans performed with *pcadapt* {-}
+
+To provide an example of results, we apply *pcadapt* with $K = 6$ in the model of range expansion. Population structure captured by the first two principal components is displayed in Fig. \@ref(fig:scanex). $P$-values are well calibrated because they are distributed as a mixture of a uniform distribution and of a peaky distribution around 0, which corresponds to outlier loci (Fig. \@ref(fig:scanex)). Using a FDR threshold of 10% with the *qvalue* package, we find 122 outliers among 10 000 SNPs, resulting in 23% actual false discoveries and a power of 95%.
+
+(ref:scanex-cap) Population structure (first 2 principal components) and distribution of $p$-values obtained with *pcadapt* for a simulation of range expansion. $P$-values are well calibrated because they are distributed as a mixture of a uniform distribution and of a peaky distribution around 0, which corresponds to outlier loci. In the left panel, each colour corresponds to individuals sampled from the same population.
+
+```{r scanex, fig.cap='(ref:scanex-cap)', fig.height=5, out.width='\\textwidth'}
+res.R <- pcadapt(x.R$geno, K = 6, min.maf = 0)
+
+ggdf <- data.frame(PC1 = res.R$scores[, 1],
+                   PC2 = res.R$scores[, 2],
+                   pop = as.factor(x.R$pop))
+
+p1 <- ggplot(ggdf, aes(x = PC1, y = PC2, fill = pop)) +
+  geom_point(size = 2.5, shape = 21, stroke = 1) +
+  ggtitle("Population structure") +
+  theme_bw() +
+  theme(axis.text = element_text(face = "bold"),
+        legend.text = element_blank(),
+        legend.position = "none",
+        plot.title = element_text(hjust = 0.5))
+
+
+pval.df <- data.frame(pval = res.R$pvalues)
+p2 <- pval.df %>%
+  ggplot(aes(pval)) +
+  geom_histogram(aes(y = ..density..),
+                 binwidth = 0.01,
+                 boundary = 0.01,
+                 color = "black",
+                 fill = cbbPalette[2]) +
+  ggtitle(expression("Distribution of "~italic(P)~"-values")) +
+  xlab(expression(italic(P)~"-values")) +
+  ylab("Density") +
+  theme_bw() +
+  theme(axis.text = element_text(face = "bold"),
+        plot.title = element_text(hjust = 0.5))
+
+gridExtra::grid.arrange(p1, p2, ncol = 1)
+```
+
+#### Control of the false discovery rate
+
+We evaluate to what extent using the packages *pcadapt* and *qvalue* control a FDR set at 10% (Fig. \@ref(fig:jitter)). All SNPs with a $q$-value smaller than 10% were considered as candidate SNPs. For the island model, we find that the proportion of false discoveries is 8% and it increases to 10% when including admixture. For the divergence model, the proportion of false discoveries is 11% and it increases to 22% when including admixture. The largest proportion of false discoveries is obtained under range expansion and is equal to 25%.
+
+(ref:jitter-cap) Control of the FDR for different computer programs for genome scans. We find that the median proportion of false discoveries is around the nominal FDR set at 10% (6% for *hapflk*, 11% for both *OutFLANK* and *pcadapt* and 19% for *sNMF*) with the exception of *BayeScan* that generates 41% of false discoveries.
+
+```{r jitter, fig.height=5, fig.cap='(ref:jitter-cap)'}
+tmp <- readRDS("data/fdrpower.rds")
+
+shPalette <- c(18, 5, 19, 1, 15)
+tmp %>% arrange(alpha, model, filename, software) %>%
+  mutate(fdr = 100 * fdr) %>%
+  filter(alpha == 10) %>%
+  group_by(model, software) %>%
+  summarise(avg_fdr = mean(fdr), avg_power = mean(power)) %>%
+  ggplot(aes(x = software,
+             y = avg_fdr,
+             color = software,
+             shape = model)) +
+  coord_flip() +
+  geom_jitter(size = 4, width = 0.25) +
+  geom_hline(yintercept = 10, linetype = 2) +
+  scale_color_manual(values = cbbPalette[c(8, 3, 4, 2, 7)]) +
+  scale_shape_manual(labels = c("Divergence",
+                                "Divergence and admixture",
+                                "Island model",
+                                "Island model and admixture",
+                                "Range expansion"),
+                     values = shPalette) +
+  scale_x_discrete(labels = c("sNMF",
+                              "pcadapt",
+                              "OutFLANK",
+                              "hapflk",
+                              "BayeScan")) +
+  guides(colour = FALSE, shape = guide_legend(nrow = 2)) +
+  ylab("False Discovery Rate (%)") +
+  xlab("Software") +
+  theme_bw() +
+  theme(axis.text.y = element_text(face = "italic"),
+        legend.title = element_blank(),
+        legend.position = "bottom",
+        legend.direction = "vertical")
+```
+
+We then evaluate the proportion of false discoveries obtained with *BayeScan*, *hapflk*, *OutFLANK* and *sNMF* (Fig. \@ref(fig:jitter)). We find that *hapflk* is the most conservative approach (FDR = 6%) followed by *OutFLANK* and *pcadapt* (FDR = 11%). The computer program *sNMF* is more liberal (FDR = 19%) and *BayeScan* generates the largest proportion of false discoveries (FDR = 41%). When not recalibrating the p-values of *hapflk*, we find that the test is even more conservative (results not shown). For all programs, the range expansion scenario is the one that generates the largest proportion of false discoveries. Proportion of false discoveries under range expansion ranges from 22% (*OutFLANK*) to 93% (*BayeScan*).
+
+#### Statistical power {-}
+
+To provide a fair comparison between methods and computer programs, we compare statistical power for equal values of the observed proportion of false discoveries. Then we compute statistical power averaged over observed proportion of false discoveries ranging from 0% to 50%.
+
+We first compare statistical power obtained with the different statistical methods that have been implemented in *pcadapt* (Table \@ref(tab:table1)). For the island model, Bayes factor, communality statistic and Mahalanobis distance have similar power (Fig. \@ref(fig:bayes-comm-maha)). For the divergence model, the power obtained with Mahalanobis distance is 20% whereas the power obtained with the communality statistic and with the Bayes factor is, respectively, 4% and 2% (Fig. \@ref(fig:bayes-comm-maha)). Similarly, for range expansion, the power obtained with Mahalanobis distance is 46% whereas the power obtained with the communality statistic and with the Bayes factor is 34% and 13%. We additionally investigate to what extent increasing sample size in each population from 20 to 60 individuals affects power. For range expansion, the power obtained with the Mahalanobis distance hardly changes ranging from 44% to 47%. However, the power obtained with the other two statistics changes importantly. The power obtained with the communality statistic increases from 27% to 39% when increasing the sample size and the power obtained with the Bayes factor increases from 0% to 44%.
+
+\clearpage
+
+(ref:bayes-comm-maha-cap) Bayes factor corresponds to the test statistic implemented in the Bayesian version of *pcadapt* [@duforet2014genome]; the communality statistic was the default statistic in version 1.x of the R package *pcadapt* [@duforet2015detecting], and Mahalanobis distances are available since the release of the 2.0 version of the package. When there is hierarchical population structure (divergence model and range expansion), the Mahalanobis distance provides more powerful genome scans compared with the test statistic previously implemented in pcadapt. The abbreviation dist. stands for distance. Statistical power is averaged over the observed proportion of false discoveries (ranging between 0% and 50%).
+
+```{r bayes-comm-maha, fig.cap='(ref:bayes-comm-maha-cap)'}
+data.frame(power = c(0.291, 0.319, 0.316,
+                     0.02, 0.04, 0.2,
+                     0.13, 0.34, 0.46),
+           model = factor(c(rep("isl", 3),
+                     rep("div", 3),
+                     rep("rexp", 3)),
+                     levels = c("isl", "div", "rexp")),
+           method = rep(c("bayes", "comm", "maha"), 3)) %>%
+  ggplot(aes(x = model, y = power, fill = as.factor(method))) +
+  geom_bar(stat = "identity",
+           position = "dodge",
+           width = 0.75,
+           color = "black") +
+  ylim(0, 0.5) +
+  scale_fill_manual(labels = c("Bayes factor",
+                               paste0("Communality\n",
+                                      "R pcadapt 1.x"),
+                               paste0("Mahalanobis dist.\n",
+                                      "R pcadapt 2.x")),
+                    values = c("darkturquoise",
+                               "darkcyan",
+                               "darkslategrey")) +
+  scale_x_discrete(labels = c(paste0("Island\n",
+                                     "model"),
+                              paste0("Divergence\n",
+                                     "model"),
+                              paste0("Range\n",
+                                     "expansion"))) +
+  xlab("Simulations") +
+  ylab("Power") +
+  theme_bw() +
+  theme(legend.title = element_blank(),
+        legend.position = c(0.125, 0.85),
+        legend.text = element_text(size = 9),
+        legend.key.size = unit(1.5, "lines"),
+        legend.background = element_rect(fill = alpha("white", 0)))
+```
+
+Then we describe our comparison of computer programs for genome scans. For the simulations obtained with the island model where there is no hierarchical population structure, the statistical power is similar for all programs (Figure \@ref(fig:FigureSI3) and \@ref(fig:FigureSI4)). Including admixed individuals hardly changes their statistical power (Figure \@ref(fig:FigureSI3)).
+
+Then, we compare statistical power in a divergence model where adaptation took place in one of the external branches of the population divergence tree. The programs *pcadapt* and *hapflk*, which account for hierarchical population structure, as well as *BayeScan* are the most powerful in that setting (Fig. \@ref(fig:power-div) and Figure \@ref(fig:FigureSI5)). The values of power in decreasing order are of 23% for *BayeScan*, of 20% for *pcadapt*, of 17% for *hapflk*, of 7% for *sNMF* and of 1% for *OutFLANK*. When including admixed individuals, the power of *hapflk* and of *pcadapt* hardly decreases whereas the power of *BayeScan* decreases to 6% (Fig. \@ref(fig:power-div)).
+
+(ref:power-div-cap) Statistical power averaged over the expected proportion of false discoveries (ranging between 0% and 50%) for the divergence model with three populations. We assume that adaptation took place in an external branch that follows the most recent population divergence event.
+
+```{r power-div, fig.cap='(ref:power-div-cap)'}
+readRDS("data/isldivrexp.rds") %>%
+  filter(model == "div") %>%
+  ggplot(aes(x = software,
+             y = measure,
+             fill = factor(type))) +
+  geom_bar(stat = "identity",
+           position = "dodge",
+           color = "black") +
+  ylim(0, 0.3) +
+  scale_fill_manual(values = c("lightblue", "darkblue"),
+                    labels = c("No admixture", "With admixture")) +
+  scale_x_discrete(labels = c("BayeScan",
+                              "hapflk",
+                              "OutFLANK",
+                              "pcadapt",
+                              "sNMF")) +
+  xlab("Software") +
+  ylab("Power") +
+  theme_bw() +
+  theme(axis.text.x = element_text(face = "italic"),
+        legend.title = element_blank(),
+        legend.position = c(0.125, 0.9),
+        legend.background = element_rect(fill = alpha("white", 0)))
+```
+
+The last model we consider is the model of range expansion. The package *pcadapt* is the most powerful approach in this setting (Fig. \@ref(fig:power-rexp) and \@ref(fig:FigureSI6)). Other computer programs also discover many true-positive loci with the exception of *BayeScan* that provides no true discovery when the observed FDR is smaller than 50% (Fig. \@ref(fig:power-rexp) and \@ref(fig:FigureSI6)). The values of power in decreasing order are of 46% for *pcadapt*, of 41% for *hapflk*, of 37% for *OutFLANK*, of 30% for *sNMF* and of 0% for *BayeScan*.
+
+(ref:power-rexp-cap) Statistical power averaged over the expected proportion of false discoveries (ranging between 0% and 50%) for a range expansion model with two refugia. Adaptation took place during the recolonization event.
+
+```{r power-rexp, fig.cap='(ref:power-rexp-cap)'}
+readRDS("data/isldivrexp.rds") %>%
+  filter(model == "rexp") %>%
+  ggplot(aes(x = software,
+             y = measure)) +
+  geom_bar(stat = "identity",
+           width = 0.5,
+           color = "black",
+           fill = "lightblue") +
+  scale_x_discrete(labels = c("BayeScan",
+                              "hapflk",
+                              "OutFLANK",
+                              "pcadapt",
+                              "sNMF")) +
+  ylim(0, 0.5) +
+  xlab("Software") +
+  ylab("Power") +
+  theme_bw() +
+  theme(axis.text.x = element_text(face = "italic"),
+        legend.title = element_blank(),
+        legend.position = c(0.125, 0.9),
+        legend.background = element_rect(fill = alpha("white", 0)))
+```
+
+#### Running time of the different computer programs {-}
+
+Last, we compare running times. The characteristics of the computer we used to perform comparisons are the following: OSX El Capitan 10.11.3, 2,5 GHz Intel Core i5, 8 Go 1600 MHz DDR3. We discard *BayeScan* as it is too time-consuming. For instance, running *BayeScan* on a genotype matrix containing 150 individuals and 3000 SNPs takes 9h whereas it takes less than one second with *pcadapt*. The different programs were run on genotype matrices containing 300 individuals and from 500 to 50 000 SNPs. *OutFLANK* is the computer program for which the runtime increases the most rapidly with the number of markers. *OutFLANK* takes around 25 min to analyse 50 000 SNPs (Figure \@ref(fig:FigureSI7)). For the other 3 computer programs (*hapflk*, *pcadapt*, *sNMF*), analysing 50 000 SNPs takes less than 3 min.
+
+### Discussion {-}
+
+The R package *pcadapt* implements a fast method to perform genome scans with next-generation sequencing data. It can handle data sets where population structure is continuous or data sets containing admixed individuals. It can handle missing data as well as pooled sequencing data. The 2.0 and later versions of the R package implements a robust Mahalanobis distance as a test statistic. When hierarchical population structure occurs, Mahalanobis distance provides more powerful genome scans compared with the communality statistic that was implemented in the first version of the package [@duforet2015detecting]. In the divergence model, adaptation occurs along an external branch of the divergence tree that corresponds to the second principal component. When outlier SNPs are not related to the first principal component, the Mahalanobis distance provides a better ranking of the SNPs compared with the communality statistic.
+
+Simulations show that the R package *pcadapt* compares favourably to other computer programs for genome scans. When data were simulated under an island model, population structure is not hierarchical because genetic differentiation is the same for all pairs of populations. Statistical power and control of the FDR were similar for all computer programs. In the presence of hierarchical population structure (divergence model) where genetic differentiation varies between pairs of populations, the ranking of the SNPs depends on the computer program. *pcadapt* and *hapflk* provide the most powerful scans whether or not simulations include admixed individuals. *OutFLANK* implements a $F_{ST}$ statistic and because adaptation does not correspond to the most differentiated populations, it fails to capture adaptive SNPs (Fig. \@ref(fig:power-div)) [@bonhomme2010detecting; @duforet2015detecting]. *BayeScan* does not assume equal differentiation between all pairs of populations, which may explain why it has a good statistical power for the divergence model. However, its statistical power is severely impacted by the presence of admixed individuals because its power decreases from 24% to 6% (Fig. \@ref(fig:power-div)). Understanding why *BayeScan* is severely impacted by admixture is out of the scope of this study. In the range expansion model, *BayeScan* returns many null q-values (between 376 and 809 SNPs of 9899 neutral and 100 adaptive SNPs) such that the observed FDR is always larger than 50%. Overall, we find that *pcadapt* and *hapflk* provide comparable statistical power. They provide optimal or near optimal ranking of the SNPs in different scenarios including hierarchical population structure and admixed individuals. The main difference between the two computer programs concerns the control of the FDR because hapflk is found to be more conservative.
+
+Because NGS data become more and more massive, careful numerical implementation is crucial. There are different options to implement PCA and *pcadapt* uses a numerical routine based on the computation of the covariance matrix $\Omega$. The algorithmic complexity to compute the covariance matrix is proportional to $pn^2$ where $p$ is the number of markers and $n$ is the number of individuals. The computation of the first $K$ eigenvectors of the covariance matrix $\Omega$ has a complexity proportional to $n^3$. This second step is usually more rapid than the computation of the covariance because the number of markers is usually large compared with the number of individuals. In brief, computing the covariance matrix $\Omega$ is by far the most costly operation when computing principal components. Although we have implemented PCA in C to obtain fast computations, an improvement in speed could be envisioned for future versions. When the number of individuals becomes large (e.g. $n \geq 10 000$), there are faster algorithms to compute principal components [@halko2011finding; @abraham2014fast]. In addition to running time, numerical implementations also impact the effect of missing data on principal components [@dray2015principal]. Achieving a good trade-off between fast computations and accurate evaluation of population structure in the face of large amount of missing data is a challenge for modern numerical methods in molecular ecology.
+
+### Acknowledgements {-}
+
+This work has been supported by the LabEx PERSYVAL-Lab (ANR-11-LABX-0025-01) and the ANR AGRHUM project (ANR-14-CE02-0003-01). We want to thank two anonymous reviewers and Stéphane Dray for their critical reading of our manuscript.
+
+K.L., E.B. and M.G.B.B. designed and performed the research.
+
+### Data accessibility {-}
+
+Island and divergence model data: doi: 10.5061/dryad.8290n.
+
+Range expansion simulated data: doi: 10.5061/dryad.mh67v. Files:
+
+`2R_R30_1351142954_453_2_NumPops=30_NumInd=20`
+
+`2R_R30_1351142954_453_2_NumPops=30_NumInd=60`
+
+`2R_R30_1351142970_988_6_NumPops=30_NumInd=20`
+
+`2R_R30_1351142970_988_6_NumPops=30_NumInd=60`
+
+`2R_R30_1351142986_950_10_NumPops=30_NumInd=20`
+
+`2R_R30_1351142986_950_10_NumPops=30_NumInd=60`
+
+### Estimation robuste de la matrice de covariance
+
+```{r}
+dt <- as.matrix(read.table(system.file("extdata", "geno3pops.pcadapt", package = "pcadapt")))
+x <- pcadapt(dt, K = 2)
+gt <- 1:150
+confidence <- 0.65
+
+df.data <- data.frame(x.coord = x$zscores[-gt, 1],
+                      y.coord = x$zscores[-gt, 2],
+                      method = "neutral")
+df.out <- data.frame(x.coord = x$zscores[gt, 1],
+                     y.coord = x$zscores[gt, 2],
+                     method = "outlier")
+
+get.ellipse.coord = function(x, method = NULL, ci = confidence, n.pts = 1000){
+  ep <- eigen(x$cov, symmetric = TRUE)
+  s <- qchisq(ci, df = length(x$center))
+  a <- 2 * sqrt(s * ep$values[1]) 
+  b <- 2 * sqrt(s * ep$values[2])
+  alpha <- atan(ep$vectors[2, 1] / ep$vectors[1, 1])
+  t <- seq(0, 2 * pi, length.out = n.pts)
+  x.coord <- a * cos(t) 
+  y.coord <- b * sin(t) 
+  coord <- as.matrix(rbind(x.coord, y.coord))
+  R_alpha <- matrix(0, 2, 2)
+  R_alpha[1, 1] <- cos(alpha)
+  R_alpha[2, 2] <- cos(alpha)
+  R_alpha[1, 2] <- -sin(alpha)
+  R_alpha[2, 1] <- sin(alpha)
+  new.coord <- R_alpha %*% coord
+  df <- data.frame(x.coord = new.coord[1, ],
+                   y.coord = new.coord[2, ],
+                   method = method)
+  return(df)
+}
+
+# Outlier-free
+obj.true <- list(cov = cov(x$zscores[-gt, ]),
+                 center = apply(x$zscores[-gt, ], MARGIN = 2, FUN = mean))
+
+tmp <- pcadapt::covRob_cpp(x$zscores)
+obj.ogk <- list(cov = tmp$cov,
+                center = tmp$center)
+
+tmp <- robust::covRob(x$zscores)
+obj.mcd <- list(cov = tmp$cov,
+                center = tmp$center)
+
+df.1 <- get.ellipse.coord(obj.true, "neutral")
+df.2 <- get.ellipse.coord(obj.ogk, "OGK")
+df.3 <- get.ellipse.coord(obj.mcd, "MCD")
+rbind(df.data, df.out, df.1, df.2, df.3) %>%
+ggplot(aes(x = x.coord, y = y.coord)) + 
+  geom_point(aes(color = method), size = 1, na.rm = TRUE) +
+  xlab("Loadings PC1") +
+  ylab("Loadings PC2") +
+  theme_bw() +
+  #labs(title = paste0("Confidence: ", 100 * confidence, "%")) +
+  theme(axis.text = element_text(size = 15),
+        axis.title = element_text(size = 15, face = "bold"),
+        title = element_text(size = 15, face = "bold"),
+        legend.text = element_text(size = 15),
+        legend.key.height = unit(1, "line"),
+        legend.key.width = unit(3, "line"))
+```
 

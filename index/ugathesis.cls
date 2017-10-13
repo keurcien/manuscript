@@ -288,7 +288,9 @@
     \vfil
     \bigskip
     \bigskip
+    \begin{flushleft}
     {\fontsize{18}{20}\fontfamily{ppl}\selectfont\bf Méthodes statistiques en grande dimension pour l'étude de l'adaptation biologique à l'aide de larges bases de données génomiques}
+    \end{flushleft}
     \centerline{}
     \vskip 1.5em
     {\fontsize{12}{14}\selectfont Thèse soutenue publiquement le \@date, \par

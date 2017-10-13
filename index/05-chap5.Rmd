@@ -1,6 +1,6 @@
 # Aspect computationnel 
 
-Dans cette partie, nous nous intéresserons brièvement à l'aspect computationnel des méthodes qui ont été présentées dans les chapitres précédents. Le développement d'outils logiciels destinés à l'exploration de données génétiques volumineuses requiert qu'une attention toute particulière soit portée à l'utilisation des ressources de calcul. Étant donné que nous nous intéressons à la possibilité de réaliser des scans génomiques pour des données génétiques de grande taille, il me semble intéressant de préciser les points sur lesquels des améliorations ont été faites d'un point de vue computationnel. 
+Dans cette partie, nous nous intéresserons brièvement à l'aspect computationnel des méthodes qui ont été présentées dans les chapitres précédents. Le développement d'outils logiciels destinés à l'exploration de données génétiques volumineuses requiert qu'une attention toute particulière soit portée à l'utilisation des ressources de calcul. Étant donné que nous nous intéressons à la possibilité de réaliser des scans génomiques pour des données génétiques de grande taille, il me semble intéressant de préciser les points sur lesquels des améliorations ont été faites d'un point de vue computationnel.
 
 
 Blockwise computation of covariance matrix
@@ -44,11 +44,10 @@ Grâce au logiciel R, il est possible de pousser encore plus loin la simplificat
 
 ## ACP et données manquantes
 
-Pour rappel, en génétique des populations, réaliser l'ACP sur des données de génômes consiste à faire la décomposition en valeurs singulières de la matrice de relation génétique. 
+Pour rappel, en génétique des populations, réaliser l'ACP sur des données de génômes consiste à faire la décomposition en valeurs singulières de la matrice de relation génétique.
 
-\begin{equation} 
+\begin{equation}
   GRM_{ij} = \frac{1}{p} \sum_{k = 1}^p \frac{(G_{ki} - 2p_k) \times (G_{kj} - 2p_k)}{2p_i(1-p_i)}
-  (\#eq:GRM)
 \end{equation}
 
 
@@ -58,7 +57,7 @@ Pour tenir compte de la présence de données manquantes, plusieurs stratégies 
 
 - Tenir compte des données manquantes dans le calcul d'estimateurs : par exemple pour calculer la corrélation entre deux individus $i$ et $j$, sont exclus du calcul tout marqueur génétique manquant chez l'individu $i$ ou $j$. La relation \@ref(eq:GRM) devient alors :
 
-\begin{equation} 
+\begin{equation}
   GRM_{ij} = \frac{1}{\sum_{k=1}^p \delta_{ki}\delta_{kj}} \sum_{k = 1}^p \frac{(G_{ki} - 2p_k) \times (G_{kj} - 2p_k)}{2p_k(1-p_k)} \delta_{ki} \delta_{kj}
   (\#eq:GRM-missing)
 \end{equation}
@@ -70,23 +69,23 @@ où $\delta_{ki} = 0$ si $G_{ki}$ est manquant et $\delta_{ki} = 1$ sinon.
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-NumericMatrix PairGRM(const NumericMatrix &G, 
+NumericMatrix PairGRM(const NumericMatrix &G,
                       const NumericVector &p) {
-  
+
   int nSNP = G.nrow(); // number of SNPs
   int nIND = G.ncol(); // number of individuals
   NumericMatrix GRM(nIND, nIND); // Genetic Relationship Matrix
-  
+
   for (int i = 0; i < nIND; i++) {
     for (int j = 0; j < nIND; j++) {
-      
+
       // value = GRM(i, j)
-      double value = 0; 
-      
+      double value = 0;
+
       // number of missing values for each pair of individuals (i, j)
       // nbmv = \sum_{k = 1}^{nSNP} \delta_{ki} \delta{kj}
-      int nbmv = 0; 
-      
+      int nbmv = 0;
+
       // Loop over the SNPs to compute the dot product
       for (int k = 0; k < nSNP; k++) {
         if ((!NumericVector::is_na(G(k, i))) && (!NumericVector::is_na(G(k, j)))) {
@@ -95,24 +94,24 @@ NumericMatrix PairGRM(const NumericMatrix &G,
           nbmv++;
         }
       }
-      
+
       // Divide by the number of non-missing values for (i, j)
       GRM(i, j) = value / (nSNP - nbmv);
-      
+
     }
   }
-  
+
   return GRM;
-  
+
 }
 
 ```
 
-Le calcul de la matrice des relations génétiques affiche une complexité algorithmique en $O(pn^2)$ et est donc très coûteux d'un point de vue computationnel. Des méthodes provenant de la théorie des matrices aléatoires proposent des algorithmes permettant d'effectuer la décomposition en valeurs singulières en $O(pn)$ [@baglama2005augmented]. Cependant, la littérature est assez peu fournie quant à la possibilité d'utiliser ces méthodes à des données comportant des données manquantes [@baglama2005augmented]. Nous proposons ici une façon de compter 
+Le calcul de la matrice des relations génétiques affiche une complexité algorithmique en $O(pn^2)$ et est donc très coûteux d'un point de vue computationnel. Des méthodes provenant de la théorie des matrices aléatoires proposent des algorithmes permettant d'effectuer la décomposition en valeurs singulières en $O(pn)$ [@baglama2005augmented]. Cependant, la littérature est assez peu fournie quant à la possibilité d'utiliser ces méthodes à des données comportant des données manquantes [@baglama2005augmented]. Nous proposons ici une façon de compter
 
 ```{r, eval = FALSE}
 pMv <- function(X, x, m, s) {
-  
+
 }
 
 rsvdm <- function(X, k) {
@@ -124,7 +123,7 @@ rsvdm <- function(X, k) {
   X.fill[is.na(X)] <- 0
   m <- apply(X, MARGIN = 2, FUN = function(h) {mean(h, na.rm = TRUE) / 2})
   s <- sqrt(2 * m * (1 - m))
-  
+
   A <- function(x, args) {
     # Input vector of length p
     x <- (x * p.snp / s)
@@ -155,8 +154,8 @@ ref.svd <- RSpectra::svds(Gs, k = 2)
 
 geno.unif <- rds$geno
 
-# Total percentage of missing values 
-mv.tot.p <- 0.10  
+# Total percentage of missing values
+mv.tot.p <- 0.10
 n.mv <- floor(nIND * nSNP * mv.tot.p)
 
 # Uniform distribution of missing values (MAR)
@@ -167,7 +166,7 @@ geno.unif[idx.mv] <- NA
 geno.median <- geno.unif
 snp.median <- apply(geno.unif, MARGIN = 1, FUN = function(X) {median(X, na.rm = TRUE)})
 for (i in 1:length(snp.median)) {
-  geno.median[i, which(is.na(geno.unif[i, ]))] <- snp.median[i]  
+  geno.median[i, which(is.na(geno.unif[i, ]))] <- snp.median[i]
 }
 
 pcadapt.svd <- pcadapt(geno.unif, K = 2, min.maf = 0)

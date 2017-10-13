@@ -6,15 +6,15 @@ This is for including Chapter 1. Notice that it's also good practice to name you
 The {#rmd-basics} text after the chapter declaration will allow us to link throughout the document back to the beginning of Chapter 1. These labels will automatically be generated (if not specified) by changing the spaces to hyphens and capital letters to lowercase. Look for the reference to this label at the beginning of Chapter 2.
 -->
 
-# État de l'art
+# Adaptation locale
 
-Cette section sera divisée en deux parties. La première partie traitera des méthodes destinées à identifier des loci sous sélection. Nous y présenterons l'heuristique des méthodes classiques de scan génomique pour la sélection. La seconde partie sera consacrée à la détection de signaux d'introgression. Par souci de clarté, nous ne considérerons ici que des espèces diploïdes, bien qu'une grande partie des résultats présentés ici puisse être adaptée au cas d'espèces haploïdes. Les loci seront par ailleurs supposés bi-alléliques, c'est-à-dire que pour un locus donné, au plus deux allèles sont observés sur ce locus à l'échelle de la population étudiée.
+Cette première partie traitera dans un premier temps des méthodes destinées à identifier des loci impliqués dans des processus d'adaptation locale. Nous présenterons différentes méthodes classiques de scan génomique pour la sélection. Ensuite, nous évoquerons l'utilisation de l'Analyse en Composantes Principales en génétique des populations. Par souci de clarté, nous ne considèrerons ici que des espèces diploïdes, bien qu'une grande partie des résultats présentés ici puisse être adaptée au cas d'espèces haploïdes. Les loci seront par ailleurs supposés bi-alléliques, c'est-à-dire que pour un locus donné, au plus deux allèles sont observés sur ce locus à l'échelle de la population étudiée.
 
-## Adaptation locale
+## L'état de l'art pour les scans génomiques
 
 ### Modèles démographiques
 
-Afin de mieux comprendre l'heuristique des méthodes de scan génomique présentées ici, nous donnons dans ce paragraphe une brève description des modèles démographiques fréquemment utilisés en génétique des populations. En effet l'idée de sélection dans une population est généralement relative à (au moins) une autre population, et la distribution des fréquences alléliques pour chacune de ces populations varie selon l'histoire démographique qu'elles ont connue.
+Afin de mieux comprendre l'heuristique des méthodes de scan génomique présentées ici, nous donnons dans ce paragraphe une brève description des modèles démographiques fréquemment utilisés en génétique des populations. En effet l'idée de sélection dans une population est généralement relative à (au moins) une autre population, et l'histoire démographique de ces populations joue un rôle important sur la distribution théorique des fréquences alléliques.
 
 #### Modèle en îles
 
@@ -26,7 +26,7 @@ Le modèle *star-like* suppose l'existence d'une population ancestrale de laquel
 
 ------
 
-(ref:demographic-models-cap) Modèles démographiques. En haut à gauche, une représentation schématique d'un modèle en îles à trois populations. En haut à droite, une représentation schématique d'un modèle *star-like* à trois populations où les *branches* ont des longueurs inégales. En bas à gauche, une représentation schématique d'un modèle de divergence instantanée à trois populations où chaque branche a la même longueur.
+(ref:demographic-models-cap) Modèles démographiques. **A.** Représentation schématique d'un modèle en îles à trois populations. **B.** Représentation schématique d'un modèle *star-like* à trois populations où les populations ont divergé de la population ancestrale à des instants différentes, conduisant à des branches de longueurs inégales. **C.** Représentation schématique d'un modèle de divergence instantanée à trois populations où les populations ont divergé au même instant, conduisant à des branches de même longueur.
 
 ```{r demographic-models, fig.cap='(ref:demographic-models-cap)'}
 circleFun <- function(center = c(0, 0),
@@ -157,14 +157,14 @@ cowplot::plot_grid(p1, p2, p3, labels = c("A", "B", "C"), ncol = 2)
 
 ### L'indice de fixation
 
-Indépendamment de l'histoire démographique, un allèle sélectionné voit généralement sa prévalence augmenter au sein d'une population. Si bien que l'observation d'une fréquence allélique anormalement élevée dans une population relativement aux autres suggère fortement que cet allèle a été favorablement sélectionné. De ce constat, il semble alors naturel de proposer une statistique testant si au moins deux populations présentent des fréquences alléliques significativement différentes l'une de l'autre [@holsinger2009genetics]. L'indice de fixation, ou encore $F_{ST}$ en abrégé, est une statistique basée sur cette heuristique. Pour un locus donné, dénotant $N$ le nombre de populations considérées et ($p_1, p_2, \dots, p_N$) les fréquences d'un des deux allèles existant, la $F_{ST}$ est définie par la relation suivante :
+Indépendamment de l'histoire démographique, un allèle sélectionné voit généralement sa prévalence augmenter au sein d'une population. Si bien que l'observation d'une fréquence allélique anormalement élevée dans une population relativement aux autres donne à suggérer que cet allèle a été favorablement sélectionné. Dans l'optique de détecter des signaux de sélection, il semble alors naturel de proposer une statistique testant si au moins deux populations présentent des fréquences alléliques significativement différentes l'une de l'autre [@holsinger2009genetics]. L'indice de fixation, ou encore $F_{ST}$ en abrégé, est une statistique basée sur cette heuristique. Pour un locus donné, dénotant $N$ le nombre de populations considérées et ($p_1, p_2, \dots, p_N$) les fréquences d'un des deux allèles existant, la $F_{ST}$ est définie par la relation suivante :
 
 \begin{equation}
   F_{ST} = \frac{\frac{1}{N-1}\sum_{i = 1}^N (p_i - \bar{p})^2}{\bar{p}(1 - \bar{p})}
   (\#eq:fst-definition)
 \end{equation}
 
-où $\bar{p} = \frac{1}{N-1}\sum_{i = 1}^N p_i$. Le numérateur correspond à la variance génétique interpopulationnelle tandis que le dénominateur correspond à la variance génétique mesurée à l'échelle de la *métapopulation*^[ensemble de populations d'individus appartenant à la même espèce.]. La variance génétique est appelée aussi *degré d'hétérozygotie*. Relativement à l'hétérozygotie, la $F_{ST}$ peut être vue comme la réduction d'hétérozygotie due à la structure de population. Autrement dit, on regarde si le fait de grouper les individus dans des populations a une incidence ou non sur le degré d'hétérozygotie.
+où $\bar{p} = \frac{1}{N-1}\sum_{i = 1}^N p_i$. Le numérateur correspond à la variance génétique interpopulationnelle tandis que le dénominateur correspond à la variance génétique mesurée à l'échelle de la *métapopulation*^[ensemble de populations d'individus appartenant à la même espèce.]. La $F_{ST}$ peut être vue comme la réduction de variance génétique due à la structure de population. Autrement dit, on regarde si le fait de grouper les individus dans des populations a une incidence ou non sur la variance génétique.
 
 ### Test de Lewontin-Krakauer
 
@@ -189,18 +189,18 @@ Cependant, les contraintes sur le modèle démographique sous-jacent sont extrê
 
 #### Estimation du nombre de degrés de liberté effectif
 
-Dans le cas où les populations n'évoluent pas de façon indépendante (ce qui peut être le cas s'il y a eu de l'isolement par la distance par la distance), la statistique $T_{LK}$ n'est plus distribuée selon un $\chi^2$ à $N-1$ degrés de liberté. Ce test peut cependant être rendu valable en estimant le nombre de degrés effectif $\text{df}$ de la statistique $T_{LK}$ [@whitlock2015reliable]. Pour estimer $\text{df}$, Whitlock, *et al* dérivent un modèle de vraisemblance basé sur la distribution de la $F_{ST}$. Partant de la densité d'une variable aléatoire suivant un $\chi^2$ à $\text{df}$ degrés de libertés, la densité de la $F_{ST}$ s'écrit :
+Dans le cas où les populations n'évoluent pas de façon indépendante (ce qui peut être le cas s'il y a eu de l'isolement par la distance par exemple), la statistique $T_{LK}$ n'est plus distribuée selon un $\chi^2$ à $N-1$ degrés de liberté. Ce test peut cependant être rendu valable en estimant le nombre de degrés de liberté effectif $\text{df}$ de la statistique $T_{LK}$ [@whitlock2015reliable]. Pour estimer $\text{df}$, @whitlock2015reliable dérivent un modèle de vraisemblance basé sur la distribution de la $F_{ST}$. Partant de la densité d'une variable aléatoire suivant un $\chi^2$ à $\text{df}$ degrés de libertés, la densité de la $F_{ST}$ s'écrit :
 
 \begin{equation}
   f(F_{ST}) = \frac{\text{df}}{\bar{F}_{ST}} \times \frac{1}{2^{\frac{\text{df}}{2}}\Gamma\left(\frac{\text{df}}{2}\right)} \times  \left(\frac{\text{df}}{\bar{F}_{ST}}F_{ST}\right)^{-1+\frac{\text{df}}{2}}
   (\#eq:OutFLANK-f)
 \end{equation}
 
-Notant $\hat{\text{df}} = \text{argmin}_{\text{df}} \; \sum_{i=1}^p \log(f(F_{ST}^i))$ l'estimateur du maximum de vraisemblance (où $F_{ST}^i$ désigne la $F_{ST}$ observée pour l'allèle $i$), la correction du test de Lewontin-Krakauer consiste à tester l'adéquation de $\frac{\hat{\text{df}}}{\bar{F}_{ST}}F_{ST}$ à un $\chi^2$ à $\hat{\text{df}}$ degrés de liberté.
+L'estimation de $\text{df}$ se fait en maximisant la fonction de log-vraisemblance $\sum_{i=1}^p \log(f(F_{ST}^i))$ (où $F_{ST}^i$ désigne la $F_{ST}$ observée pour l'allèle $i$). La correction du test de Lewontin-Krakauer consiste alors à tester l'adéquation de $\frac{\text{df}}{\bar{F}_{ST}}F_{ST}$ à un $\chi^2$ à $\text{df}$ degrés de liberté.
 
 #### Dérivation du test de Lewontin-Krakauer dans le cas de populations structurées
 
-Dans le cas de populations structurées, l'hypothèse de divergence instantanée ne tient plus. Pour tenir compte de la structure, Bonhomme, *et al.* proposent de corriger la statistique pour l'apparentement génétique^[kinship.] des populations, modélisé par une matrice $\mathcal{F} = (f_{ij})_{1 \leq i,j \leq N} \in M_N(\mathbb{R})$, où $f_{ij}$ mesure la corrélation entre $p_i$ et $p_j$ et peut être interprétée comme la probabilité qu'un individu de la population $i$ et un individu de la population $j$ aient hérité de cet allèle d'un même ancêtre commun. 
+Dans le cas de populations structurées, l'hypothèse de divergence instantanée ne tient plus. Pour tenir compte de la structure, @bonhomme2010detecting proposent de corriger la statistique $T_{LK}$ pour l'apparentement génétique^[kinship.] des populations, modélisé par une matrice $\mathcal{F} = (f_{ij})_{1 \leq i,j \leq N} \in M_N(\mathbb{R})$, où $f_{ij}$ mesure la corrélation entre $p_i$ et $p_j$ et peut être interprétée comme la probabilité qu'un individu de la population $i$ et un individu de la population $j$ aient hérité de cet allèle d'un même ancêtre commun.
 
 La statistique de test $T_{F-LK}$, correspondant au test de Lewontin-Krakauer corrigé pour l'apparentement génétique $\mathcal{F}$, garde une forme analogue à celle développée en \@ref(eq:LK-chi2) :
 
@@ -209,84 +209,98 @@ La statistique de test $T_{F-LK}$, correspondant au test de Lewontin-Krakauer co
   (\#eq:flk-statistic)
 \end{equation}
 
-où $\hat{p}_0$ désigne un estimateur de la fréquence $p_0$ de l'allèle dans la population ancestrale. 
+où $\hat{p}_0$ désigne un estimateur de la fréquence $p_0$ de l'allèle dans la population ancestrale.
 Dans le cas où les loci sont soumis uniquement à la dérive génétique, $T_{F-LK} \sim \chi_{N - 1}^2$ [@bonhomme2010detecting]. En pratique, la méthode implémentée dans le logiciel hapflk cherche à estimer les paramètres $p_0$ et $\mathcal{F}$.
 
-### Modèle du logiciel Bayescan
+### Le modèle $F$
 
-Une autre l'idée consiste à affirmer qu'en l'absence de sélection, dans un modèle en îles où des individus migrent d'une population à une autre, la proportion $\lambda$ d'allèles dans une population donnée provenant d'une autre population doit être la même pour tous les loci [@beaumont2004identifying]. Un locus présentant une proportion d'allèles migrants anormalement plus basse serait alors considéré comme potentiellement sous sélection [@petry1983effect; @bazin2010likelihood]. Sous l'hypothèse que les fréquences alléliques suivent une distribution bêta, la $F_{ST}$ peut se réécrire en fonction de la proportion $\lambda$ d'allèles migrants [@balding2003likelihood; @balding2008handbook] :
-
-\begin{equation}
-  F_{ST} = \frac{1}{1 + \lambda}
-  (\#eq:fst-balding)
-\end{equation}
-
-DEMO EN ANNEXE
-
-Réécrite de cette manière, elle peut être interprétée comme étant proportionnelle à la probabilité que deux individus aient un ancêtre commun dans la sous-population $j$. La façon la plus simple serait de modéliser à l'aide d'une régression linéaire la proportion $\lambda_{ij}$ en fonction d'effets $\alpha_i$ spécifiques au locus (*i.e.* taux de mutation, sélection) et d'effets $\beta_j$ spécifiques à la population (*i.e.* taille de population effective, taux de migration) :
+Une autre idée consiste à affirmer qu'en l'absence de sélection, dans un modèle en îles, la proportion d'allèles immigrants^[venant d'une autre population.] doit être la même pour tous les loci [@beaumont2004identifying]. Cette proportion d'allèles immigrants mesure la dérive génétique subie par la population qui intègre ces allèles [@villemereuil2015new]. En effet, une population échangeant moins d'allèles avec les autres populations se retrouverait alors plus différenciée. D'un point de vue de la sélection allélique, ce sont les loci susceptibles d'être sous sélection sont ceux présentant une proportion d'allèles migrants anormalement basse [@petry1983effect; @bazin2010likelihood]. @beaumont2004identifying proposent alors un modèle de régression logistique pour la $F_{ST}$ [@balding2003likelihood; @balding2008handbook], en la modélisant par des effets $\alpha$ spécifiques au locus (taux de mutation, sélection) et des effets $\beta$ spécifiques à la population (taille de population effective, taux de migration), c'est le modèle $F$ :
 
 \begin{equation}
-  \lambda_{ij} = \alpha_i + \beta_j + \gamma_{ij}
-  (\#eq:fst-linear-regression)
-\end{equation}
-
-où $\gamma_{ij}$ correspond à un terme d'erreur spécifique au locus $i$ et à la sous-population $j$. Cette formulation \@ref(eq:fst-linear-regression) n'est cependant pas satisfaisante [@beaumont2004identifying]. Si l'effet d'une population est très fort, les valeurs de $F_{ST}$ relativement à cette population se retrouveraient très faibles pour tous les loci, ce qui n'est pas désirable pour la détection de loci *outliers*. Pour contrer cet effet, Beaumont, *et al.* se tournent vers un modèle de régression logistique pour la $F_{ST}$ :
-
-\begin{equation}
-  \log \left( \frac{F_{ST}}{1 - F_{ST}} \right) = \alpha_i + \beta_j + \gamma_{ij}
+  \log \left( \frac{F_{ST}}{1 - F_{ST}} \right) = \alpha + \beta
   (\#eq:Bayescan-statistic-implicit)
 \end{equation}
 
-ce qui donne en version explicite :
+La décomposition de la $F_{ST}$, en une somme d'effets locus-spécifique et population-spécifique, permet d'identifier les loci à forte $F_{ST}$ qui présentent un effet qui n'est pas partagé par les autres loci.
 
-\begin{equation}
-  F_{ST} = \frac{\exp(\alpha_i + \beta_j + \gamma_{ij})}{1 + \exp(\alpha_i + \beta_j + \gamma_{ij})}
-  (\#eq:Bayescan-statistic-explicit)
-\end{equation}
+## L'Analyse en Composantes Principales en génétique des populations
 
-```{r, eval=FALSE}
-x <- seq(0, 10, by = 0.05)
-data.frame(x = c(x, x),
-           y = c(1 / (1 + 0.5 + x), exp(0.5 + x) / (1 + exp(0.5 + x))),
-           model = c(rep("linear", length(x)), rep("logistic", length(x)))) %>%
-  ggplot(aes(x = x, y = y, color = model)) +
-  xlab(expression(beta)) +
-  ylab(expression(F[ST])) +
-  geom_line() +
-  facet_grid(~model) +
+L'Analyse en Composantes Principales est un outil incontournable pour l'analyse de données génétiques. Elle est utilisée principalement comme un outil de visualisation, aussi bien en génétique des populations que pour les études d'association. Elle est également connue pour être capable de retrouver la structure génétique, et donne la possibilité de ne garder qu'un nombre réduit de variables tout en résumant l'essentiel de la variation génétique. Nous présentons ici l'Analyse en Composantes Principales ainsi que ses applications en génétique des populations.
+
+### Principe de l'Analyse en Composantes Principales 
+
+L'Analyse en Composantes Principales est une méthode statistique consistant à transformer un ensemble de variables possiblement corrélées en un nouvel ensemble de variables orthogonales et donc non corrélées appelées *composantes principales*. Cette transformation vérifie plusieurs propriétés dont celle d'orthogonalité, c'est-à-dire que la distance euclidienne entre deux observations est préservée. De plus, elle est définie de telle sorte que la première composante principale maximise la variance, ce qui signifie que parmi toutes les droites affines de l'espace de départ, la première composante correspond à la droite affine où la projection orthogonale des observations présente la dispersion (autrement dit la variance) la plus grande. De la même manière, la deuxième composante principale correspond à la droite affine maximisant la variance, sous la contraite d'être orthogonale à la composante principale précédente. Les composantes principales suivantes se déduisent donc des précédentes en suivant ce schéma itératif. La contrainte d'orthogonalité impose que le nombre de composantes principales soit inférieur au nombre de variables et au nombre d'observations. En pratique, le calcul des composantes principales repose sur la diagonalisation de la matrice de covariance ou de la matrice de corrélation.
+
+(ref:pca-definition-cap) Exemple de données distribuées selon une Gaussienne multivariée. La droite rouge correspond à l'axe de projection maximisant la variance, et donc par définition, à la première composante principale. La droite verte correspond à la deuxième composante principale et se déduit de la première grâce à la contraite d'orthogonalité et au fait qu'il n'y a ici que deux variables.
+
+```{r pca-definition, fig.cap='(ref:pca-definition-cap)'}
+X <- matrix(c(0.1, -0.2, -0.2, 0.1), nrow = 2)
+mvg <- MASS::mvrnorm(n = 1000, c(0, 0), X %*% t(X), tol = 1e-6, empirical = FALSE, EISPACK = FALSE)
+obj.pca <- prcomp(mvg)
+x1 <- c(1, 0)
+x2 <- c(-1, 0)
+x3 <- c(0, 1)
+x4 <- c(0, -1)
+y1 <- obj.pca$rotation %*% x1
+y2 <- obj.pca$rotation %*% x2
+y3 <- obj.pca$rotation %*% x3
+y4 <- obj.pca$rotation %*% x4
+
+pc1.1 <- data.frame(x1 = 0, x2 = y1[1], y1 = 0, y2 = y1[2])
+pc1.2 <- data.frame(x1 = 0, x2 = y2[1], y1 = 0, y2 = y2[2])
+pc2.1 <- data.frame(x1 = 0, x2 = y3[1], y1 = 0, y2 = y3[2])
+pc2.2 <- data.frame(x1 = 0, x2 = y4[1], y1 = 0, y2 = y4[2])
+
+data.frame(x = mvg[, 1], y = mvg[, 2]) %>%
+  ggplot(aes(x, y)) +
+  geom_point(color = "steelblue") + 
+  coord_equal() +
+  geom_segment(data = pc1.1, aes(x = x1, y = y1, xend = x2, yend = y2), col = "#D55E00", size = 1) +
+  geom_segment(data = pc1.2, aes(x = x1, y = y1, xend = x2, yend = y2), col = "#D55E00", size = 1) +
+  geom_segment(data = pc2.1, aes(x = x1, y = y1, xend = x2, yend = y2), col = "#009E73", size = 1) +
+  geom_segment(data = pc2.2, aes(x = x1, y = y1, xend = x2, yend = y2), col = "#009E73", size = 1) +
+  xlab("Variable 1") +
+  ylab("Variable 2") +
   theme_bw()
 ```
 
+### Apparentement génétique interindividuel
 
-### Fast PCA
+L'utilisation de l'Analyse en Composantes Principales en génétique des populations a été popularisée par Cavalli-Sforza [@menozzi1978synthetic]. En génétique des populations, l'Analyse en Composantes Principales est réalisée à partir de la diagonalisation d'une matrice de covariance particulière, appelée matrice d'apparentement génétique [@mcvean2009genealogical]. Nous avons vu un peu plus haut la notion d'apparentement génétique interpopulationnel ainsi que l'intérêt de corriger la $F_{ST}$ pour celui-ci. Depuis l'apparition des données génomiques, il est possible de définir des mesures de similarité génétique à l'échelle de l'individu à partir des données de génotype, contrairement à l'apparentement génétique interpopulationnel qui est défini à partir des fréquences alléliques. La figure \@ref(fig:correlogram) compare les deux matrices d'apparentement pour une même simulation d'un modèle démographique à trois populations, et met en évidence le fait que l'apparentement génétique peut s'apprécier à une échelle plus fine. Il existe cependant différentes définitions de l'apparentement génétique interindividuel [@speed2015relatedness]. Nous utiliserons la définition basée sur la corrélation allélique, retenue par @galinsky2016fast et @chen2016eigengwas, dans ce cas l'apparentement génétique entre l'individu $i$ et l'individu $j$ est donnée par la quantité suivante :
 
-#### L'ACP en génétique des populations
+\begin{equation}
+  GRM_{ij} = \frac{1}{p} \sum_{k = 1}^p \frac{(G_{ki} - 2p_k) \times (G_{kj} - 2p_k)}{2p_i(1-p_i)}
+  (\#eq:GRM)
+\end{equation}
 
-L'utilisation de l'Analyse en Composantes Principales en génétique des populations a été popularisée par Cavalli-Sforza [@menozzi1978synthetic].
+Il convient de préciser qu'il ne s'agit pas exactement d'une matrice de corrélation, puisque le terme $2p_k$ ne correspond ni à la moyenne de $G_{.,i}$, ni à celle de $G_{.,j}$.
 
-(ref:popres-cap) ACP réalisée sur le jeu de données POPRES [@novembre2008genes].
+(ref:correlogram-cap) À gauche une matrice d'apparentement génétique interpopulationnelle. À droite une matrice d'apparentement génétique interindividuelle.
 
-```{r popres, fig.cap = '(ref:popres-cap)', out.width='\\textwidth'}
-obj.popres <- readRDS("data/popres.rds")
-
-ggdf <- data.frame(PC1 = -obj.popres$u[, 1],
-                   PC2 = -obj.popres$u[, 2],
-                   pop = obj.popres$pop.fr)
-
-ggplot(ggdf, aes(x = PC2, y = PC1, fill = pop)) +
-  geom_point(size = 2.5, shape = 21, stroke = 1) +
-  scale_fill_manual(labels = sort(unique(ggdf$pop)),
-                    values = as.character(obj.popres$palette.fr)) +
-  guides(fill = guide_legend(nrow = 5)) +
-  theme_bw() +
-  theme(axis.text = element_text(face = "bold"),
-        legend.text = element_text(size = 7.5),
-        legend.key.height = unit(0.75, "line"),
-        legend.key.width = unit(0.5, "line"),
-        legend.title = element_blank(),
-        legend.direction = "horizontal",
-        legend.position = "bottom")
+```{r correlogram, fig.cap='(ref:correlogram-cap)'}
+G <- readRDS("data/div.rds")
+pop <- G$pop[, 1]
+pop <- pop[seq(1, ncol(G$geno), by = 5)]
+G <- G$geno[, seq(1, ncol(G$geno), by = 5)]
+p <- apply(G, MARGIN = 1, FUN = function(h) {mean(h) / 2})
+p1 <- apply(G[, pop == 1], MARGIN = 1, FUN = function(h) {mean(h) / 2})
+p2 <- apply(G[, pop == 2], MARGIN = 1, FUN = function(h) {mean(h) / 2})
+p3 <- apply(G[, pop == 3], MARGIN = 1, FUN = function(h) {mean(h) / 2})
+f <- cbind(p1, p2, p3)
+Gn <- scale(t(G), center = TRUE, scale = sqrt(2 * p * (1 - p)))
+GRM <- cor(G)
+kinship <- cor(f)
+par(mfrow = c(1, 2))
+corrplot::corrplot(kinship, method = "color", tl.pos = "n")
+corrplot::corrplot(GRM, method = "color", tl.pos = "n")
+par(mfrow = c(1, 1))
 ```
+
+### Applications en génétique des populations 
+
+#### Visualisation {-}
+
+En génétique des populations, l'ACP est devenu un outil de visualisation incontournable, notamment grâce à sa capacité à rendre compte de la structure de populations à l'aide d'un faible nombre d'axes principaux, appelés aussi *axes de variation génétique* [@price2006principal]. 
 
 (ref:hapmap-cap) ACP réalisée sur la phase 3 du jeu de données HapMap [@gibbs2003international].
 
@@ -312,94 +326,42 @@ ggplot(ggdf, aes(x = PC1, y = PC2, fill = pop)) +
         legend.position = "bottom")
 ```
 
-### Contexte
+#### Correction pour la structure de population {-}
 
-### Tests multiples
+En génétique associative, où l'on cherche à détecter les gènes associés à un phénotype en comparant des individus porteurs et non-porteurs du phénotype, les composantes principales servent par exemple à corriger pour la structure de population pour éviter les associations dues à l'excès de différenciation génétique entre les individus porteurs et non-porteurs [@price2006principal]. 
 
-### Contrôle du taux de fausse découverte
+#### Structure géographique {-}
 
-Le taux de fausse découverte, correspond à la proportion de faux positifs parmi les positifs. En notant $FP$ le nombre de faux positifs, $FP$ le nombre de vrais positifs, on définit le taux de fausse découverte $FDR$ par :
+@novembre2008genes ont montré que ces axes de variation génétique pouvaient également être interprétés en terme d'axes géographiques. L'Analyse en Composantes Principales a été réalisée sur un échantillon d'individus européens issus du jeu de données POPRES [@nelson2008population]. En figure \@ref(fig:popres), nous observons en effet que la projection des individus sur les deux premiers axes de l'ACP reflète de façon particulièrement frappante la disposition géographique des différentes populations. 
 
-\begin{equation}
-  FDR = \mathbb{E}\Big[\frac{FP}{TP + FP} 1_{FP+TP > 0}\Big]
-  (\#eq:FDR-def)
-\end{equation}
+(ref:popres-cap) ACP réalisée sur le jeu de données POPRES [@novembre2008genes].
 
-- Référence cours de Christophe Giraud
+```{r popres, fig.cap = '(ref:popres-cap)', out.width='\\textwidth'}
+obj.popres <- readRDS("data/popres.rds")
 
-q-value, bonferroni, benjamini-hochberg
-La figure suivante donne les comparaisons entre les différentes procédures de correction :
+ggdf <- data.frame(PC1 = -obj.popres$u[, 1],
+                   PC2 = -obj.popres$u[, 2],
+                   pop = obj.popres$pop.fr)
 
-## Introgression adaptative
-
-### Coefficients de métissage globaux et locaux
-
-Étant données des populations ancestrales, il est possible d'estimer pour un individu donné, la proportion de son génôme provenant de chacune des populations ancestrales. Ces proportions sont connues plus communément sous le nom de *coefficients de métissage globaux*. De nombreux logiciels existent pour l'estimation de ces coefficients : STRUCTURE, ADMIXTURE [@alexander2009fast], LEA [@frichot2015lea], tess3r [@caye2016tess3]. En complément à cette information globale, il peut être intéressant de déterminer sur des portions plus petites du génôme, de la même manière que dans le cas global, les proportions venant de telle ou telle population ancestrale pour chacune de ces portions. Nous parlons dans ce cas de *coefficients de métissage locaux*. Encore une fois, plusieurs logiciels ont été proposés dans le but d'estimer ces coefficients : Hapmix [@price2009sensitive], EILA [@yang2013efficient], LAMP [@thornton2014local], loter ou encore RFmix [@maples2013rfmix].
-
-L'introgression peut être détectée de différentes façons. Une première approche consiste à utiliser les *coefficients de métissage locaux*. Les méthodes mentionnées plus haut estiment ces coefficients pour chaque individu, permettant de calculer à partir de ceux-ci des coefficients de métissage locaux pour chaque population.
-
-### Lien entre Analyse en Composantes Principales et métissage global.
-
-L'un des premiers articles à établir un lien entre l'ACP et les coefficients de métissage global fut sur l'interprétation généalogique de l'ACP de Gil McVean [@mcvean2009genealogical]:
-
-(ref:mcvean-cap) Coefficients de métissage et ACP [@mcvean2009genealogical].
-
-```{r mcvean, results = 'asis', fig.cap = '(ref:mcvean-cap)', out.width = '300px'}
-include_graphics("figure/mcvean.png")
+ggplot(ggdf, aes(x = PC2, y = PC1, fill = pop)) +
+  geom_point(size = 2.5, shape = 21, stroke = 1) +
+  scale_fill_manual(labels = sort(unique(ggdf$pop)),
+                    values = as.character(obj.popres$palette.fr)) +
+  guides(fill = guide_legend(nrow = 5)) +
+  theme_bw() +
+  theme(axis.text = element_text(face = "bold"),
+        legend.text = element_text(size = 7.5),
+        legend.key.height = unit(0.75, "line"),
+        legend.key.width = unit(0.5, "line"),
+        legend.title = element_blank(),
+        legend.direction = "horizontal",
+        legend.position = "bottom")
 ```
 
-Pour chacun des 22 chromosomes,
+#### Ascendance {-}
 
-### Analyse en Composantes Principales locale
+Une autre particularité de l'ACP réside dans la possibilité d'inférer les *coefficients de métissage* ou *coefficients d'ascendance* [@mcvean2009genealogical; @ma2012principal]. Un coefficient de métissage quantifie pour un individu donné la proportion du génôme provenant d'un groupe génétique spécifique (appelé aussi population source ou population ancestrale). Nous reviendrons sur cette notion dans le chapitre consacré à l'introgression.
 
-Notant $p$ le nombre de marqueurs génétiques, $i$ un entier compris entre $1$ et $p$, et $x_i$ la position génétique (en Morgans) ou la position physique (en paires de bases) du $i$-ème marqueur génétique. Nous définissons pour cet entier $i$ la fenêtre $W_i^T$ de taille $T$ et centrée en $i$ :
+------
 
-$$W_i^T = \{ j \in [|1, p|], |x_i - x_j| \leq T/2 \}$$
-
-### Sensibilité à l'imputation des données manquantes
-
-\newpage
-
-#### Méthodes de détection
-
-##### La statistique D de Patterson
-
-La statistique $D$ de Patterson [@durand2011testing] demeure aujourd'hui la méthode la plus utilisée pour détecter la trace de flux de gènes dans une population. La méthode repose sur l'observation de motifs portant les noms *ABBA* et *BABA*, en référence aux différents types de généalogie possible pour un site nucléotidique.
-
-$$ D = \displaystyle \frac{\sum_i C_{ABBA}(i) - C_{BABA}(i)}{\sum_i C_{ABBA}(i) + C_{BABA}(i)} $$
-
-##### RNDmin
-
-[Descriptif de RNDmin]
-
-Pour comprendre la récente méthode proposée par [@rosenzweig2016powerful], il est nécessaire de définir un certain nombre de statistiques dont $RND_{\text{min}}$ dérive.
-
-&nbsp;
-
-- $d_{xy}$ est la distance de Hamming entre la séquence $X$ de la population $1$ et la séquence $Y$ de la population $2$. Ainsi, si $x = (x_i)_{1 \leq i \leq n}$ et $y = (y_i)_{1 \leq i \leq n}$, alors :
-
-$$d_{xy} = \text{Card}(\{i \in [|1, n|] \; | \; x_i \neq y_i \})$$
-
-Cette statistique est ainsi définie pour une paire de séquences ($x$, $y$). Pour quantifier la dissimilarité entre deux ensembles de séquences, deux approches sont possibles. La première consiste à calculer la distance moyenne $d_{XY}$. De par sa définition, cette distance présente néanmoins le défaut d'être peu sensible aux épisodes récents d'introgression [@geneva2015new].
-En effet, les faibles valeurs de $d_{xy}$ correspondant à des évènements de divergence récents peuvent voir leur influence diminuée en cas de présence d'évènements de divergence plus anciens.
-Pour pallier à ce problème, considérer la distance minimale entre les deux ensembles de séquences [@joly2009statistical] constitue une solution intéressante.
-
-[Expliquer pourquoi on définit $d_{\text{out}}$ et $RND$]
-
-En définissant $d_{out} = \frac{1}{2}(d_{XO} + d_{YO})$, il est possible de définir de la même
-façon $RND_{min}$ :
-
-$$RND_{\text{min}} = \frac{d_{\text{min}}}{d_{\text{out}}}$$
-
-Pour récapituler, $RND_{\text{min}}$ est une statistique robuste aux variations de taux de mutation et qui reste sensible aux récents évènements d'introgression. En pratique, l'introduction de $d_{\text{out}}$ requiert ainsi la donnée d'une population ancestrale commune aux deux populations d'intérêt.
-
-##### Bdf
-
-##### Analyse Linéaire Discriminante
-
-##### Régression linéaire, régression logistique, forêts aléatoires et importance des variables
-
-##### Régression locale, package mgcv, locfit, Backward selection strategy
-
-##### ACP locale et espace de formes
-
+Malgré l'importance et la popularité de l'Analyse Composantes Principales en génétique des populations, ce n'est que récemment que son utilisation a été étendue aux scans génomiques [@duforet2015detecting; @galinsky2016fast]. Dans le chapitre qui suit, nous proposons de nouvelles statistiques de sélection basées sur l'Analyse en Composantes Principales et démontrons en quoi elles généralisent les tests classiques de différenciation.

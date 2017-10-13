@@ -34,7 +34,8 @@
 \usepackage[french]{babel}
 \usepackage{amsmath}
 \usepackage{amssymb,amsthm}
-\usepackage{xcolor}
+\usepackage[table]{xcolor}
+%\usepackage{xcolor}
 \usepackage{eso-pic}
 \usepackage{tabu}
 \usepackage{longtable,booktabs,setspace}
@@ -66,11 +67,19 @@
 \definecolor{customGreen}{RGB}{41,124,120}
 \definecolor{customGrey}{RGB}{105,105,105}
 \definecolor{customSteelBlue}{RGB}{65,131,196}
+\definecolor{customRowColor}{RGB}{252,243,207}
+\definecolor{contiYellow}{RGB}{255,165,0}
+
 %\renewcommand{\familydefault}{\sfdefault}
 %\chapterfont{\color{black}\huge}  % sets colour of chapters
 %\sectionfont{\color{customDarkGrey}\LARGE}  % sets colour of sections
 %\subsectionfont{\color{customGreen}}
 %\subsubsectionfont{\color{customGrey}}  % sets colour of sections
+
+% Define custom tabular environment
+\let\oldtabu\tabu
+\let\endoldtabu\endtabu
+\renewenvironment{tabu}{\rowcolors[]{2}{contiYellow!5}{contiYellow!20}\oldtabu}{\endoldtabu}
 
 \titleformat{\chapter}[display]
 {\normalfont%
@@ -182,6 +191,8 @@ $endfor$
 %% End Preamble
 %%
 %
+
+\baselineskip 0.7cm
 
 \begin{document}
 

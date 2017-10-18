@@ -1,17 +1,17 @@
 ---
-author: 'Keurcien LUU'
-date: '31 octobre 2017'
-division: 'Mathematics and Natural Sciences'
-advisor: 'Michael BLUM'
+author: "Keurcien LUU"
+date: "21 décembre 2017"
+division: "Mathematics and Natural Sciences"
+advisor: "Michael BLUM"
 lab: "Techniques de l'Ingénierie Médicale et de la Complexité - Informatique, Mathématiques et Applications de Grenoble (TIMC-IMAG)"
-department: 'Ingénierie de la Santé, de la Cognition et Environnement (EDISCE)' 
-title: 'THÈSE'
+department: "Ingénierie de la Santé, de la Cognition et Environnement (EDISCE)" 
+title: "Méthodes statistiques en grande dimension pour l'étude de l'adaptation biologique à l'aide de larges bases de données génomiques"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 output: 
-  thesisdown::thesis_pdf: default
-  #bookdown::gitbook:
-  # css: style.css
+  #thesisdown::thesis_pdf: default
+  bookdown::gitbook:
+   css: style.css
   # thesisdown::thesis_gitbook: default
   # thesisdown::thesis_epub: default
   # thesisdown::thesis_word: default

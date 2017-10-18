@@ -1,12 +1,222 @@
 `r if(knitr:::is_latex_output()) '\\appendix'`
 
-`r if(!knitr:::is_latex_output()) '# (APPENDIX) Appendix {-}'` 
+`r if(!knitr:::is_latex_output()) '# (APPENDIX) Appendice {-}'` 
 
-# Details
+# Détails
+
+### Rapport entre la communalité et l'indice de fixation
+
+Pour établir le lien entre la $F_{ST}$ et la communalité, nous nous plaçons dans le cas de deux populations $A$ et $B$, composées respectivement de $n_1$ et $n_2$ individus. Nous rappelons que la communalité correspond à la somme quadratique des loadings pondérés par la variance des composantes principales. Notons $n = n_1 + n_2$, $\boldsymbol{G}$ la matrice de génotypes et $G$ le vecteur de taille $n$ contenant le génotype des individus pour un allèle donné (G correspond à une ligne de $\boldsymbol{G}$). En reprenant la définition \@ref(def:fst) de la $F_{ST}$ dans le cas $N = 2$, les fréquences alléliques $p_i$ s'écrivent $p_1 = \sum_{i=1}^n \delta_{1i} G_{i} / \sum_{i=1}^n \delta_{1i}$ et  $p_2 = \sum_{i=1}^n \delta_{2i} G_{i} / \sum_{i=1}^n \delta_{2i}$ où $\delta_{ki} = 1$ si l'individu $i$ appartient à la population $k$ et $0$ sinon. Commençons par exprimer la $F_{ST}$ en fonction des génotypes :
+
+\begin{equation}
+  \begin{split}
+  F_{ST} & = \frac{1}{2-1}\frac{\sum_{i=1}^2 (p_i - \bar{p})^2}{\bar{p}(1-\bar{p})} \\
+  & = \frac{1}{\bar{p}(1-\bar{p})} \left(\left(\frac{\sum_{i=1}^n \delta_{1i} G_{i}}{\sum_{i=1}^n \delta_{1i}} - \bar{p}\right)^2 + \left(\frac{\sum_{i=1}^n \delta_{2i} G_{i}}{\sum_{i=1}^n \delta_{2i}} - \bar{p}\right)^2\right)\\
+  & = \frac{1}{\bar{p}(1-\bar{p})} \left(\left(\frac{\sum_{i=1}^n \delta_{1i} (G_{i} - \bar{p})}{n_1}\right)^2 + \left(\frac{\sum_{i=1}^n \delta_{2i} (G_{i} - \bar{p})}{n_2}\right)^2\right)\\
+  \end{split}
+  (\#eq:fst-communality-proof)
+\end{equation}
+
+Notant $\tilde{G}_i = \frac{G_i - \bar{p}}{\sqrt{\bar{p}(1-\bar{p})}}$ :
+
+\begin{equation}
+  F_{ST} = \left(\sum_{i=1}^n \frac{\delta_{1i}}{n_1} \tilde{G_{i}}\right)^2 + \left(\sum_{i=1}^n \frac{\delta_{2i}}{n_2} \tilde{G_{i}}\right)^2\\
+  (\#eq:fst-communality-proof-2)
+\end{equation}
+
+ce qui peut se réécrire $F_{ST} = ||\tilde{G}^T U_{\delta}||_2^2$ où $U_{\delta}  = (\frac{\delta_{ji}}{n_j})_{1 \leq i \leq n, \; 1\leq j \leq 2} \in M_{n, 2}(\mathbb{R})$. Si le premier et le quatrième individu appartiennent à la population $A$ et que le deuxième et le troisième individu appartiennent à la population $B$, la matrice $U_{\delta}$ s'écrit :
+
+$$U_{\delta} = \begin{pmatrix}\frac{1}{n_1} & 0\\
+0 & \frac{1}{n_2}\\
+0 & \frac{1}{n_2}\\
+\frac{1}{n_1} & 0
+\end{pmatrix}$$
+
+Pour faire le parallèle avec la communalité, il est nécessaire de trouver une matrice colonne $U_{\delta}^{\prime} \in M_{n, 1}(\mathbb{R})$ telle que $F_{ST} = ||\tilde{G}^T U_{\delta}^{\prime}||_2^2$. Pour ce faire, nous allons chercher une matrice de rotation telle que $U_{\delta}R$ ait sa première colonne constante, c'est-à-dire telle que :
+
+\begin{equation}
+  \begin{pmatrix}\frac{1}{n_1} & 0\\
+    0 & \frac{1}{n_2}
+  \end{pmatrix}R =
+  \begin{pmatrix} a & x\\
+    a & y
+  \end{pmatrix}
+  (\#eq:condition-1)
+\end{equation}
+
+où $x, y, a$ sont des réels à déterminer. Soit $R \in M_2(\mathbb{R})$ une matrice de rotation :
+
+$$R = \begin{pmatrix}\cos\theta & -\sin\theta\\
+\sin\theta & \cos\theta
+\end{pmatrix}$$
+
+En injectant $R$ dans \@ref(eq:condition-1), on obtient :
+
+\begin{equation}
+  \begin{pmatrix}\frac{\cos\theta}{n_1} & -\frac{\sin\theta}{n_1}\\
+    \frac{\sin\theta}{n_2} & \frac{\cos\theta}{n_2}
+  \end{pmatrix} =
+  \begin{pmatrix} a & x\\
+    a & y
+  \end{pmatrix}
+  (\#eq:condition-2)
+\end{equation}
+
+\@ref(eq:condition-2) implique que l'angle de la rotation vérifie la relation $\frac{\cos\theta}{n_1} = \frac{\sin\theta}{n_2}$, qui a pour solution dans $]-\frac{\pi}{2}, \frac{\pi}{2}[$, $\theta = \arctan(\frac{n_2}{n_1})$. Nous en déduisons ainsi les valeurs de $x$ et de $y$ :
+
+\begin{equation}
+  \begin{split}
+  x & = -\frac{\sin(\arctan(\frac{n_2}{n_1}))}{n_1} \\
+  y & = \frac{\cos(\arctan(\frac{n_2}{n_1}))}{n_2} \\
+  \end{split}
+  (\#eq:xy)
+\end{equation}
+
+Or :
+
+\begin{equation}
+  \begin{split}
+  \sin(\arctan(x)) & = \frac{x}{\sqrt{1 + x^2}} \\
+  \cos(\arctan(x)) & = \frac{1}{\sqrt{1 + x^2}}
+  \end{split}
+  (\#eq:trigo)
+\end{equation}
+
+Notant $R$ la rotation d'angle $\arctan(\frac{n_2}{n_1})$, on a finalament :
+
+$$U_{\delta}R = \begin{pmatrix}a & -\delta_{11}  \frac{n_2}{\sqrt{n_1^2+n_2^2}} + \delta_{21} \frac{n_1}{\sqrt{n_1^2+n_2^2}}\\
+a & -\delta_{12}  \frac{n_2}{\sqrt{n_1^2+n_2^2}} + \delta_{22} \frac{n_1}{\sqrt{n_1^2+n_2^2}}\\
+\vdots & \vdots \\
+a & -\delta_{1n}  \frac{n_2}{\sqrt{n_1^2+n_2^2}} + \delta_{2n} \frac{n_1}{\sqrt{n_1^2+n_2^2}}
+\end{pmatrix}$$
+
+Puisque $R$ est une rotation, $||\tilde{G}^T U_{\delta}||_2 = ||\tilde{G}^T U_{\delta}R||_2$. En développant $\tilde{G}^T U_{\delta}R$, on obtient :
+
+\begin{equation}
+  \begin{split}
+   \tilde{G}^T U_{\delta}R = \left(\sum_{i=1}^n a \tilde{G}_i, \sum_{i=1}^n \left(-\delta_{1i}  \frac{n_2}{\sqrt{n_1^2+n_2^2}} + \delta_{2i} \frac{n_1}{\sqrt{n_1^2+n_2^2}}\right)\tilde{G}_i \right)
+  \end{split}
+\end{equation}
+
+Or $\sum_{i=1}^n \tilde{G}_i = 0$ par définition de $\tilde{G}$, ce qui permet d'écrire, en posant $U_{\delta}^{\prime} \in M_{n,1}(\mathbb{R})$ la matrice colonne correspondant à la deuxième colonne de $U_{\delta}R$ :
+
+\begin{equation}
+  \begin{split}
+    F_{ST} & = ||\tilde{G}^T U_{\delta}||_2^2 \\
+    & = ||\tilde{G}^T U_{\delta}R||_2^2 \\
+    & = ||\tilde{G}^T U_{\delta}^{\prime}||_2^2
+  \end{split}
+\end{equation}
+
+```{r}
+n1 <- 1/5
+n2 <- 1/8
+xx <- c(-1/4, 1/4)
+xx.2 <- c(-0.15, 0.15)
+yy.1 <- - n2 * xx / n1
+yy.2 <- n1 * xx.2 / n2
+n.x <- c(n1, 0)
+n.y <- c(0, n2)
+df.branch <- data.frame(x1 = n.x[1], x2 = n.x[2], y1 = n.y[1], y2 = n.y[2])
+df.axis.x <- data.frame(x1 = xx[1], x2 = xx[2], y1 = yy.1[1], y2 = yy.1[2])
+df.axis.y <- data.frame(x1 = xx.2[1], x2 = xx.2[2], y1 = yy.2[1], y2 = yy.2[2])
+data.frame(x = n.x, y = n.y) %>%
+  ggplot(aes(x = x, y = y)) +
+  coord_equal() +
+  geom_point(size = 2, color = "red") +
+  xlim(-1/4, 1/4) +
+  ylim(-1/4, 1/4) +
+  xlab("X") +
+  ylab("Y") +
+  geom_hline(yintercept = 0) +
+  geom_vline(xintercept = 0) +
+  geom_segment(data = df.branch, aes(x = x1, y = y1, xend = x2, yend = y2)) +
+  geom_segment(data = df.axis.x, aes(x = x1, y = y1, xend = x2, yend = y2), color = "blue") +
+  geom_segment(data = df.axis.y, aes(x = x1, y = y1, xend = x2, yend = y2), color = "blue") +
+  annotate("text",
+           x = n.x + c(0, 0.01),
+           y = n.y + c(0.025, 0),
+           label = c("frac(1, n[1])", "frac(1, n[2])"),
+           parse = TRUE) +
+  theme_bw()
+
+```
+
+Notant $\tilde{\boldsymbol{G}} = U \Sigma V^T$ la SVD de rang 1, la communalité a pour expression $\rho_1^2 = (\Sigma V)^2 = ||\tilde{G}^TU||_2^2$.
+Remarquons que $U_{\delta}^{\prime}$ a une expression similaire à celle des scores de l'ACP exprimée dans @mcvean2009genealogical. Ceci nous permet de considérer la $F_{ST}$ comme un cas particulier de la communalité où les scores de l'ACP sont identiques pour tous les individus appartenant à une même population. À l'inverse, cela permet de voir la communalité comme une extension de la $F_{ST}$ à l'échelle individuelle.
 
 
+### L'Analyse en Composantes Principales régularisée
 
-# Supplementary Information
+L'Analyse en Composantes Principales parcimonieuse est utilisée pour donner une meilleure interprétabilité des composantes principales. Les composantes principales classiques sont des combinaisons linéaires de toutes les variables de départ, si bien que n'importe quelle composante principale renvoie potentiellement à toutes les variables du jeu de données. L'Analyse en Composantes Principales permet de contourner ce problème en ne sélectionnant qu'un certain nombre de variables pour construire ses composantes principales, attribuant des valeurs nulles aux autres variables.
+
+```{r, eval=FALSE}
+create.fdr.pow = function(list, ground.truth, lmax = length(list), smooth = TRUE, soft.name){
+  fdr <- 0
+  pow <- 0
+  s <- seq(1, lmax, by = 1)
+  for (k in s){
+    l <- list[1:k]
+    fdr <- c(fdr, simulate::compute.fdr(l, ground.truth))
+    pow <- c(pow, simulate::compute.power(l, ground.truth))
+  }
+  res <- list()
+  idx <- sort(fdr, decreasing = FALSE, index.return = TRUE)$ix
+  fdr <- fdr[idx]
+  pow <- pow[idx]
+  if (smooth == FALSE){
+    res$fdr <- fdr
+    res$pow <- pow
+  } else if (smooth == TRUE){
+    pow.old <- 0
+    fdr.old <- 0
+    aux.fdr <- 0
+    aux.pow <- 0
+    for (val in 1:length(fdr)){
+      if (pow[val] >= pow.old){
+        aux.fdr <- c(aux.fdr, fdr[val])
+        aux.pow <- c(aux.pow, pow[val])
+        pow.old <- pow[val]
+      }
+    }
+    res$fdr <- aux.fdr
+    res$pow <- aux.pow
+  }
+  return(data.frame(Software = soft.name, 
+                    FDR = fdr,
+                    Power = pow))
+}
+
+#d <- readRDS("data/div.rds")
+
+dir <- "~/Documents/thesis/git/simulations/divergence_model/"
+n.simu <- c(25, 50, 75, 100, 150, 175)
+
+pow <- 0
+fdr <- 0
+pow.pcadapt <- 0
+fdr.pcadapt <- 0
+for (i in 1:length(n.simu)) {
+  geno <- t(as.matrix(read.table(paste0(dir, "div3pops_Eur_", n.simu[i]))))
+  gt <- scan(paste0(dir, "div3pops_Eur_", n.simu[i], ".gt"))
+  x <- pcadapt(geno, K = 2)
+  p <- apply(geno, MARGIN = 1, FUN = function(X) {mean(X) / 2})
+  G <- scale(t(geno), center = TRUE, scale = sqrt(2 * p * (1 - p)))
+  obj.spca <- elasticnet::spca(G, K = 2, para = c(0.1, 0.1))
+  h2 <- obj.spca$pev[1] * obj.spca$loadings[, 1]^2 + obj.spca$pev[2] * obj.spca$loadings[, 2]^2
+
+  rnk <- sort(h2, decreasing = TRUE, index.return = TRUE)$ix
+  rnk.pcadapt <- sort(x$pvalues, decreasing = FALSE, index.return = TRUE)$ix
+  pow <- pow + sapply(1:1000, FUN = function(h) {simulate::compute.power(rnk[1:h], gt)})
+  fdr <- fdr + sapply(1:1000, FUN = function(h) {simulate::compute.fdr(rnk[1:h], gt)})
+  pow.pcadapt <- pow.pcadapt + sapply(1:1000, FUN = function(h) {simulate::compute.power(rnk.pcadapt[1:h], gt)})
+  fdr.pcadapt <- fdr.pcadapt + sapply(1:1000, FUN = function(h) {simulate::compute.fdr(rnk.pcadapt[1:h], gt)})
+}
+plot(fdr / length(n.simu), pow / length(n.simu))
+points(fdr.pcadapt / length(n.simu), pow.pcadapt / length(n.simu), col = "red")
+```
+
+# Informations supplémentaires
 
 ## Article 1 {-}
 
@@ -48,15 +258,11 @@ ggplot(data = df) +
   geom_line(size = 2,
             aes(x = K,
                 y = values,
-                colour = type,
-                linetype = type)) +
+                colour = type)) +
   ylim(0,1) +
   scale_colour_manual("Curve",
                       values = cbbPalette[c(7, 3)]) +
-  scale_linetype_manual(name = "Curve",
-                        values = c(3, 1)) +
-  guides(colour = guide_legend(nrow = 1),
-         linetype = guide_legend(nrow = 1)) +
+  guides(colour = guide_legend(nrow = 1)) +
   theme_bw() +
   theme(legend.position = "bottom",
         legend.direction = "vertical",
@@ -107,9 +313,7 @@ df %>%
   ggplot(aes(x = fdr,
              y = power)) +
   facet_wrap(~model, ncol = 1) +
-  geom_line(aes(linetype = software,
-                color = software),
-            size = 1.5, na.rm = TRUE) +
+  geom_line(aes(color = software), size = 1.5, na.rm = TRUE) +
   scale_color_manual("Software",
                      values = cbbPalette[c(7, 2, 4, 3, 8)],
                      labels = c("BayeScan",
@@ -117,17 +321,6 @@ df %>%
                                 "OutFLANK",
                                 "pcadapt",
                                 "sNMF")) +
-  scale_linetype_manual(name = "Software",
-                        labels = c("BayeScan",
-                                   "hapflk",
-                                   "OutFLANK",
-                                   "pcadapt",
-                                   "sNMF"),
-                        values = c("dotdash",
-                                   "dotted",
-                                   "longdash",
-                                   "solid",
-                                   "dashed")) +
   xlim(0, 0.6) +
   ylim(0, 1) +
   guides(colour = guide_legend(nrow = 2),
@@ -155,9 +348,7 @@ df %>%
   ggplot(aes(x = fdr,
              y = power)) +
   facet_wrap(~model, ncol = 1) +
-  geom_line(aes(linetype = software,
-                color = software),
-            size = 1.5, na.rm = TRUE) +
+  geom_line(aes(color = software), size = 1.5, na.rm = TRUE) +
   scale_color_manual("Software",
                      values = cbbPalette[c(7, 2, 4, 3, 8)],
                      labels = c("BayeScan",
@@ -165,17 +356,6 @@ df %>%
                                 "OutFLANK",
                                 "pcadapt",
                                 "sNMF")) +
-  scale_linetype_manual(name = "Software",
-                        labels = c("BayeScan",
-                                   "hapflk",
-                                   "OutFLANK",
-                                   "pcadapt",
-                                   "sNMF"),
-                        values = c("dotdash",
-                                   "dotted",
-                                   "longdash",
-                                   "solid",
-                                   "dashed")) +
   xlim(0, 0.6) +
   ylim(0, 1) +
   guides(colour = guide_legend(nrow = 2),
@@ -203,9 +383,7 @@ levels(df$model) <- c("No admixture", "With admixture")
 df %>%
   ggplot(aes(x = fdr,
              y = power)) +
-  geom_line(aes(linetype = software,
-                color = software),
-            size = 1.5, na.rm = TRUE) +
+  geom_line(aes(color = software), size = 1.5, na.rm = TRUE) +
   scale_color_manual("Software",
                      values = cbbPalette[c(7, 2, 4, 3, 8)],
                      labels = c("BayeScan",
@@ -213,17 +391,6 @@ df %>%
                                 "OutFLANK",
                                 "pcadapt",
                                 "sNMF")) +
-  scale_linetype_manual(name = "Software",
-                        labels = c("BayeScan",
-                                   "hapflk",
-                                   "OutFLANK",
-                                   "pcadapt",
-                                   "sNMF"),
-                        values = c("dotdash",
-                                   "dotted",
-                                   "longdash",
-                                   "solid",
-                                   "dashed")) +
   xlim(0, 0.6) +
   ylim(0, 1) +
   guides(colour = guide_legend(nrow = 2),
@@ -397,7 +564,6 @@ data.frame(name = name,
                              "Region",
                              "PANTHER annotation"),
                caption = '(ref:annotation-cap)',
-               longtable = TRUE,
                booktabs = TRUE,
                escape = TRUE) %>%
   kable_styling(full_width = T)

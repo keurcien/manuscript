@@ -1,73 +1,190 @@
-# Introgression adaptative
+# Aspect computationnel 
 
-### Coefficients de métissage globaux et locaux
+Dans cette partie, nous nous intéresserons brièvement à l'aspect computationnel des méthodes qui ont été présentées dans les chapitres précédents. Le développement d'outils logiciels destinés à l'exploration de données génétiques volumineuses requiert qu'une attention toute particulière soit portée à l'utilisation des ressources de calcul. Étant donné que nous nous intéressons à la possibilité de réaliser des scans génomiques pour des données génétiques de grande taille, il me semble intéressant de préciser les points sur lesquels des améliorations ont été faites d'un point de vue computationnel.
 
-Étant données des populations ancestrales, il est possible d'estimer pour un individu donné, la proportion de son génôme provenant de chacune des populations ancestrales. Ces proportions sont connues plus communément sous le nom de *coefficients de métissage globaux*. De nombreux logiciels existent pour l'estimation de ces coefficients : STRUCTURE, ADMIXTURE [@alexander2009fast], LEA [@frichot2015lea], tess3r [@caye2016tess3]. En complément à cette information globale, il peut être intéressant de déterminer sur des portions plus petites du génôme, de la même manière que dans le cas global, les proportions venant de telle ou telle population ancestrale pour chacune de ces portions. Nous parlons dans ce cas de *coefficients de métissage locaux*. Encore une fois, plusieurs logiciels ont été proposés dans le but d'estimer ces coefficients : Hapmix [@price2009sensitive], EILA [@yang2013efficient], LAMP [@thornton2014local], loter ou encore RFmix [@maples2013rfmix].
 
-L'introgression peut être détectée de différentes façons. Une première approche consiste à utiliser les *coefficients de métissage locaux*. Les méthodes mentionnées plus haut estiment ces coefficients pour chaque individu, permettant de calculer à partir de ceux-ci des coefficients de métissage locaux pour chaque population.
+Blockwise computation of covariance matrix
+Random SVD
+Storage in binary format
+Memory-mapping
 
-### Lien entre Analyse en Composantes Principales et métissage global.
+## Données d'entrée
 
-L'un des premiers articles à établir un lien entre l'ACP et les coefficients de métissage global fut sur l'interprétation généalogique de l'ACP de Gil McVean [@mcvean2009genealogical]:
+La matrice de génotype est stockée dans un fichier texte où chaque ligne représente un marqueur génétique. Les caractères sont séparés par un espace et les valeurs manquantes sont encodées par des `9`. Ce format a été utilisé car le calcul de l'ACP pouvait être effectué en parcourant une seule fois le fichier, ligne par ligne, correspondant au sens de lecture du fichier.
 
-(ref:mcvean-cap) Coefficients de métissage et ACP [@mcvean2009genealogical].
+Ce format, bien que très simple, n'est en réalité pas adapté au traitement informatique. Il présente plusieurs désavantages :
 
-```{r mcvean, results = 'asis', fig.cap = '(ref:mcvean-cap)', out.width = '300px'}
-include_graphics("figure/mcvean.png")
+- Les espaces n'encodent aucune information. La moitié de l'espace mémoire occupée par le fichier est donc essentiellement vide d'un point de vue informatif.
+
+- Les génotypes 0, 1, 2 et 9 sont encodés en ASCII, comme tout caractère (au sens informatique du terme), sur un octet (ou 8 bits). Si bien qu'un octet peut en réalité contenir l'information de quatre génotypes (2 bits par génotype). Si l'on s'en réfère au format .bed, les génotypes sont encodés de la façon suivante :
+
+A DETAILLER
+
+- L'accès en lecture à un fichier texte est bien moins rapide que l'accès à un fichier binaire.
+
+- Le format .pcadapt n'est utilisé que par pcadapt.
+
+Pour résumer, un fichier .bed et un fichier .pcadapt contiennent exactement la même information. Un fichier .bed occupe exactement 8 fois moins d'espace mémoire physique d'un fichier .pcadapt. Même sans tenir compte de la vitesse de lecture, selon que l'on lit un fichier binaire ou un fichier texte, il est 8 fois plus rapide de récupérer une entrée de la matrice de génotype.
+
+## Memory-mapping
+
+La version C de PCAdapt utilisait le fait qu'il était possible de calculer la matrice de covariance entre les individus en stockant un certain nombre de SNPs à chaque fois. Afin de ne pas charger entièrement la matrice de génotypes dans la mémoire vive, les valeurs de la matrice étaient lues depuis le fichier. Les principaux inconvénients de cette façon de procéder résident dans l'accès au fichier en tant que *stream* :
+
+- Accès lent
+
+- Accès aléatoire impossible^[l'accès aléatoire (pour une matrice) correspond au fait de pouvoir accéder à l'élément $(i, j)$ de la matrice sans avoir à lire les valeurs qui le précèdent.].
+
+La library C++ `boost` permet de *mapper* un fichier, créant des accès aléatoires à ce fichier sans qu'il y ait besoin de charger le fichier.
+
+## Interface Shiny
+
+Grâce au logiciel R, il est possible de pousser encore plus loin la simplification d'utilisation des logiciels et des packages développés. À l'instar du package adegenet, nous proposons une interface web utilisable localement et facilement déployable sur des serveurs distants.
+
+(ref:shiny-app-cap) Interface Shiny de la librairie pcadapt. 
+
+```{r shiny-app, fig.cap='(ref:shiny-app-cap)', out.width="100%"}
+knitr::include_app("https://keurcien.shinyapps.io/app-pcadapt")
 ```
 
-Pour chacun des 22 chromosomes,
+## ACP et données manquantes
 
-### Analyse en Composantes Principales locale
+Pour rappel, en génétique des populations, réaliser l'ACP sur des données de génômes consiste à faire la décomposition en valeurs singulières de la matrice de relation génétique.
 
-Notant $p$ le nombre de marqueurs génétiques, $i$ un entier compris entre $1$ et $p$, et $x_i$ la position génétique (en Morgans) ou la position physique (en paires de bases) du $i$-ème marqueur génétique. Nous définissons pour cet entier $i$ la fenêtre $W_i^T$ de taille $T$ et centrée en $i$ :
+\begin{equation}
+  GRM_{ij} = \frac{1}{p} \sum_{k = 1}^p \frac{(G_{ki} - 2p_k) \times (G_{kj} - 2p_k)}{2p_i(1-p_i)}
+\end{equation}
 
-$$W_i^T = \{ j \in [|1, p|], |x_i - x_j| \leq T/2 \}$$
 
-### Sensibilité à l'imputation des données manquantes
+Pour tenir compte de la présence de données manquantes, plusieurs stratégies peuvent être envisagées [@dray2015principal] :
 
-\newpage
+- Imputer : remplacer chaque entrée manquante par une valeur qu'elle peut potentiellement prendre. Certaines méthodes imputent les valeurs manquantes par les moyennes correspondantes [@abraham2014fast], ou suggèrent d'utiliser des logiciels destinés à l'imputation [@browning2016genotype; @delaneau2012linear].
 
-#### Méthodes de détection
+- Tenir compte des données manquantes dans le calcul d'estimateurs : par exemple pour calculer la corrélation entre deux individus $i$ et $j$, sont exclus du calcul tout marqueur génétique manquant chez l'individu $i$ ou $j$. La relation \@ref(eq:GRM) devient alors :
 
-##### La statistique D de Patterson
+\begin{equation}
+  GRM_{ij} = \frac{1}{\sum_{k=1}^p \delta_{ki}\delta_{kj}} \sum_{k = 1}^p \frac{(G_{ki} - 2p_k) \times (G_{kj} - 2p_k)}{2p_k(1-p_k)} \delta_{ki} \delta_{kj}
+  (\#eq:GRM-missing)
+\end{equation}
 
-La statistique $D$ de Patterson [@durand2011testing] demeure aujourd'hui la méthode la plus utilisée pour détecter la trace de flux de gènes dans une population. La méthode repose sur l'observation de motifs portant les noms *ABBA* et *BABA*, en référence aux différents types de généalogie possible pour un site nucléotidique.
+où $\delta_{ki} = 0$ si $G_{ki}$ est manquant et $\delta_{ki} = 1$ sinon.
 
-$$ D = \displaystyle \frac{\sum_i C_{ABBA}(i) - C_{BABA}(i)}{\sum_i C_{ABBA}(i) + C_{BABA}(i)} $$
+```{r engine='Rcpp', eval=FALSE, echo=TRUE}
+#include <Rcpp.h>
+using namespace Rcpp;
 
-##### RNDmin
+// [[Rcpp::export]]
+NumericMatrix PairGRM(const NumericMatrix &G,
+                      const NumericVector &p) {
 
-[Descriptif de RNDmin]
+  int nSNP = G.nrow(); // number of SNPs
+  int nIND = G.ncol(); // number of individuals
+  NumericMatrix GRM(nIND, nIND); // Genetic Relationship Matrix
 
-Pour comprendre la récente méthode proposée par [@rosenzweig2016powerful], il est nécessaire de définir un certain nombre de statistiques dont $RND_{\text{min}}$ dérive.
+  for (int i = 0; i < nIND; i++) {
+    for (int j = 0; j < nIND; j++) {
 
-&nbsp;
+      // value = GRM(i, j)
+      double value = 0;
+      double tmp = 0; 
+      // number of missing values for each pair of individuals (i, j)
+      // nbmv = \sum_{k = 1}^{nSNP} \delta_{ki} \delta{kj}
+      int nbmv = 0;
 
-- $d_{xy}$ est la distance de Hamming entre la séquence $X$ de la population $1$ et la séquence $Y$ de la population $2$. Ainsi, si $x = (x_i)_{1 \leq i \leq n}$ et $y = (y_i)_{1 \leq i \leq n}$, alors :
+      // Loop over the SNPs to compute the dot product
+      for (int k = 0; k < nSNP; k++) {
+        if ((!NumericVector::is_na(G(k, i))) && 
+            (!NumericVector::is_na(G(k, j)))) {
+          tmp = (G(k, i) - 2 * p[k]) * (G(k, j) - 2 * p[k]);
+          value +=  tmp / (2 * p[k] * (1 - p[k]));
+        } else {
+          nbmv++;
+        }
+      }
 
-$$d_{xy} = \text{Card}(\{i \in [|1, n|] \; | \; x_i \neq y_i \})$$
+      // Divide by the number of non-missing values for (i, j)
+      GRM(i, j) = value / (nSNP - nbmv);
 
-Cette statistique est ainsi définie pour une paire de séquences ($x$, $y$). Pour quantifier la dissimilarité entre deux ensembles de séquences, deux approches sont possibles. La première consiste à calculer la distance moyenne $d_{XY}$. De par sa définition, cette distance présente néanmoins le défaut d'être peu sensible aux épisodes récents d'introgression [@geneva2015new].
-En effet, les faibles valeurs de $d_{xy}$ correspondant à des évènements de divergence récents peuvent voir leur influence diminuée en cas de présence d'évènements de divergence plus anciens.
-Pour pallier à ce problème, considérer la distance minimale entre les deux ensembles de séquences [@joly2009statistical] constitue une solution intéressante.
+    }
+  }
 
-[Expliquer pourquoi on définit $d_{\text{out}}$ et $RND$]
+  return GRM;
 
-En définissant $d_{out} = \frac{1}{2}(d_{XO} + d_{YO})$, il est possible de définir de la même
-façon $RND_{min}$ :
+}
+```
 
-$$RND_{\text{min}} = \frac{d_{\text{min}}}{d_{\text{out}}}$$
+Le calcul de la matrice des relations génétiques affiche une complexité algorithmique en $O(pn^2)$ et est donc très coûteux d'un point de vue computationnel. Des méthodes provenant de la théorie des matrices aléatoires proposent des algorithmes permettant d'effectuer la décomposition en valeurs singulières en $O(pn)$ [@baglama2005augmented]. Cependant, la littérature est assez peu fournie quant à la possibilité d'utiliser ces méthodes à des données comportant des données manquantes [@baglama2005augmented]. Nous proposons ici une façon de compter
 
-Pour récapituler, $RND_{\text{min}}$ est une statistique robuste aux variations de taux de mutation et qui reste sensible aux récents évènements d'introgression. En pratique, l'introduction de $d_{\text{out}}$ requiert ainsi la donnée d'une population ancestrale commune aux deux populations d'intérêt.
+```{r, eval = FALSE}
+pMv <- function(X, x, m, s) {
 
-##### Bdf
+}
 
-##### Analyse Linéaire Discriminante
+rsvdm <- function(X, k) {
+  miss.ind <- apply(X, MARGIN = 1, FUN = function(h) {sum(is.na(h))})
+  miss.snp <- apply(X, MARGIN = 2, FUN = function(h) {sum(is.na(h))})
+  p.ind <- (ncol(X) - miss.ind) / ncol(X)
+  p.snp <- (nrow(X) - miss.snp) / nrow(X)
+  X.fill <- X
+  X.fill[is.na(X)] <- 0
+  m <- apply(X, MARGIN = 2, FUN = function(h) {mean(h, na.rm = TRUE) / 2})
+  s <- sqrt(2 * m * (1 - m))
 
-##### Régression linéaire, régression logistique, forêts aléatoires et importance des variables
+  A <- function(x, args) {
+    # Input vector of length p
+    x <- (x * p.snp / s)
+    return((X.fill %*% x - 2 * sum(x * m)))
+  }
+  Atrans <- function(x, args) {
+    # Input vector of length n
+    x <- x * p.ind
+    return(((t(X.fill) %*% x  - 2 * sum(x) * m) / s))
+  }
+  res <- RSpectra::svds(A, k, nu = k, nv = 0, Atrans = Atrans,
+                        opts = list(tol = 1e-4, maxitr = 100),
+                        dim = c(nrow(X), ncol(X)))
+  return(res)
+}
 
-##### Régression locale, package mgcv, locfit, Backward selection strategy
+obj.rsvd <- rsvdm(t(geno.unif), 2)
 
-##### ACP locale et espace de formes
+rds <- readRDS("data/Case2.rds")
+G <- rds$geno
+nIND <- ncol(rds$geno)
+nSNP <- nrow(rds$geno)
+
+### PCA with no missing value
+maf <- pcadapt::cmpt_minor_af(G, 2)
+Gs <- scale(t(G), center = TRUE, scale = sqrt(2 * maf * (1 - maf)))
+ref.svd <- RSpectra::svds(Gs, k = 2)
+
+geno.unif <- rds$geno
+
+# Total percentage of missing values
+mv.tot.p <- 0.10
+n.mv <- floor(nIND * nSNP * mv.tot.p)
+
+# Uniform distribution of missing values (MAR)
+idx.mv <- sample(1:(nSNP * nIND), n.mv, TRUE)
+geno.unif[idx.mv] <- NA
+
+# Median imputation
+geno.median <- geno.unif
+snp.median <- apply(geno.unif, MARGIN = 1, FUN = function(X) {median(X, na.rm = TRUE)})
+for (i in 1:length(snp.median)) {
+  geno.median[i, which(is.na(geno.unif[i, ]))] <- snp.median[i]
+}
+
+pcadapt.svd <- pcadapt(geno.unif, K = 2, min.maf = 0)
+median.svd <- pcadapt(geno.median, K = 2, min.maf = 0)
+plot(ref.svd$u[, 1], pcadapt.svd$scores[, 1])
+
+sum(abs(ref.svd$u[, 1] - pcadapt.svd$scores[, 1])^2)
+sum(abs(ref.svd$u[, 1] - median.svd$scores[, 1])^2)
+sum(abs(ref.svd$u[, 1] - obj.rsvd$u[, 1])^2)
+
+```
+
+
+Bien évidemment cela ne dépend pas uniquement des algorithmes utilisés et il faut aussi tenir compte des ressources de calcul mises à disposition des utilisateurs. Nous avons néanmoins pris le parti de proposer un outil permettant de réaliser des scans génomiques pour la sélection sur des données pouvant contenir jusqu'à plusieurs millions de marqueurs génétiques génotypés pour plusieurs milliers d'individus, sans que cela ne requiert une utilisation démesurée de mémoire vive.
+
 

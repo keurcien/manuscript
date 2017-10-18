@@ -2,7 +2,9 @@
 
 ## La génétique des populations
 
-« Il est bon de rappeler que ce qui nous rend semblables est plus important que ce qui nous rend différents. Les milliards d'êtres humains éparpillés sur toute la planète se différencient par la couleur de la peau et par la forme du corps, par la langue et par la culture. Et cette variété, qui témoigne de notre capacité à changer, à nous adapter à des milieux différents et à y développer des modes de vie originaux, est la meilleure garantie pour l'avenir de l'espèce humaine. Les connaissances que nous avons acquises sur nous-mêmes montrent cependant que toute cette diversité, comme la surface changeante des océans ou de la voûte du ciel, est bien peu de chose par rapport à cet immense patrimoine que nous avons en commun, nous, les humains. » [@cavalli1994francesco]
+> "Il est bon de rappeler que ce qui nous rend semblables est plus important que ce qui nous rend différents. Les milliards d'êtres humains éparpillés sur toute la planète se différencient par la couleur de la peau et par la forme du corps, par la langue et par la culture. Et cette variété, qui témoigne de notre capacité à changer, à nous adapter à des milieux différents et à y développer des modes de vie originaux, est la meilleure garantie pour l'avenir de l'espèce humaine. Les connaissances que nous avons acquises sur nous-mêmes montrent cependant que toute cette diversité, comme la surface changeante des océans ou de la voûte du ciel, est bien peu de chose par rapport à cet immense patrimoine que nous avons en commun, nous, les humains."
+>
+> --- @cavalli1994francesco
 
 ### L'évolution comme point de départ
 
@@ -22,7 +24,7 @@ include_graphics("figure/mendel.png")
 
 En 1859, Darwin soutenait l'idée selon laquelle la principale force évolutive serait la sélection naturelle [@darwin1980origine]. « Je me propose de passer brièvement en revue les progrès de l’opinion relativement à l’origine des espèces. Jusque tout récemment, la plupart des naturalistes croyaient que les espèces sont des productions immuables créées séparément. De nombreux savants ont habilement soutenu cette hypothèse. Quelques autres, au contraire, ont admis que les espèces éprouvent des modifications et que les formes actuelles descendent de formes préexistantes par voie de génération régulière. »
 
-C'est de cette manière qu'en 1920, Edmond Barbier, dans sa notice relative à la traduction française de *L'Origine des espèces* [@darwin1980origine], décide de présenter le contexte dans lequel il a été amené à effectuer ce travail de traduction. Bien qu'elle fut globalement bien accueillie par la communauté scientifique, sa théorie fut tout de même en proie à de nombreuses critiques. L'une des principales critiques émises à son encontre fut relative à la croyance de Darwin selon laquelle l'hérédité *par mélange* serait le principal mode de transmission des caractères héréditaires [@gayon1992darwin]. Or, si sélection naturelle il y a, la conservation et la transmission des caractères sélectionnés sont essentielles. Si bien qu'une hérédité *par mélange* n'est pas envisageable pour soutenir la thèse de la sélection naturelle, puisque tout caractère transmis de cette façon se verrait altéré (ou dilué si l'on souhaite conserver l'idée de mélange) à chaque génération et donc éliminé après un certain temps. Cependant, sa théorie bénéficiera par la suite des travaux de Mendel qui, lors de leur redécouverte en 1902 [@bateson1913mendel], apporteront l'élément fondamental manquant à la théorie darwinienne : le principe d'hérédité *mendélienne*. Cette théorie de l'évolution néo-darwinienne, née de la conciliation de la théorie darwinienne et du principe d'hérédité de Mendel, constitue le paradigme évolutionniste tel que nous le connaissons aujourd'hui et porte le nom de *théorie synthétique de l'évolution*.
+C'est de cette manière qu'en 1920, Edmond Barbier, dans sa notice relative à la traduction française de *L'Origine des espèces* [@darwin1980origine], décide de présenter le contexte dans lequel il a été amené à effectuer ce travail de traduction. Bien que la théorie de Darwin fut globalement bien accueillie par la communauté scientifique, elle fut tout de même en proie à de nombreuses critiques. L'une des principales critiques émises à son encontre fut relative à la croyance de Darwin selon laquelle l'hérédité *par mélange* serait le principal mode de transmission des caractères héréditaires [@gayon1992darwin]. Or, si sélection naturelle il y a, la conservation et la transmission des caractères sélectionnés sont essentielles. Si bien qu'une hérédité *par mélange* n'est pas envisageable pour soutenir la thèse de la sélection naturelle, puisque tout caractère transmis de cette façon se verrait altéré (ou dilué si l'on souhaite conserver l'idée de mélange) à chaque génération et donc éliminé après un certain temps. Cependant, sa théorie bénéficiera par la suite des travaux de Mendel qui, lors de leur redécouverte en 1902 [@bateson1913mendel], apporteront l'élément fondamental manquant à la théorie darwinienne : le principe d'hérédité *mendélienne*. Cette théorie de l'évolution néo-darwinienne, née de la conciliation de la théorie darwinienne et du principe d'hérédité de Mendel, constitue le paradigme évolutionniste tel que nous le connaissons aujourd'hui et porte le nom de *théorie synthétique de l'évolution*.
 
 ### L'évolution d'une théorie
 
@@ -56,8 +58,11 @@ L'approbation de cette théorie, bien que conceptuellement intéressante, aura u
 
 ### Forces évolutives
 
-Ce changement de paradigme nous invite de ce fait à observer la sélection naturelle à travers le prisme de la théorie neutraliste, et donc à identifier les mutations sélectives comme des mutations dont les origines ne peuvent être uniquement expliquées par des processus biologiquement neutres. La génétique des populations distingue trois types de processus neutres qui, tout comme la sélection naturelle, constituent les principales *forces évolutives*. 
-« La mutation propose, la sélection dispose. » [@cavalli1994francesco]
+Ce changement de paradigme nous invite de ce fait à observer la sélection naturelle à travers le prisme de la théorie neutraliste, et donc à identifier les mutations sélectives comme des mutations dont les origines ne peuvent être uniquement expliquées par des processus biologiquement neutres. La génétique des populations distingue trois types de processus neutres : la dérive génétique, les mutations aléatoires et le flux de gènes. Ces processus, tout comme la sélection naturelle, constituent les principales *forces évolutives*. 
+
+> "La mutation propose, la sélection dispose."
+>
+> --- @cavalli1994francesco
 
 #### La dérive génétique {-}
 
@@ -133,6 +138,7 @@ data.frame(Species = species, Rates = rates) %>%
   kable_styling(full_width = T)
 ```
 
+
 #### Le flux de gène {-}
 
 Le flux de gène est généralement le résultat d'évènements migratoires (bien que ce ne soit pas nécessairement toujours le cas [@tigano2016genomics]), initiés par des individus appartenant à une population donnée, vers une seconde population dont le pool génique diffère éventuellement de la population d'origine. Le flux de gène influe sur la diversité génétique initialement présente si par exemple, parmi les allèles *migrants* figurent des allèles qui n'existaient pas dans la population receveuse.
@@ -195,7 +201,7 @@ Avant d'aborder la partie sur les méthodes développées au cours de cette thè
 
 ### Des données en grande dimension
 
-Le séquençage nouvelle génération (appelé encore séquençage à haut débit) a connu un essor considérable au cours des dernières décennies. Si bien que les prouesses techniques et les progrès technologiques réalisés dans ce domaine ont permis de réduire d'un facteur 100,000 les coûts de séquençage en l'espace de seulement 15 ans (Figure \@ref(fig:wetterstrand)).
+Le séquençage nouvelle génération (appelé encore séquençage à haut débit ou NGS) a connu un essor considérable au cours des dernières décennies. Si bien que les prouesses techniques et les progrès technologiques réalisés dans ce domaine ont permis de réduire d'un facteur 100,000 les coûts de séquençage en l'espace de seulement 15 ans (Figure \@ref(fig:wetterstrand)).
 
 (ref:wetterstrand-cap) Évolution des coûts de séquençage depuis 2001 [@wetterstrand2013dna].
 
@@ -220,7 +226,7 @@ df %>%
   theme_bw()
 ```
 
-Toutefois, compte tenu de la popularité croissante des technologies NGS [@muir2016real] et des considérables volumes de données qu'elles génèrent, de nouvelles problèmatiques se posent quant à leur stockage et leur analyse, nécessitant l'utilisation de puissantes ressources de calcul ainsi que le développement d'algorithmes plus adaptés [@gogol2012overview].
+Toutefois, compte tenu de la popularité croissante des technologies NGS [@muir2016real] et des considérables volumes de données qu'elles génèrent, de nouvelles problématiques se posent quant à leur stockage et leur analyse, nécessitant l'utilisation de puissantes ressources de calcul ainsi que le développement d'algorithmes plus adaptés [@gogol2012overview].
 
 D'un point de vue statistique, l'accumulation de données, aussi bien en termes d'observations qu'en termes de variables, tend à opacifier la limite, si elle existe, entre ce qui relève du signal que l'on cherche à détecter, et ce qui n'en relève pas. Ce phénomène bien connu en statistiques porte le nom de *fléau de la dimension* [@giraud2014introduction].
 
@@ -230,9 +236,9 @@ Le séquençage de l'ADN a également permis de faire évoluer le concept de *ma
 
 #### Microsatellite {-}
 
-Jusqu'à présent, les microsatellites ont connu un succès important, notamment grâce à la popularisation de techniques telles que la PCR (*Réaction en Chaîne par Polymérase*). Cependant, grâce aux nouvelles avancées technologiques que nous évoquerons un peu plus loin, ils sont progressivement délaissés au détriment des SNPs.
+Jusqu'à présent, les microsatellites ont connu un succès important, notamment grâce à la popularisation de techniques telles que la PCR (*Réaction en Chaîne par Polymérase*). Cependant, grâce aux nouvelles avancées technologiques que nous évoquerons un peu plus loin, ils sont progressivement délaissés au détriment des SNPs. Un microsatellite est repérable par la répétition successive de petits motifs chacun composé de 1 à 4 nucléotides.
 
-(ref:microsat) Exemples de microsatellites. Un microsatellite est repérable par la répétition successive de petits motifs chacun composé de 1 à 4 acides aminés. La première séquence comporte 3 répétitions du motif CCG, tandis que la seconde inclut 4 répétitions du motif CA.
+(ref:microsat) Exemples de microsatellites. La première séquence comporte 3 répétitions du motif CCG, tandis que la seconde inclut 4 répétitions du motif CA.
 
 ```{r microsat, fig.cap = '(ref:microsat)', fig.height=3}
 pair_base = function(seq) {
@@ -321,7 +327,9 @@ rbind(microsatA.df, microsatB.df) %>%
 
 #### Insertion/Délétion (Indel) {-}
 
-(ref:indel-cap) L'insertion ou la délétion d'une base constituent également des polymorphismes génétiques. Relativement à une séquence de nucléotides de référence, une insertion consiste en la présence d'une base supplémentaire tandis que la délétion consiste en l'absence d'une base.
+L'insertion ou la délétion d'une base constituent également des polymorphismes génétiques. Relativement à une séquence de nucléotides de référence, une insertion consiste en la présence d'une base supplémentaire tandis que la délétion consiste en l'absence d'une base.
+
+(ref:indel-cap) Exemple d'Indel.
 
 ```{r indel, fig.cap='(ref:indel-cap)', fig.height=3}
 N <- 20
@@ -410,7 +418,9 @@ rbind(indelA.df, indelB.df) %>%
 
 #### Polymorphisme d'un seul nucléotide (SNP) {-}
 
-(ref:snp-cap) Le polymorphisme d'un seul nucléotide correspond au polymorphisme génétique le plus simple, et correspond à l'emplacement d'un nucléotide présentant des variations appréciables à l'échelle d'une population.
+Le polymorphisme d'un seul nucléotide correspond au polymorphisme génétique le plus simple, et correspond à l'emplacement d'un nucléotide présentant des variations appréciables à l'échelle d'une population. 
+
+(ref:snp-cap) Exemple de SNP. 
 
 ```{r snp, fig.cap='(ref:snp-cap)', fig.height=3}
 N <- 20
@@ -503,7 +513,7 @@ rbind(SNPA.df, SNPB.df) %>%
 
 ### Encodage des données génétiques
 
-Dans ce paragraphe nous présentons le format des données sur lesquelles nous travaillons et définissons quelques notations qui seront utilisées par la suite. Conformément à l'usage qui en est fait par @gillespie2010population, nous emploierons le terme d'allèle pour désigner la version d'un nucléotide à un locus donné. Dans le cadre de nos travaux, nous considèrerons que pour un locus donné, il n'existe que deux nucléotides possibles (SNP bi-allélique),
+Dans ce paragraphe nous présentons le format des données sur lesquelles nous travaillons et définissons quelques notations qui seront utilisées par la suite. Conformément à l'usage qui en est fait par @gillespie2010population, nous emploierons le terme d'allèle pour désigner la version d'une base nucléique à un locus donné. Dans le cadre de nos travaux, nous considèrerons que pour un locus donné, il n'existe que deux nucléotides possibles (SNP bi-allélique),
 dont l'un sera considéré comme *l'allèle de référence* et l'autre comme *l'allèle alternatif*. Pour un locus donné, l'encodage des données de SNPs consiste à attribuer à chaque individu (Figure \@ref(fig:snp-encoding)) :
 
 - la valeur $0$  s'il est homozygote pour l'allèle de référence.
@@ -629,22 +639,21 @@ p3 <- BIM.df %>%
 
 
 plot_grid(p1, p2, p3, labels = c("A", "B", "C"))
-
 ```
 
 Dans la mesure du possible, l'allèle de référence (resp. alternatif) est choisi de façon à correspondre à l'allèle ancestral (resp. dérivé). En pratique, le choix de l'allèle de référence et de l'allèle alternatif peut se faire de façon totalement arbitraire sans que cela n'influe sur les méthodes statistiques basées sur la variance des allèles, ce qui sera généralement le cas pour celles qui sont présentées ici. 
 
-Les matrices de génotypes seront généralement notées $G$ et seront considérées comme des éléments de $M_{pn}(\{0,1,2\})$, où $p$ désigne le nombre de loci et $n$ le nombre d'individus. Ainsi, $G_{.,i}$ désignera le vecteur de taille $p$ composé des génotypes de l'individu $i$. De même, $G_{j,.}$ désignera le vecteur de taille $n$ contenant le génotype des individus pour le locus $j$. À la matrice $G$ sera associée la matrice $\tilde{G}$, normalisée pour les lignes (c'est-à-dire pour les SNPs). Notant $f_j$ la fréquence allélique de l'allèle alternatif (ou de l'allèle de référence), nous définissons $\tilde{G}_{j,.}$ par :
+Les matrices de génotypes seront généralement notées $G$ et seront considérées comme des éléments de $M_{pn}(\{0,1,2\})$, où $p$ désigne le nombre de locus et $n$ le nombre d'individus. Ainsi, $G_{.,i}$ désignera le vecteur de taille $p$ composé des génotypes de l'individu $i$. De même, $G_{j,.}$ désignera le vecteur de taille $n$ contenant le génotype des individus pour le locus $j$. À la matrice $G$ sera associée la matrice $\tilde{G}$, normalisée pour les lignes (c'est-à-dire pour les SNPs). Notant $f_j$ la fréquence allélique de l'allèle alternatif (ou de l'allèle de référence), nous définissons $\tilde{G}_{j,.}$ par :
 
 \begin{equation}
-  \tilde{G}_{j,.} = \frac{G_{j,.} - 2f_j}{\sqrt{2f_j(1-f_j)})}
+  \tilde{G}_{j,.} = \frac{G_{j,.} - 2f_j}{\sqrt{2f_j(1-f_j)}}
 \end{equation}
 
 Le choix de cette normalisation sera discuté plus tard.
 
 ## Les motivations de la thèse
 
-La production de données génétiques, volumineuses par la quantité d'information qu'elles renferment, laisse présager le meilleur pour les domaines de la médecine clinique et de la biologie évolutive. En génétique des populations, leur acquisition offre de nombreuses perspectives d'étude, notamment concernant la mise en évidence de marqueurs génétiques impliqués dans les processus évolutifs ou associés à certains phénotypes. Les méthodes répondant à cette problématique portent le nom de *scans génomiques*. Les scans génomiques pour la sélection, destinés à isoler des loci sous sélection, se sont largement répandus au cours des dernières années, principalement grâce au développement fulgurant qu'ont connu les technologies NGS. Pour illustrer le principe des scans génomiques, nous reprenons l'exemple des Tibétains dont l'adaptation locale à la haute altitude est suspectée d'avoir été rendue possible grâce à l'introgression de gènes hérités de l'Homme de Denisova [@hu2017evolutionary].
+La production de données génétiques, volumineuses par la quantité d'information qu'elles renferment, laisse présager le meilleur pour les domaines de la médecine clinique et de la biologie évolutive. En génétique des populations, leur acquisition offre de nombreuses perspectives d'étude, notamment concernant la mise en évidence de gènes impliqués dans les processus évolutifs ou de gènes associés à certains phénotypes. Les méthodes répondant à cette problématique portent le nom de *scans génomiques*. Les scans génomiques pour la sélection, destinés à isoler des locus sous sélection, se sont largement répandus au cours des dernières années, principalement grâce au développement fulgurant qu'ont connu les technologies NGS. Pour illustrer le principe des scans génomiques, nous reprenons l'exemple des Tibétains dont l'adaptation locale à la haute altitude est suspectée d'avoir été rendue possible grâce à l'introgression de gènes hérités de l'Homme de Denisova [@hu2017evolutionary]. Pour détecter les gènes responsables de cette adaptation, @xu2010genome ont réalisé un scan génomique en analysant la différenciation génétique entre une population constituée de tibétains et une autre constituée de Hans. Le résultat de ce scan génomique^[se présente généralement sous la forme d'un graphique, appelé *Manhattan plot*, représentant la statistique de test utilisée en fonction de l'emplacement chromosomique.] est présenté en figure \@ref(fig:tibetan-scan). 
 
 (ref:tibetan-scan-cap) Scan génomique utilisant la $F_{ST}$ (mesure de différenciation génétique de référence) que nous introduirons dans le chapitre suivant. Deux régions génomiques présentant des valeurs de $F_{ST}$ significativement élevées ont été identifiées sur les chromosomes 1 et 2 [@xu2010genome].
 

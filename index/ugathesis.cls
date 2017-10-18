@@ -263,7 +263,7 @@
     \null
     \vfil
     \vspace{1cm}
-    {\fontsize{12}{14}\fontfamily{CM}\selectfont\bf \@title}
+    {\fontsize{12}{14}\fontfamily{CM}\selectfont\bf Thèse}
     \bigskip
     \vfil
     \vfil
@@ -289,7 +289,7 @@
     \bigskip
     \bigskip
     \begin{flushleft}
-    {\fontsize{18}{20}\fontfamily{ppl}\selectfont\bf Méthodes statistiques en grande dimension pour l'étude de l'adaptation biologique à l'aide de larges bases de données génomiques}
+    {\fontsize{18}{20}\fontfamily{ppl}\selectfont\bf \@title}
     \end{flushleft}
     \centerline{}
     \vskip 1.5em

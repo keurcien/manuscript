@@ -5,7 +5,7 @@ division: "Mathematics and Natural Sciences"
 advisor: "Michael BLUM"
 lab: "Techniques de l'Ingénierie Médicale et de la Complexité - Informatique, Mathématiques et Applications de Grenoble (TIMC-IMAG)"
 department: "Ingénierie de la Santé, de la Cognition et Environnement (EDISCE)" 
-title: "Méthodes statistiques en grande dimension pour l'étude de l'adaptation biologique à l'aide de larges bases de données génomiques"
+title: "Application de l’Analyse en Composantes Principales pour étudier l’adaptation biologique en génomique des populations."
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 output: 

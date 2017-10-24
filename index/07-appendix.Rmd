@@ -145,6 +145,31 @@ data.frame(x = n.x, y = n.y) %>%
 Notant $\tilde{\boldsymbol{G}} = U \Sigma V^T$ la SVD de rang 1, la communalité a pour expression $\rho_1^2 = (\Sigma V)^2 = ||\tilde{G}^TU||_2^2$.
 Remarquons que $U_{\delta}^{\prime}$ a une expression similaire à celle des scores de l'ACP exprimée dans @mcvean2009genealogical. Ceci nous permet de considérer la $F_{ST}$ comme un cas particulier de la communalité où les scores de l'ACP sont identiques pour tous les individus appartenant à une même population. À l'inverse, cela permet de voir la communalité comme une extension de la $F_{ST}$ à l'échelle individuelle.
 
+#### Une généralisation de la statistique $T_{F-LK}$ {-}
+
+Soit $U\Sigma V^T$ la décomposition en valeurs singulières de $\tilde{G}$. Notons $\mathcal{F}$ la matrice d'apparentement génétique interpopulationnel. En utilisant l'estimateur usuel de la matrice de covariance, nous avons :
+
+\begin{equation}
+  \mathcal{F} = \frac{1}{p}U_{\delta}^T\tilde{G}\tilde{G}^TU_{\delta} 
+\end{equation}
+
+où $U_{\delta}$ est la matrice définie en proposition \@ref(prp:udelta). Par définition de la matrice d'apparentement génétique interindividuel, $G_{RM} = \frac{1}{p}\tilde{G}\tilde{G}^T$, si bien que :
+
+\begin{equation}
+  \mathcal{F} = U_{\delta}^TG_{RM}U_{\delta}
+\end{equation}
+
+Or $\tilde{G} \simeq U \Sigma V^T$, d'où $G_{RM} \simeq U \Sigma ^2 U^T$.
+De la même manière qu'en proposition \@ref(prp:fst-communality), nous pouvons réécrire la statistique $T_{F-LK}$ en un locus $j$ de la façon suivante :
+
+\begin{equation}
+  \begin{split}
+    T_{F-LK} &= \tilde{G}_{.,j}^T U_{\delta} \mathcal{F}^{-1} U_{\delta}^T \tilde{G}_{.,j} \\
+    &= \tilde{G}_{.,j}^T U_{\delta} (U_{\delta}^TG_{RM}U_{\delta})^{-1} U_{\delta}^T \tilde{G}_{.,j} \\
+    &\simeq \tilde{G}_{.,j}^T U_{\delta} (U_{\delta}^T U \Sigma ^2 U^T U_{\delta})^{-1} U_{\delta}^T \tilde{G}_{.,j} 
+  \end{split}
+\end{equation}
+
 
 ### L'Analyse en Composantes Principales régularisée
 

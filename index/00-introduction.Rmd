@@ -22,7 +22,7 @@ include_graphics("figure/mendel.png")
 
 ### La théorie de l'évolution
 
-En 1859, Darwin soutenait l'idée selon laquelle la principale force évolutive serait la sélection naturelle [@darwin1980origine]. « Je me propose de passer brièvement en revue les progrès de l’opinion relativement à l’origine des espèces. Jusque tout récemment, la plupart des naturalistes croyaient que les espèces sont des productions immuables créées séparément. De nombreux savants ont habilement soutenu cette hypothèse. Quelques autres, au contraire, ont admis que les espèces éprouvent des modifications et que les formes actuelles descendent de formes préexistantes par voie de génération régulière. »
+En 1859, Darwin soutenait l'idée selon laquelle la principale force évolutive est la sélection naturelle [@darwin1980origine]. « Je me propose de passer brièvement en revue les progrès de l’opinion relativement à l’origine des espèces. Jusque tout récemment, la plupart des naturalistes croyaient que les espèces sont des productions immuables créées séparément. De nombreux savants ont habilement soutenu cette hypothèse. Quelques autres, au contraire, ont admis que les espèces éprouvent des modifications et que les formes actuelles descendent de formes préexistantes par voie de génération régulière. »
 
 C'est de cette manière qu'en 1920, Edmond Barbier, dans sa notice relative à la traduction française de *L'Origine des espèces* [@darwin1980origine], décide de présenter le contexte dans lequel il a été amené à effectuer ce travail de traduction. Bien que la théorie de Darwin fut globalement bien accueillie par la communauté scientifique, elle fut tout de même en proie à de nombreuses critiques. L'une des principales critiques émises à son encontre fut relative à la croyance de Darwin selon laquelle l'hérédité *par mélange* serait le principal mode de transmission des caractères héréditaires [@gayon1992darwin]. Or, si sélection naturelle il y a, la conservation et la transmission des caractères sélectionnés sont essentielles. Si bien qu'une hérédité *par mélange* n'est pas envisageable pour soutenir la thèse de la sélection naturelle, puisque tout caractère transmis de cette façon se verrait altéré (ou dilué si l'on souhaite conserver l'idée de mélange) à chaque génération et donc éliminé après un certain temps. Cependant, sa théorie bénéficiera par la suite des travaux de Mendel qui, lors de leur redécouverte en 1902 [@bateson1913mendel], apporteront l'élément fondamental manquant à la théorie darwinienne : le principe d'hérédité *mendélienne*. Cette théorie de l'évolution néo-darwinienne, née de la conciliation de la théorie darwinienne et du principe d'hérédité de Mendel, constitue le paradigme évolutionniste tel que nous le connaissons aujourd'hui et porte le nom de *théorie synthétique de l'évolution*.
 
@@ -52,9 +52,9 @@ data.frame(theory = sort(rep(c("Darwin", "Kimura"), 3)),
         axis.title.y = element_blank())
 ```
 
-Une des composantes principales de cette nouvelle théorie consiste à affirmer que les fluctuations aléatoires dans les fréquences d'allèle, n'affectant que très peu ou pas du tout la valeur sélective, constituent la principale source de variabilité de l'ADN [@charlesworth2009darwin]. Une grande partie de la variation génétique observée est fonctionnellement neutre et n'occasionne pas de changement de phénotype. 
+Une des composantes principales de cette nouvelle théorie consiste à affirmer que les fluctuations aléatoires dans les fréquences d'allèle, n'affectant que très peu ou pas du tout la valeur sélective, constituent la principale source de variabilité de l'ADN [@charlesworth2009darwin]. Une grande partie de la variation génétique observée est fonctionnellement neutre et n'occasionne pas de changement de valeur sélective. 
 
-L'approbation de cette théorie, bien que conceptuellement intéressante, aura un retentissement beaucoup plus important d'un point de vue méthodologie statistique. La formulation d'une hypothèse permettant de décrire un processus évolutif en l'absence de sélection, portant généralement le nom d'*hypothèse nulle* ou encore de *modèle neutre*, est souvent de première nécessité dans toute démarche visant à caractériser un mécanisme de sélection. La donnée d'observations mettant en défaut le modèle neutre aura pour conséquences de créditer davantage une hypothèse invoquant un processus de sélection. Historiquement, la statistique $D$ de Tajima fut l'une des premières statistiques développées à partir d'une hypothèse nulle bâtie pour les mutations neutres [@tajima1989statistical]. 
+L'approbation de cette théorie, bien que conceptuellement intéressante, aura un retentissement beaucoup plus important d'un point de vue de la méthodologie statistique. La formulation d'une hypothèse permettant de décrire un processus évolutif en l'absence de sélection, portant généralement le nom d'*hypothèse nulle* ou encore de *modèle neutre*, est souvent de première nécessité dans toute démarche visant à caractériser un mécanisme de sélection. La donnée d'observations mettant en défaut le modèle neutre aura pour conséquences de créditer davantage une hypothèse invoquant un processus de sélection. Historiquement, la statistique $D$ de Tajima fut l'une des premières statistiques développées à partir d'une hypothèse nulle bâtie pour les mutations neutres [@tajima1989statistical]. 
 
 ### Forces évolutives
 
@@ -123,7 +123,7 @@ En particulier, la figure \@ref(fig:drift) met en évidence deux caractéristiqu
 
 #### Les mutations aléatoires {-}
 
-Si la dérive génétique entraîne une perte de diversité allélique, les mutations favorisent quant à elles le maintien des variations génétiques entre les populations [@gillespie2010population]. Les mutations apparaissent principalement lors de la phase de réplication de l'ADN. Une mutation peut survenir à un locus donné avec une probabilité spécifique à chaque espèce [@drake1998rates], appelée *taux de mutation*.
+Si la dérive génétique entraîne une perte de diversité allélique, les mutations favorisent quant à elles le maintien des variations génétiques entre les populations [@gillespie2010population]. Les mutations apparaissent principalement lors de la phase de réplication de l'ADN. Une mutation peut survenir à un locus donné avec une probabilité spécifique à chaque espèce [@drake1998rates], appelée *taux de mutation* (Table \@ref(tab:mutationRate)).
 
 (ref:mutationRate-cap) Exemples de taux de mutation par paire de base et par réplication chez différentes espèces [@drake1998rates].
 
@@ -141,11 +141,11 @@ data.frame(Species = species, Rates = rates) %>%
 
 #### Le flux de gène {-}
 
-Le flux de gène est généralement le résultat d'évènements migratoires (bien que ce ne soit pas nécessairement toujours le cas [@tigano2016genomics]), initiés par des individus appartenant à une population donnée, vers une seconde population dont le pool génique diffère éventuellement de la population d'origine. Le flux de gène influe sur la diversité génétique initialement présente si par exemple, parmi les allèles *migrants* figurent des allèles qui n'existaient pas dans la population receveuse.
+Le flux de gène est généralement le résultat d'évènements migratoires initiés par des individus appartenant à une population donnée, vers une seconde population dont les fréquences d'allèles diffèrent éventuellement de la population d'origine. Le flux de gène influe sur la diversité génétique initialement présente si par exemple, parmi les allèles *migrants* figurent des allèles qui n'existaient pas dans la population receveuse.
 
 #### La sélection naturelle {-}
 
-En biologie évolutive, la sélection naturelle est la force évolutive qui tend à préserver les allèles conférant des avantages quant à la survie d'un individu ou d'une espèce. Elle agit sur les traits qui sont héritables. La grande majorité de ces traits sont transmis aux descendants en suivant le mécanisme d'hérédité génétique. Cependant, d'autres aspects de la biologie d'un organisme peuvent se transmettre via des mécanismes différents, comme certains comportements culturels ou caractéristiques de l'environnement qui ont été façonnées par les populations ancestrales [@gerbault2011evolution].
+En biologie évolutive, la sélection naturelle est la force évolutive qui tend à préserver les allèles conférant des avantages quant à la viabilité ou la fertilité d'un individu. Elle agit sur les traits qui sont héritables. La grande majorité de ces traits sont transmis aux descendants en suivant le mécanisme d'hérédité génétique. 
 
 ### Adaptation locale
 
@@ -179,21 +179,20 @@ Chez l'Homme moderne, les habitudes alimentaires et les modes de vie constituent
 
 #### L'hybridation et le flux de gène comme sources d'adaptation
 
-Un caractère peut être sélectionné au sein d'une population de différentes manières : 
+Un caractère (par exemple un variant allélique) peut être sélectionné au sein d'une population de différentes manières : 
 
-- le caractère y est déjà présent^[standing genetic variation.].
+- le caractère y est déjà présent et devient adaptif suite à un changement d'environnement (*standing genetic variation*).
 
-- le caractère y apparaît à la suite d'une mutation spontanée^[*de novo* mutations.].
+- le caractère y apparaît à la suite d'une mutation spontanée (*de novo mutations*).
 
-- le caractère est hérité d'une autre population par flux de gène^[adaptive introgression.].
+- le caractère est hérité d'une autre population par flux de gène (*adaptive introgression*).
 
 Cette dernière possibilité est d'ailleurs très intéressante pour une espèce d'un point de vue de la diversité génétique. Pour enrichir le catalogue d'allèles, nous avons vu plus haut que le flux de gène constituait un processus clé. La reproduction sexuée est connue pour jouer un rôle important dans la sélection naturelle, offrant aux individus la possibilité, par le biais du brassage allélique, d'hériter des "meilleurs allèles" que possèdent leurs parents. Augmenter la diversité génétique augmente ainsi les chances de voir se transmettre des allèles favorables.
 
 Nous parlons d'hybridation ou de métissage lorsque deux individus, appartenant à deux populations différentes, se reproduisent entre eux. Pour ce qui est de la distinction de populations, nous nous en tiendrons à la suggestion faite par @harrison1990hybrid, considérant que deux individus issus de populations différentes doivent chacun posséder des traits héritables qui les différencient. Ainsi, l'hybridation constitue un excellent moyen pour permettre à une espèce d'intégrer de nouveaux allèles [@stevison2008hybridization]. Bien que l'hybridation conduise fréquemment à la naissance d'individus à la valeur sélective hautement diminuée voire d'individus non fertiles, il arrive que certains descendants aient tout de même la capacité de se reproduire et ainsi être à l'origine de l'apparition de nouveaux allèles. La sélection de tels allèles transmis par flux de gène ou par hybridation correspond à ce que l'on appelle *l'introgression adaptative*. Des exemples d'introgression sont observés à la fois dans la nature (*introgression naturelle*) et à la fois chez des espèces domestiquées (*introgression délibérée*). Nous pouvons citer l'exemple de la souris domestique, *Mus musculus domesticus*, qui a hérité d'un gène de résistance à la coumadine (communément appelée « mort aux rats ») en s'hybridant avec une espèce sauvage, *Mus spretus* [@song2011adaptive]. Ce gène de résistance est localisé sur le chromosome 7 de la souris domestique et appartient à une région qui a été identifiée comme provenant effectivement de la souris sauvage.
 
-------
 
-L'identification des mutations génétiques responsables de l'adaptation est particulièrement cruciale pour la compréhension des processus évolutifs et plus spécifiquement ceux liés à la spéciation^[épisode de divergence d'une espèce ayant conduit à la formation d'au moins une nouvelle espèce.]. L'introgression adaptative permet quant à elle de comprendre l'adaptation rapide de certaines espèces et en quoi l'hybridation constitue un vecteur important pour l'adaptation [@hufford2013genomic]. Bien que l'étude de l'adaptation locale puisse être menée de façon expérimentale^[par le biais de la *transplantation réciproque* [@kawecki2004conceptual].], nous proposons ici d'exploiter les données de séquençage de génômes afin d'appréhender ce problème de façon plus quantitative.
+L'identification des mutations génétiques responsables de l'adaptation est particulièrement cruciale pour la compréhension des processus évolutifs et plus spécifiquement ceux liés à la spéciation^[épisode de divergence d'une espèce ayant conduit à la formation d'au moins une nouvelle espèce.]. L'introgression adaptative permet quant à elle de comprendre l'adaptation rapide de certaines espèces et en quoi l'hybridation constitue un vecteur important pour l'adaptation [@hufford2013genomic]. Bien que l'étude de l'adaptation locale puisse être menée de façon expérimentale par le biais de la *transplantation réciproque* [@kawecki2004conceptual], nous proposons ici d'exploiter les génotypes de populations naturelles.
 
 ## Données de polymorphismes génétiques
 
@@ -236,7 +235,7 @@ Le séquençage de l'ADN a également permis de faire évoluer le concept de *ma
 
 #### Microsatellite {-}
 
-Jusqu'à présent, les microsatellites ont connu un succès important, notamment grâce à la popularisation de techniques telles que la PCR (*Réaction en Chaîne par Polymérase*). Cependant, grâce aux nouvelles avancées technologiques que nous évoquerons un peu plus loin, ils sont progressivement délaissés au détriment des SNPs. Un microsatellite est repérable par la répétition successive de petits motifs chacun composé de 1 à 4 nucléotides.
+Jusqu'à présent, les microsatellites ont connu un succès important, notamment grâce à la popularisation de techniques telles que la PCR (*Réaction en Chaîne par Polymérase*). Cependant, grâce aux nouvelles avancées technologiques que nous évoquerons un peu plus loin, ils sont progressivement délaissés au profit des SNPs. Un microsatellite est repérable par la répétition successive de petits motifs chacun composé de 1 à 4 nucléotides (Figure \@ref(fig:microsat)).
 
 (ref:microsat) Exemples de microsatellites. La première séquence comporte 3 répétitions du motif CCG, tandis que la seconde inclut 4 répétitions du motif CA.
 
@@ -327,7 +326,7 @@ rbind(microsatA.df, microsatB.df) %>%
 
 #### Insertion/Délétion (Indel) {-}
 
-L'insertion ou la délétion d'une base constituent également des polymorphismes génétiques. Relativement à une séquence de nucléotides de référence, une insertion consiste en la présence d'une base supplémentaire tandis que la délétion consiste en l'absence d'une base.
+L'insertion ou la délétion d'une base constituent également des polymorphismes génétiques. Relativement à une séquence de nucléotides de référence, une insertion consiste en la présence d'une base supplémentaire tandis que la délétion consiste en l'absence d'une base (Figure \@ref(fig:indel)).
 
 (ref:indel-cap) Exemple d'Indel.
 
@@ -418,7 +417,7 @@ rbind(indelA.df, indelB.df) %>%
 
 #### Polymorphisme d'un seul nucléotide (SNP) {-}
 
-Le polymorphisme d'un seul nucléotide correspond au polymorphisme génétique le plus simple, et correspond à l'emplacement d'un nucléotide présentant des variations appréciables à l'échelle d'une population. 
+Le polymorphisme d'un seul nucléotide correspond au polymorphisme génétique le plus simple, et correspond à l'emplacement d'un nucléotide présentant des variations appréciables à l'échelle d'une population (Figure \@ref(fig:snp)). 
 
 (ref:snp-cap) Exemple de SNP. 
 
@@ -643,7 +642,7 @@ plot_grid(p1, p2, p3, labels = c("A", "B", "C"))
 
 Dans la mesure du possible, l'allèle de référence (resp. alternatif) est choisi de façon à correspondre à l'allèle ancestral (resp. dérivé). En pratique, le choix de l'allèle de référence et de l'allèle alternatif peut se faire de façon totalement arbitraire sans que cela n'influe sur les méthodes statistiques basées sur la variance des allèles, ce qui sera généralement le cas pour celles qui sont présentées ici. 
 
-Les matrices de génotypes seront généralement notées $G$ et seront considérées comme des éléments de $M_{pn}(\{0,1,2\})$, où $p$ désigne le nombre de locus et $n$ le nombre d'individus. Ainsi, $G_{.,i}$ désignera le vecteur de taille $p$ composé des génotypes de l'individu $i$. De même, $G_{j,.}$ désignera le vecteur de taille $n$ contenant le génotype des individus pour le locus $j$. À la matrice $G$ sera associée la matrice $\tilde{G}$, normalisée pour les lignes (c'est-à-dire pour les SNPs). Notant $f_j$ la fréquence allélique de l'allèle alternatif (ou de l'allèle de référence), nous définissons $\tilde{G}_{j,.}$ par :
+Les matrices de génotypes seront généralement notées $G$ et seront considérées comme des éléments de $M_{pn}(\{0,1,2\})$, où $p$ désigne le nombre de locus et $n$ le nombre d'individus. Ainsi, $G_{.,i}$ désignera le vecteur de taille $p$ composé du génotype de l'individu $i$. De même, $G_{j,.}$ désignera le vecteur de taille $n$ contenant les comptages de l'allèle alternatif pour les différents individus au locus $j$. À la matrice $G$ sera associée la matrice $\tilde{G}$, normalisée pour les lignes (c'est-à-dire pour les SNPs). Notant $f_j$ la fréquence allélique de l'allèle alternatif (ou de l'allèle de référence), nous définissons $\tilde{G}_{j,.}$ par :
 
 \begin{equation}
   \tilde{G}_{j,.} = \frac{G_{j,.} - 2f_j}{\sqrt{2f_j(1-f_j)}}
@@ -653,7 +652,9 @@ Le choix de cette normalisation sera discuté plus tard.
 
 ## Les motivations de la thèse
 
-La production de données génétiques, volumineuses par la quantité d'information qu'elles renferment, laisse présager le meilleur pour les domaines de la médecine clinique et de la biologie évolutive. En génétique des populations, leur acquisition offre de nombreuses perspectives d'étude, notamment concernant la mise en évidence de gènes impliqués dans les processus évolutifs ou de gènes associés à certains phénotypes. Les méthodes répondant à cette problématique portent le nom de *scans génomiques*. Les scans génomiques pour la sélection, destinés à isoler des locus sous sélection, se sont largement répandus au cours des dernières années, principalement grâce au développement fulgurant qu'ont connu les technologies NGS. Pour illustrer le principe des scans génomiques, nous reprenons l'exemple des Tibétains dont l'adaptation locale à la haute altitude est suspectée d'avoir été rendue possible grâce à l'introgression de gènes hérités de l'Homme de Denisova [@hu2017evolutionary]. Pour détecter les gènes responsables de cette adaptation, @xu2010genome ont réalisé un scan génomique en analysant la différenciation génétique entre une population constituée de tibétains et une autre constituée de Hans. Le résultat de ce scan génomique^[se présente généralement sous la forme d'un graphique, appelé *Manhattan plot*, représentant la statistique de test utilisée en fonction de l'emplacement chromosomique.] est présenté en figure \@ref(fig:tibetan-scan). 
+La production de données génétiques, volumineuses par la quantité d'information qu'elles renferment, laisse présager le meilleur pour les domaines de la médecine clinique et de la biologie évolutive. En génétique des populations, leur acquisition offre de nombreuses perspectives d'étude, notamment concernant la mise en évidence de gènes impliqués dans les processus évolutifs ou de gènes associés à certains phénotypes. Les méthodes répondant à cette problématique portent le nom de *scans génomiques*. Les scans génomiques pour la sélection, destinés à isoler des locus sous sélection, se sont largement répandus au cours des dernières années, principalement grâce au développement fulgurant qu'ont connu les technologies NGS. Pour illustrer le principe des scans génomiques, nous reprenons l'exemple de l'adaptation à l'altitude pour les Tibétains. 
+
+Pour détecter les gènes responsables de cette adaptation, @xu2010genome ont réalisé un scan génomique en analysant la différenciation génétique entre une population constituée de tibétains et une autre constituée de Hans. Le résultat de ce scan génomique^[se présente généralement sous la forme d'un graphique, appelé *Manhattan plot*, représentant la statistique de test utilisée en fonction de l'emplacement chromosomique.] est présenté en figure \@ref(fig:tibetan-scan). 
 
 (ref:tibetan-scan-cap) Scan génomique utilisant la $F_{ST}$ (mesure de différenciation génétique de référence) que nous introduirons dans le chapitre suivant. Deux régions génomiques présentant des valeurs de $F_{ST}$ significativement élevées ont été identifiées sur les chromosomes 1 et 2 [@xu2010genome].
 
@@ -661,7 +662,9 @@ La production de données génétiques, volumineuses par la quantité d'informat
 include_graphics("figure/tibetan_fst.png")
 ```
 
-(ref:tibetan-introgression-cap) Scan génomique pour l'introgression utilisant la statistique $D$ ($D^{*}$ correspond à la normalisation de la statistique $D$ que nous introduirons dans le chapitre [A COMPLETER]) [@hu2017evolutionary].
+Les SNPs qui ont la différenciation la plus élevée se trouvent dans le facteur de transcription EPAS1 qui est un facteur de transcription activé en condition d'hypoxie. À la suite de ces scans de différenciation, il a été montré en utilisant la statistique $D$ (Table \@ref(tab:tibetan-introgression)) que les variants adaptatifs sur EPAS1 ont été transmis grâce à l'introgression issue de l'Homme de Denisova [@hu2017evolutionary].
+
+(ref:tibetan-introgression-cap) Scan génomique pour l'introgression utilisant la statistique $D$ ($D^{*}$ correspond à la normalisation de la statistique $D$ que nous introduirons dans le chapitre. Nous retrouvons bien EPAS1 dans la liste des gènes hérités de l'Homme de Denisova) [@hu2017evolutionary].
 
 ```{r tibetan-introgression, results='asis', message=FALSE}
 Chr <- c(7, 2, 2, 5, 12, 4)
@@ -686,7 +689,7 @@ data.frame(Chr = Chr,
 ```
 
 
-Principalement réalisés sur des données humaines, les scans génomiques se sont progressivement étendus à d'autres espèces, modèles et non-modèles [@haasl2016detecting], tout en amorçant la transition vers des marqueurs génétiques de type SNP (Figure \@ref(fig:gwss)).
+Principalement réalisés sur des données humaines, les scans génomiques se sont progressivement étendus à d'autres espèces, modèles et non-modèles [@haasl2016detecting], et les SNPs sont désormais les marqueurs les plus utilisés (Figure \@ref(fig:gwss)).
 
 (ref:gwss-cap) Évolution de la proportion d'articles scientifiques s'intéressant à des espèces non humaines et de la proportion de ceux dont l'étude est réalisée sur des données de SNPs, dans le cadre des scans génomiques pour la sélection [@haasl2016detecting].
 
@@ -765,8 +768,11 @@ df %>% ggplot(aes(x = Recent,
 
 Toutefois, certains outils statistiques ayant été développés ne sont plus adaptés. La raison principale étant que les temps de calculs requis par ces outils pour l'analyse de données massives sont souvent prohibitifs. Les méthodes d'analyse exploratoire nécessitent souvent d'être expérimentées plusieurs fois. D'une part parce que le prétraitement des données peut être est amené à changer au cours de l'étude (filtration de marqueurs génétiques présentant une proportion trop élevée de données manquantes, retrait d'individus marginaux, etc.). D'autre part car les méthodes d'analyse proposent généralement un éventail de paramètres dont le choix ne s'impose pas spontanément. Expérimenter une même méthode avec différents critères de qualité et différents paramètres est souvent nécessaire pour minimiser les biais d'utilisation. Tout ceci justifie le recours à des méthodes rapides et adaptées à ces nouveaux volumes de données. Pour satisfaire à ces critères, des méthodes basées sur l'Analyse en Composantes Principales ont été proposées pour étudier l'adaptation locale [@duforet2015detecting; @galinsky2016fast]. 
 
-Sur la base du travail de thèse de Nicolas Duforet-Frebourg [@duforet2014statistiques], nous avons cherché dans un premier temps à améliorer la méthodologie statistique implémentée dans le logiciel PCAdapt, ainsi que les performances computationnelles, afin de garantir la possibilité de l'utiliser sur des génômes plus denses et disposant d'une plus grande résolution.
 
-Dans un premier temps, nous définirons les différents modèles, historiques et contemporains, utilisés pour réaliser des scans génomiques pour la sélection. Ce premier chapitre sera conclu par l'emploi de l'Analyse en Composantes Principales en génétique des populations. Les chapitres suivants seront consacrées aux approches statistiques basées sur l'ACP qui ont été implémentées dans le package R que nous avons développé au cours de cette thèse. Ils illustreront comment l'ACP peut être exploitée de façon à détecter des signaux de sélection ainsi que des régions d'introgression adaptative. Enfin, nous terminerons avec les aspects computationnels et numériques qui nous ont préoccupé tout au long de la thèse, en présentant quelques comparatifs de performances réalisées avec divers algorithmes.
+### Résultats principaux et organisation du manuscript
+
+Sur la base du travail de thèse de Nicolas Duforet-Frebourg [@duforet2014statistiques], nous avons cherché dans un premier temps à améliorer la méthodologie statistique implémentée dans le logiciel PCAdapt, ainsi que les performances computationnelles, afin de garantir la possibilité de l'utiliser sur des génômes plus denses et disposant d'une plus grande résolution. Afin de permettre la publication de l'article [@duforet2015detecting], j'ai réalisé des simulations de modèles en îles et de divergence afin de valider l'approche basée sur la communalité pour réaliser des scans à sélection. J'ai ensuite développé la librairie R pcadapt et proposé une statistique de scan à sélection plus puissante que la communalité qui est la distance robuste de Mahalanobis. Ce travail correspond à la publication [@luu2017pcadapt]. La dernière contribution principale de ma thèse correspond au développement d'une méthode statistique basée sur l'ACP qui permet d'identifier les régions du génôme impliquée dans les évènement d'introgression adaptive. Ce travail correspond au manuscript *Scanning genomes for adaptive introgression using principal component analysis* en annexe et fera l'objet d'une soumission prochainement.
+
+Dans le chapitre 2, nous commençons par décrire les différents modèles, historiques et contemporains, utilisés pour réaliser des scans génomiques pour la sélection. Ce premier chapitre rappelle ensuite quelle est l'utilisation de l'Analyse en Composantes Principales en génétique des populations. La fin du chapitre 2 rappelle les résultats obtenus avec la communalité et la distance de Mahalanobis, qui sont implémentées dans la librairie pcadapt, et qui correspondent aux publications [@duforet2015detecting; @luu2017pcadapt]. Le chapitre 3 illustre traite de l'introgression adaptative. Les chapitres 2 et 3 montrent donc comment l'ACP peut être exploitée de façon à détecter des signaux de sélection ainsi que des régions d'introgression adaptative. Enfin, nous terminerons avec les aspects computationnels et numériques qui nous ont préoccupé tout au long de la thèse, en présentant quelques comparatifs de performances réalisées avec divers algorithmes.
 
 

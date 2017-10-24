@@ -1,7 +1,13 @@
-** Résumé **  \par
+\textbf{Titre :} Application de l’Analyse en Composantes Principales pour étudier l’adaptation biologique en génomique des populations. \par
 
-L'identification de gènes ayant permis à des populations de s'adapter à leur environnement local constitue une des problématiques importantes du domaine de la génétique des populations. Le développement récent des nouvelles technologies de séquençage génomique donne désormais accès à des génômes denses et bénéficiant d'une haute résolution. Nous proposons dans cette thèse de nouvelles méthodes statistiques basées sur l'Analyse en Composantes Principales et adaptées à de larges volumes de données génomiques. 
+\textbf{Résumé :} L'identification de gènes ayant permis à des populations de s'adapter à leur environnement local constitue une des problématiques majeures du domaine de la génétique des populations. Les méthodes statistiques actuelles répondant à cette problématique ne sont plus adaptées aux données de séquençage nouvelle génération (NGS). Nous proposons dans cette thèse de nouvelles statistiques adaptées à ces nouveaux volumes de données, destinées à la détection de gènes sous sélection. Nos méthodes reposent exclusivement sur l'Analyse en Composantes Principales, dont nous justifierons l'utilisation en génétique des populations. Nous expliquerons également les raisons pour lesquelles nos approches généralisent les méthodes statistiques existantes et démontrons l'intérêt d'utiliser une approche basée sur l'Analyse en Composantes Principales en comparant nos méthodes à celles de l'état de l'art. Notre travail a notamment abouti au développement de pcadapt, une librairie R permettant l'utilisation de nos statistiques de détection sur des données génétiques variées. \par
 
-** Abstract **
+\textbf{Mots-clés :} génétique des populations, analyse en composantes principales, adaptation locale, introgression, bio-informatique. \par 
 
-In population genetics, the detection of genes that led populations to adapt to their environment is of major interest. The development of
+\bigskip
+
+\textbf{Title :} Application of Principal Component Analysis to study biological adaptation in population genomics. \par
+
+\textbf{Abstract :} Identifying genes involved in local adaptation is of major interest in population genetics. Current statistical methods for genome scans are no longer suited to the analysis of Next Generation Sequencing (NGS) data. We propose new statistical methods to perform genome scans on massive datasets. Our methods rely exclusively on Principal Component Analysis which use in population genetics will be discussed extensively. We also explain the reasons why our approaches can be seen as extensions of existing methods and demonstrate how our PCA-based statistics compare with state-of-the-art methods. Our work has led to the developement of pcadapt, an R package designed for outlier detection for various genetic data. \par
+
+\textbf{Keywords :} population genetics, principal component analysis, local adaptation, introgression, bioinformatics.

@@ -1,16 +1,71 @@
 # Introgression adaptative
 
-Dans la partie précédente nous nous sommes intéressés à la détection d'allèles ayant favorisé l'adaptation d'une population à son environnement. Cependant, les scans génomiques pour la sélection ne permettent pas de comprendre l'origine du mécanisme adaptatif sous-jacent (mutation aléatoire ou flux de gène). Savoir si un allèle sélectionné a été hérité ou non d'une autre population par flux de gène peut donc se révéler intéressant dans ce cas. Nous présentons dans ce chapitre différents outils statistiques pour la détection de signaux d'introgression.
+Dans la partie précédente nous nous sommes intéressés à la détection d'allèles ayant favorisé l'adaptation d'une population à son environnement. Cependant, les scans génomiques pour la sélection ne permettent pas de comprendre l'origine du mécanisme adaptatif associé. Nous avons vu en introduction que la diversité allélique jouait un rôle important dans les processus d'adaptation locale, en offrant aux populations la possibilité de puiser dans un catalogue d'allèles plus vaste et d'augmenter ainsi leur potentiel adaptatif. Pour cette raison, l'introgression est désormais considérée comme un mécanisme d'adaptation important [@hedrick2013adaptive]. Nous rappelons que *l'introgression adaptative* correspond à la sélection d'allèles transmis par flux de gène ou par hybridation, ce qui permet de distinguer deux scénarios évolutifs distincts que nous décrivons ici. 
 
-## Méthode basée sur l'utilisation de coefficients de métissage locaux.
+Le premier est un scénario de métissage où deux populations apparentées s'hybrident en donnant naissance à une nouvelle population, si bien que certains allèles provenant d'une des populations parentales peuvent être sélectionnés pour l'environnement dans lequel évolue la population métissée (Figure \@ref(fig:scenarii)). 
 
-Nous explicitons ici le principe de détection de signaux d'introgression à partir de la donnée de coefficients de métissage locaux. 
+Le second scénario suppose l'entrée en contact d'une population dite donneuse avec une population dite receveuse, permettant à la population receveuse d'intégrer de nouveaux allèles (Figure \@ref(fig:scenarii)).
+
+(ref:scenarii-cap) Scénarios d'introgression. À gauche une représentation schématique du modèle de métissage. À droite une représentation schématique du modèle à flux de gène. Dans les deux cas, la population jaune correspond à la population ayant bénéfié de gènes par introgression de la part de la population bleue.
+
+```{r scenarii, results="asis", fig.cap="(ref:scenarii-cap)"}
+include_graphics("figure/scenarii.png")
+```
+
+Nous présentons dans ce chapitre différents outils statistiques (Table \@ref(tab:software)) pour la détection de signaux d'introgression pour chacun des deux scénarios (Figure \@ref(fig:scenarii)), ainsi qu'une nouvelle approche basée sur l'Analyse en Composantes Principales valable pour les deux types de scénarios.
+
+(ref:software-cap) Liste des méthodes et des logiciels présentés dans ce chapitre.
+
+```{r software, results='asis', message=FALSE, eval=TRUE}
+method <- c("Loter",
+            "HAPMIX",
+            "RFMix",
+            "EILA",
+            "*D*",
+            "Bdf",
+            "*f*",
+            "RNDmin")
+
+scenario <- c("Métissage",
+              "Métissage",
+              "Métissage",
+              "Métissage",
+              "Flux de gène",
+              "Flux de gène",
+              "Flux de gène",
+              "Flux de gène")
+
+ref <- c("Dias-Alves et al. (*in prep*)",
+         "@price2009sensitive",
+         "@maples2013rfmix",
+         "@yang2013efficient",
+         "@durand2011testing",
+         "@pfeifer2017estimates",
+         "@martin2014evaluating",
+         "@rosenzweig2016powerful")
+
+data.frame(method = method,
+           scenario = scenario,
+           ref = ref) %>%
+  knitr::kable(col.names = c("Méthode",
+                             "Scénario",
+                             "Référence"),
+               caption = '(ref:software-cap)',
+               booktabs = TRUE,
+               escape = TRUE) %>%
+  kable_styling(full_width = T)
+```
+
+## Introgression par métissage
+
+Nous nous intéressons ici à la détection de signaux d'introgression dans une population métissée, à partir de la donnée de coefficients de métissage locaux. Nous avons vu dans le paragrahe 2.2.3 qu'il était possible d'estimer pour un individu, la proportion de son génôme provenant d'un ou de plusieurs groupes génétiques. Ces proportions sont connues plus communément sous le nom de *coefficients de métissage* et peuvent servir à mieux comprendre l'histoire démographique des populations métisséees. De nombreux logiciels existent pour l'estimation de ces coefficients : STRUCTURE, ADMIXTURE [@alexander2009fast], LEA [@frichot2015lea], tess3r [@caye2016tess3]. Chaque individu peut de ce fait être vu comme une mosaïque d'allèles qui ont été puisés dans des groupes génétiques distincts. En revanche, les coefficients de métissage ne renseignent pas sur les portions du génôme qui proviennent effectivement de ces groupes génétiques.
 
 ### Coefficients de métissage locaux
 
-Nous avons vu un peu plus tôt qu'il était possible d'estimer pour un individu, la proportion de son génôme provenant d'un ou de plusieurs groupes génétiques. Ces proportions sont connues plus communément sous le nom de *coefficients de métissage* et peuvent servir à mieux comprendre l'histoire démographique des populations métisséees. De nombreux logiciels existent pour l'estimation de ces coefficients : STRUCTURE, ADMIXTURE [@alexander2009fast], LEA [@frichot2015lea], tess3r [@caye2016tess3]. Chaque individu peut de ce fait être vu comme une mosaïque d'allèles qui ont été puisés dans des groupes génétiques distincts. En revanche, les coefficients de métissage ne renseignent pas sur les portions du génôme qui proviennent effectivement de ces groupes génétiques. Chercher à attribuer à chaque allèle la population ancestrale de laquelle il est originaire constitue la problématique d'estimation des *coefficients de métissage locaux*. Avoir à disposition une telle information individuelle et locale permettrait ainsi de quantifier à l'échelle de la population la probabilité qu'un allèle ait été fourni par une population spécifique. Ce type de méthodologie, basée sur l'estimation de coefficients de métissage locaux, a par exemple été employé dans l'étude de peupliers d'Amérique du Nord [@suarez2016]. Encore une fois, plusieurs logiciels ont été proposés dans le but d'estimer ces coefficients locaux : HAPMIX [@price2009sensitive], EILA [@yang2013efficient], LAMP [@thornton2014local], Loter [A COMPLETER] ou encore RFMix [@maples2013rfmix].
+Chercher à attribuer à chaque allèle la population ancestrale de laquelle il est originaire constitue la problématique d'estimation des *coefficients de métissage locaux* (Figure \@ref(fig:LAI)). Avoir à disposition une telle information individuelle et locale permet de quantifier à l'échelle de la population la probabilité qu'un allèle ait été fourni par une population spécifique. Ce type de méthodologie, basée sur l'estimation de coefficients de métissage locaux, a par exemple été employé pour la détection d'introgression adaptative chez les peupliers d'Amérique du Nord [@suarez2016]. Encore une fois, plusieurs logiciels ont été proposés dans le but d'estimer ces coefficients locaux : HAPMIX [@price2009sensitive], EILA [@yang2013efficient], LAMP [@thornton2014local], Loter (Dias-Alves et al., *in prep*) ou encore RFMix [@maples2013rfmix].
 
-(ref:LAI-cap) Exemple de matrice de coefficients de métissage locaux pour des individus issus du métissage de deux populations sources (numérotées 1 et 2). **A**. Chaque ligne de la matrice correspond à un SNP et chaque individu est représenté par une paire de colonnes (de la même couleur). **B**. Matrice de coefficients de métissage locaux individuels. L'exemple illustre que pour chaque nucléotide d'un individu, les méthodes d'estimation de coefficients de métissage locaux attribuent ce nucléotide soit à la population 1 soit à la population 2.
+
+(ref:LAI-cap) Exemple de matrice de coefficients de métissage locaux pour des individus issus du métissage de deux populations sources (numérotées 1 et 2). **A**. Chaque ligne de la matrice correspond à un SNP et chaque haplotype est représenté par une colonne. **B**. Matrice de coefficients de métissage locaux individuels. Pour chaque nucléotide d'un haplotype, les méthodes d'estimation de coefficients de métissage locaux cherchent à attribuer ce nucléotide soit à la population 1 soit à la population 2.
 
 ```{r LAI, fig.cap='(ref:LAI-cap)', fig.height=3}
 N <- 6
@@ -57,7 +112,7 @@ p1 <- SNP.df %>%
                 label = lab),
             size = 5) +
   scale_fill_manual(values = cbbPalette[c(3, 6, 7)]) +
-  xlab("Individus") +
+  xlab("Haplotypes") +
   ylab("SNPs") +
   theme_bw() +
   theme(axis.text.x = element_blank(),
@@ -81,7 +136,7 @@ p2 <- geno.df %>%
                 label = lab),
             size = 5) +
   scale_fill_manual(values = cbbPalette[c(3, 6, 7)]) +
-  xlab("Individus") +
+  xlab("Haplotypes") +
   ylab("SNPs") +
   theme_bw() +
   theme(axis.text.x = element_blank(),
@@ -129,24 +184,24 @@ p3 <- geno.df %>%
         plot.title = element_text(hjust = 0.5))
 
 
-plot_grid(p1, p2, p3, p3, labels = c("A", "B", "C", "D"))
+plot_grid(p1, p2, labels = c("A", "B"))
 ```
 
 ### Statistique de test
 
-À partir de la matrice de coefficients de métissage locaux individuels, il est possible d'estimer pour un SNP donné la proportion d'allèles provenant de chacun des populations sources considérées. Notant $M$ cette matrice et $n$ le nombre d'individus métissés, cette proportion s'écrit :
+À partir de la matrice de coefficients de métissage locaux individuels, il est possible d'estimer pour un SNP donné la proportion d'allèles provenant de chacune des populations sources considérées. Pour estimer la proportion d'allèles provenant de la population $i$ pour le locus $j$, il suffit de calculer le nombre moyen de fois qu'un allèle observé sur le locus $j$ a été attribué à la population $i$ (un même individu présente deux allèles sur un locus donné (Figure \@ref(fig:LAI))). Notant $M$ la matrice de coefficients de métissage locaux individuels (Figure \@ref(fig:LAI), panel B), $G$ la matrice de génotypes (précisons que $M$ a deux fois plus de colonnes que $G$ car elle est de même dimension que la matrice des haplotypes) et $n$ le nombre d'individus métissés, la proportion d'allèles $p_{jk}$ provenant de la population $P_k$ au locus $j$ s'écrit :
 
 \begin{equation}
-  P(G_{j,.} \in \text{P}_K) = \frac{1}{n}\text{Card}(\{i \in [|1, n|] \; | \; M_{ji} = K \})
+  p_{jk} = \frac{1}{2n}\sum_{i=1}^n \delta_{M_{i, 2j-1}}^k + \delta_{M_{i, 2j}}^k
 \end{equation}
 
-La recherche de régions d'introgression dans la population hybride se fait ensuite en regardant pour chaque $(P(G_{j,.} \in \text{P}_K))_{1 \leq j \leq p}$, les SNPs présentant des proportions significativement élevées par rapport aux autres.
+où $\delta_x^k = 1$ si $x=k$ et $0$ sinon, $j=1,\dots,p$ où $p$ est le nombre de loci et $k=1,\dots,K$ où $K$ est le nombre de populations ancestrales. La proportion $p_{jk}$ désigne le coefficient de métissage local au locus $j$ à l'échelle de la population métisse. La recherche de régions d'introgression dans la population hybride se fait ensuite en regardant les coefficients de métissage locaux significativement élevés par rapport aux autres. Il n'y a pas de valeur standard pour le seuil de significativité, @suarez2016 choisissent par exemple un seuil de significativité de 3 écarts-types tandis que @fan2017epas1 optent pour un seuil de significativité de 2 écarts-types.
 
-## Méthodes basées sur la diversité nucléotidique.
+## Introgression par flux de gènes
 
-La seconde classe de méthodes repose sur la comparaison de séquences de nucléotides, nucléotide par nucléotide. Un chromosome est par exemple divisé en un certain nombre de séquences (qui peuvent être disjointes ou chevauchantes), et les statistiques sont calculées sur chacune de ces séquences. Les séquences de nucléotides sont vues comme des chaînes de caractères et leur dissimilarité est mesurée à l'aide de distances classiques (ou de mesures de comptage) telles que la distance de Hamming.
+La seconde classe de méthodes repose sur la comparaison de séquences de nucléotides, nucléotide par nucléotide. Un chromosome est par exemple divisé en un certain nombre de fenêtres (qui peuvent être disjointes ou chevauchantes), et les statistiques sont calculées sur chacune de ces fenêtres. Les séquences de nucléotides sont vues comme des chaînes de caractères et leur dissimilarité est mesurée à l'aide de distances classiques (ou de mesures de comptage) telles que la distance de Hamming.
 
-### Diversité nucléotidique par paire de séquences {-}
+### Diversité nucléotidique par paires de séquences
 
 Soient $x = (x_i)_{1 \leq i \leq n}$ et $y = (y_i)_{1 \leq i \leq n}$ deux séquences de nucléotides. En particulier, $\forall i \in [|1, n|], \; x_i, y_i \in \{A, C, T, G \}$. La distance de Hamming $d_{xy}$ entre la séquence $x$ et la séquence $y$ est définie par :
 
@@ -163,9 +218,7 @@ Pour étudier les similarités localement sur le génôme à l'échelle de popul
   \end{split}
 \end{equation}
 
-$d_{XY}$ est appelée la *pairwise nucleotide diversity* et estime le nombre moyen de nucléotides différents entre une séquence venant de la population $X$ et une séquence venant de la population $Y$. $d_{\min}$ estime la distance minimale entre deux séquences tirées de $P_1$ et de $P_2$. 
-
-Pour détecter l'introgression entre deux populations $X$ et $Y$ à partir de distances entre séquences nucléotidiques, la seule donnée de $d_{XY}$ ou de $d_{\min}$ ne suffit pas, une distance n'étant une mesure de proximité que si elle est mise en comparaison avec une autre distance. C'est pour cela que les statistiques d'introgression basées sur ce type de distance requièrent généralement la donnée d'une population de contrôle, généralement notée O. C'est le cas par exemple des statistiques $RND$ et $RND\min$ définies ci-dessous [@rosenzweig2016powerful] :
+$d_{XY}$ est appelée la *pairwise nucleotide diversity* et estime le nombre moyen de nucléotides différents entre une séquence venant de la population $X$ et une séquence venant de la population $Y$. $d_{\min}$ estime la distance minimale entre deux séquences tirées de $P_1$ et de $P_2$. Notons que $d_{XY}$ et $d_{\text{min}}$ étant symétriques, $X$ et $Y$ jouent des rôles équivalents, si bien que l'utilisation de ces distances pour détecter l'introgression ne permet pas de conclure sur le sens du flux de gène que l'on cherche à mettre en évidence. De plus, pour détecter l'introgression entre deux populations $X$ et $Y$ à partir de distances entre séquences nucléotidiques, la seule donnée de $d_{XY}$ ou de $d_{\min}$ ne suffit pas, une distance n'étant une mesure de proximité que si elle est mise en comparaison avec une autre distance. C'est pour cela que les statistiques d'introgression basées sur ce type de distance requièrent généralement la donnée d'une population de contrôle (appelée aussi *outgroup*), généralement notée $O$. C'est le cas par exemple des statistiques $RND$ [@feder2005mayr] et $RND\min$ [@rosenzweig2016powerful] définies ci-dessous :
 
 \begin{equation}
   \begin{split}
@@ -186,9 +239,9 @@ L'emploi de ce modèle suppose l'accès à des séquences nucléotidiques proven
 
 - une population de contrôle avec qui toute possibilité de métissage est exclue.
 
-Ces populations sont généralement présentées selon le schéma suivant :
+Ces populations sont généralement présentées selon le schéma suivant (Figure \@ref(fig:123O)) :
 
-(ref:123O-cap) Arbre allélique.
+(ref:123O-cap) Arbre allélique. $O$ désigne la population contrôle, $P_3$ la population donneuse, $P_1$ et $P_2$ les deux populations susceptibles de recevoir des allèles provenant de $P_3$.
 
 ```{r 123O, fig.cap='(ref:123O-cap)'}
 triangle.x <- -c(-0.15, 1.05, 2.25)
@@ -229,7 +282,7 @@ df.triangle %>%
         panel.background = element_blank())
 ```
 
-Sous l'hypothèse nulle, c'est-à-dire en l'absence d'introgression, la proportion de séquences communes à $P_3$ et $P_1$ doit être la même que la proportion de séquences communes à $P_3$ et à $P_2$. À l'inverse, un évènement d'introgression entre $P_3$ et $P_1$ devrait s'accompagner de l'augmentation de la fraction de séquences partagées par $P_3$ et $P_1$, relativement à $P_2$. Cette différence de proportions est mesurée par la statistique $D$ de Patterson [@durand2011testing], conçue spécifiquement pour détecter l'introgression. De façon plus imagée, notant $A$ et $B$ respectivement les allèles portés par $O$ et par $P_3$, la statistique $D$ compte le nombre de motifs $ABBA$ (Figure \@ref(fig:abba-baba)) et le nombre de motifs $BABA$ (Figure \@ref(fig:abba-baba)) et teste si les deux quantités sont significativement différentes l'une de l'autre.
+Sous l'hypothèse nulle, c'est-à-dire en l'absence d'introgression, la proportion de nucléotides communs à $P_3$ et $P_1$ doit être la même que la proportion de nucléotides communs à $P_3$ et à $P_2$. À l'inverse, un évènement d'introgression entre $P_3$ et $P_1$ devrait s'accompagner de l'augmentation de la fraction de séquences partagées par $P_3$ et $P_1$, relativement à $P_2$. Cette différence de proportions est mesurée par la statistique $D$ de Patterson [@durand2011testing], conçue spécifiquement pour détecter l'introgression de manière globale sur le génôme. De façon plus imagée, notant $A$ et $B$ respectivement les allèles portés par $O$ et par $P_3$, la statistique $D$ compte le nombre de motifs $ABBA$ (Figure \@ref(fig:abba-baba)) et le nombre de motifs $BABA$ (Figure \@ref(fig:abba-baba)) et teste si les deux quantités sont significativement différentes l'une de l'autre.
 
 (ref:abba-baba-cap) **A.** À gauche un arbre allélique présentant un motif $ABBA$ indiquant que l'allèle $B$ présent dans la population $P_2$ a été hérité de la population $P_3$. **B.** À droite un arbre allélique présentant un motif $BABA$ indiquant que l'allèle $B$ présent dans la population $P_1$ a été hérité de la population $P_3$.
 
@@ -317,224 +370,61 @@ p2 <- df.triangle %>%
 plot_grid(p1, p2, labels = c("A", "B"))
 ```
 
-En termes mathématiques, la statistique $D$ de Patterson, définie à partir des motifs $ABBA$ et $BABA$, est donnée par la relation suivante :
+La statistique $D$ de Patterson, définie à partir des motifs $ABBA$ et $BABA$, est donnée par la relation suivante :
 
 \begin{equation} 
   D = \displaystyle \frac{\sum_i C_{ABBA}(i) - C_{BABA}(i)}{\sum_i C_{ABBA}(i) + C_{BABA}(i)} 
 \end{equation}
 
-où $C_{ABBA}(i)$ (resp. $C_{BABA}(i)$) désigne le nombre de motifs $ABBA$ (resp. $BABA$) observés sur le site $i$-ème nucléotide de la séquence.
-De nombreuses variantes ont été développées à partir de cette statistique, dont les statistiques $Bd_{f}$ et $f_d$ auxquelles nous nous comparons [@pfeifer2017estimates; martin2014evaluating], mais nous renvoyons le lecteur aux références correspondantes pour des détails supplémentaires.
+où $C_{ABBA}(i)$ (resp. $C_{BABA}(i)$) désigne le nombre de motifs $ABBA$ (resp. $BABA$) observés sur le site $i$. Selon @martin2014evaluating, cette statistique présente le défaut de trouver des outliers dans des régions à faible diversité allélique qui ne sont pas nécessairement introgressées. Partant de ce constat, de nombreuses variantes ont été développées à partir de cette statistique, dont les statistiques $Bd_{f}$ [@pfeifer2017estimates] et $f_d$ [@martin2014evaluating] auxquelles nous nous comparons, afin de corriger les défauts de la statistique $D$. 
+
+## Une nouvelle statistique pour les scans d'introgression
 
 ### Analyse en Composantes Principales locale
 
-Notant $p$ le nombre de marqueurs génétiques, $i$ un entier compris entre $1$ et $p$, et $x_i$ la position génétique (mesurée en Morgans) ou la position physique (mesurée en paires de bases) du $i$-ème marqueur génétique. Nous définissons pour cet entier $i$ la fenêtre $W_i^T$ de taille $T$ et centrée en $i$ :
+Les méthodes de détection d'introgression que nous avons présentées, aussi bien dans un scénario de métissage que dans un scénario à flux de gènes (Figure \@ref(fig:scenarii)), reposent sur le même principe, à savoir que dans une zone d'introgression les motifs observés diffèrent significativement de ce qui est observé à l'échelle globale (soit en termes de coefficients de métissage, soit en termes de motifs d'arbre allélique). 
+
+Nous proposons dans ce paragraphe d'utiliser les scores de l'ACP en tant que motif de comparaison, ceci étant justifié par le fait que le métissage à l'échelle du génôme peut être estimé à partir des scores des individus métissés [@mcvean2009genealogical]. Notant $B$ le barycentre des scores des individus d'une population métissée $P$, et $B_1$ (resp. $B_2$) le barycentre des scores des individus appartenant à la population $P_1$ (resp. $P_2$), nous pouvons estimer la proportion globale de métissage de $P$ relativement à $P_1$ et $P_2$ en calculant les coordonnées barycentriques de $B$ dans le repère ($B_1$, $B_2$), c'est-à-dire en déterminant les coefficients $q_1$ et $q_2$ tels que $B = q_1 B_1 + q_2 B_2$ avec $q_1 + q_2 = 1$. 
+
+À l'échelle locale, nous pourrions également définir de tels coefficients barycentriques, à la condition de pouvoir définir des *scores locaux*. Dans la littérature, nous trouvons deux façons de définir de tels scores :
+
+- les scores de l'ACP réalisée sur des sous-ensembles de SNPs [@li2016local; @fan2017epas1]. Cette approche revient à fenêtrer le génôme et à réaliser l'ACP sur chacune des fenêtres.
+
+- les scores locaux de l'ACP. Cette approche à trouver les loadings en faisant une ACP classique sur l'ensemble du génôme, puis les scores locaux sont obtenus en ne prenant en compte que les loadings de la fenêtre considérée. Dit autrement, cela revient à calculer les coefficients de la régression de $\tilde{G}$ par un sous-ensemble de loadings $\Sigma V^T$ où $\tilde{G} \simeq U \Sigma V^T$ est la décomposition en valeurs singulières de la matrice de génotypes normalisée. Ces coefficients de régression sont par ailleurs appelés *scores de métissage* par @brisbin2012pcadmix. 
+
+Nous choisissons ici d'utiliser la seconde approche basée sur les coefficients de régression, principalement parce que la première n'est pas adaptée au cas de données génétiques denses. Une approche par fenêtre glissante nécessiterait de réaliser un nombre d'ACP locales équivalent au nombre de marqueurs présents, soit une complexité en $O(np^2)$ (où $n$ désigne le nombre d'individus et $p$ le nombre de marqueurs génétiques), contrairement à la seconde méthode qui peut être implémentée en temps linéaire par rapport à $n$ et à $p$ (voir annexe). Notant $i$ un entier compris entre $1$ et $p$, et $x_i$ la position génétique (mesurée en Morgans) ou la position physique (mesurée en paires de bases) du $i$-ème marqueur génétique. Nous définissons pour cet entier $i$ la fenêtre $W_i^T$ de taille $T$ et centrée en $i$ par :
 
 \begin{equation}
   W_i^T = \{ j \in [|1, p|], |x_i - x_j| \leq T/2 \}
 \end{equation}
 
-Soit $\tilde{G} = U \Sigma V^T$ la décomposition en valeurs singulières de la matrice de génotypes normalisée $\tilde{G}$. Partant de l'égalité $U = \tilde{G}V\Sigma^{-1}$, nous définissons des scores locaux de la façon suivante :
+Soit $\tilde{G} = U \Sigma V^T$ la décomposition en valeurs singulières de la matrice de génotypes normalisée $\tilde{G}$. Partant de l'approximation $U \simeq \tilde{G}V\Sigma^{-1}$, les scores de métissage sont définis de la façon suivante [@brisbin2012pcadmix] :
 
 \begin{equation}
   U_{W_i^T} = \tilde{G}_{.,W_i^T}V_{W_i^T,.}\Sigma^{-1}
 \end{equation}
 
+Les proportions de métissage local de la population $B_{W_i^T}$ sont définies de la même façon que dans le cas global, à la différence qu'elles utilisent les scores locaux $U_{W_i^T}$ à la place des scores globaux $U$. Ainsi, une région sera alors considérée comme introgressée si les proportions de métissage locale calculées sur cette région sont significativement différentes des proportions de métissage calculées à l'échelle du génôme.
 
+### Résultats principaux
 
-L'heuristique de cette approche repose sur l'interprétation des loadings $V$. Nous rappelons que chaque composante principale est la combinaison linéaire des SNPs, pondérée par les loadings. En reprenant l'assertion que les composantes principales permettent de discriminer les populations, Les loadings mesurent donc à quel point un SNP est informatif pour la séparation des populations. 
+**Nous proposons une méthode spécifiquement dédiée à la détection d'introgression.** Le développement d'une méthode destinée spécifiquement à la détection d'introgression est motivé par le fait que des méthodes basées sur l'estimation de coefficients de métissage nécessitent de disposer d'informations parfois difficiles à obtenir comme la phase des haplotypes. Le problème de la détection d'introgression étant plus simple que celui de l'estimation des coefficients de métissage local, nous proposons une approche qui permet de s'affranchir d'étapes relativement lourdes telles que la détermination des haplotypes et de leur phase, allégeant considérablement le temps de calcul nécessaire. À l'aide de simulation numérique réalisées pour les deux types de scénarios d'introgression présentés, nous montrons que notre statistique produit un taux de fausses découvertes et une puissance comparables aux méthodes de l'état de l'art (Figure \@ref(fig:power-admix)), en utilisant seulement la donnée de génotypes.
 
- 
+**Application au jeu de données de peupliers.** Nous avons testé notre méthode sur un jeu de données de peupliers d'Amérique du Nord [@suarez2016]. Deux populations de peupliers ont été génotypées, *Populus balsamifera* qui est une population adaptée aux conditions boréales et *Populus trichocarpa* qui est une population adaptée au climat doux du Nord-Ouest américain [@suarez2016]. Comme @suarez2016, nous avons regardé pour des individus métisses avec une ascendance génétique *Trichocarpa* majoritaire, les régions de leur génôme présentant un excès d'ascendance génétique *Balsamifera* qui leur permet de s'adapter à des conditions plus froides et sèches. Nous trouvons la même région d'introgression sur le chromosome 6 que @suarez2016 (Figure \@ref(fig:chr06-100kbp)). Pour le chromosome 15 nous trouvons les mêmes régions candidates. En revanche, nous trouvons deux nouvelles régions candidates pour le chromosome 12 (Figure \@ref(fig:chr12-100kbp)), qui sont également détectées avec RFMix [@maples2013rfmix] et l'une d'entre elles est détectée avec Loter. Cette différence de résultats peut être due au prétraitement des données de génotypes. @suarez2016 ont appliqué des filtres enlevant près de $95\%$ du jeu de données initial, tandis que nous avons choisi de ne filtrer que les SNPs présentant plus de $5\%$ de données manquantes, ce qui permettait de conserver plus de $70\%$ du jeu de données initial.
 
+(ref:chr06-100kbp-cap) Résultats du scan d'introgression obtenus sur le chromosome 6 du jeu de données de peupliers [@suarez2016] avec différentes méthodes basées sur l'estimation des coefficients de métissage locaux.
 
-
-\newpage
-
-## Simulations
-
-### Données de peupliers
-
-Le premier jeu de données est issu d'une étude d'introgression adaptative chez les peupliers d'Amérique du Nord [@suarez2016]. La simulation d'haplotypes d'individus admixés est effectuée à partir des deux populations ancestrales qui y sont présentes. La première, *Populus Balsamifera*, est une espèce de peupliers qui peuple le nord du continent nord-américain, d'Est en Ouest, et se trouve exposée à des conditions climatiques peu clémentes. La seconde, *Populus Trichocarpa*, est principalement localisée en Californie, et bénéficie d'un climat continental.
-
-Chacune des simulations est constituée de $50$ haplotypes de la souche continentale, de $50$ haplotyêpes de la souche boréale, ainsi que de $50$ haplotypes d'individus hybrides générés à partir des haplotypes ancestraux. Ces haplotypes ancestraux ont été estimés à l'aide du logiciel Beagle. A partir des positions en paires de base, une carte de recombinaison génétique est générée en utilisant le taux de recombinaison moyen chez le peuplier. Le taux de recombinaison, noté $\tau_r$, correspond au nombre moyen de paires de bases à parcourir pour qu'ait lieu un épisode de recombinaison génétique, *i.e.*, notant $L$ la longueur du chromosome en Morgans ($M$), et $N_{bp}$ le nombre de paires de bases le constituant, le taux de recombinaison génétique pour ce chromosome est donné par la relation:
-
-$$\tau_r = \frac{L}{N_{bp}}$$
-
-Dans ce scénario, les simulations ont été produites en utilisant un taux de recombinaison génétique moyen $\tau_r$ de $0.05$ centiMorgans par million de paire de bases, correspondant à la valeur utilisée par les auteurs de l'étude avec le logiciel RASPberry (\textit{Recombination via Ancestry Switch Probability}). A partir de la donnée de la position physique en paires de bases ainsi que du taux de recombinaison moyen, nous générons une carte de recombinaison génétique adaptée à nos simulations.
-
-### Génération aléatoire d'individus hybrides
-
-Pour simuler un individu métissé, il est d'abord nécessaire de simuler l'emplacement des évènements de recombinaison. Pour ce faire, nous utilisons le modèle décrit dans [@price2009sensitive], en parcourant
-
-
-```{r lambda0001, echo = FALSE, out.width = "400px", out.height="200px", fig.align = 'center', fig.cap="$\\lambda = 0.001$"}
-include_graphics(path = "figure/ancestry_heatmap_lambda_0001.png")
-```
-```{r lambda001, echo = FALSE, out.width = "400px", out.height="200px", fig.align = 'center', fig.cap="$\\lambda = 0.01$"}
-include_graphics(path = "figure/ancestry_heatmap_lambda_001.png")
-```
-```{r lambda01, echo = FALSE, out.width = "400px", out.height="200px", fig.align = 'center', fig.cap="$\\lambda = 0.1$"}
-include_graphics(path = "figure/ancestry_heatmap_lambda_01.png")
+```{r chr06-100kbp, results='asis', fig.cap='(ref:chr06-100kbp-cap)'}
+include_graphics("figure/Chr06_100kbp.png")
 ```
 
+(ref:chr12-100kbp-cap) Résultats du scan d'introgression obtenus sur le chromosome 6 du jeu de données de peupliers [@suarez2016] avec différentes méthodes basées sur l'estimation des coefficients de métissage locaux.
 
-```{r simulations, eval = FALSE}
-path <- "~/Documents/thesis/git/simulations/introgression/"
-output.name <- "populus"
-recombinationRate <- 0.05 # in Morgans per Megabase
-nSNP <- 50000
-ancstrl.1 <- 1
-ancstrl.2 <- 3
-hyb <- 4
-intro.size <- 500
-global.ancestry <- 0.1
-inverted.ancestry <- 0.5
-
-info.map <- as.matrix(fread(paste0(path, output.name, ".map"),
-                            data.table = FALSE))
-H1 <- as.matrix(fread(paste0(path, output.name, "_H1"),
-                      data.table = FALSE))
-H2 <- as.matrix(fread(paste0(path, output.name, "_H2"),
-                      data.table = FALSE))
-n.hyb <- ncol(H1) / 2
-
-### Introgression region
-idx <- sample(1:nSNP, size = 1)
-beg.reg <- max(1, idx - intro.size)
-end.reg <- min(nSNP, idx + intro.size)
-intro.reg <- beg.reg:end.reg
+```{r chr12-100kbp, results='asis', fig.cap='(ref:chr12-100kbp-cap)'}
+include_graphics("figure/Chr12_100kbp.png")
 ```
 
 \newpage
-
-
-```{r, eval = FALSE, echo = FALSE, fig.width = 7, fig.height = 4, fig.align = 'center', fig.cap = "$\\lambda = 0.1$"}
-lambda <- 0.1
-res <- simulate::generate_hybrid_matrix(H1,
-                                        H2,
-                                        alpha = global.ancestry,
-                                        beta = inverted.ancestry,
-                                        n.hyb = n.hyb,
-                                        gen_map = info.map[, 2],
-                                        lambda = lambda,
-                                        ancestry.switch = intro.reg)
-simulate::display.ancestry(res$true.ancestry.matrix)
-im <- matrix(0, ncol = ncol(res$true.ancestry.matrix), nrow = nrow(res$true.ancestry.matrix))
-im[res$true.ancestry.matrix == "22"] <- 2
-im[res$true.ancestry.matrix %in% c("12", "21")] <- 1
-im[res$true.ancestry.matrix == "11"] <- 0
-image(im, axes = FALSE, xlab = "", ylab = "")
-```
-
-```{r, eval = FALSE, echo = FALSE, fig.width = 7, fig.height = 4, fig.align = 'center', fig.cap = "$\\lambda = 10$"}
-lambda <- 10
-res <- simulate::generate_hybrid_matrix(H1,
-                                        H2,
-                                        alpha = global.ancestry,
-                                        beta = inverted.ancestry,
-                                        n.hyb = n.hyb,
-                                        gen_map = info.map[, 2],
-                                        lambda = lambda,
-                                        ancestry.switch = intro.reg)
-simulate::display.ancestry(res$true.ancestry.matrix)
-im <- matrix(0, ncol = ncol(res$true.ancestry.matrix), nrow = nrow(res$true.ancestry.matrix))
-im[res$true.ancestry.matrix == "22"] <- 2
-im[res$true.ancestry.matrix %in% c("12", "21")] <- 1
-im[res$true.ancestry.matrix == "11"] <- 0
-image(im, axes = FALSE, xlab = "", ylab = "")
-```
-
-
-```{r, eval = FALSE, echo = FALSE, fig.width = 7, fig.height = 4, fig.align = 'center', fig.cap = "$\\lambda = 50$"}
-lambda <- 50
-res <- simulate::generate_hybrid_matrix(H1,
-                                        H2,
-                                        alpha = global.ancestry,
-                                        beta = inverted.ancestry,
-                                        n.hyb = n.hyb,
-                                        gen_map = info.map[, 2],
-                                        lambda = lambda,
-                                        ancestry.switch = intro.reg)
-simulate::display.ancestry(res$true.ancestry.matrix)
-im <- matrix(0, ncol = ncol(res$true.ancestry.matrix), nrow = nrow(res$true.ancestry.matrix))
-im[res$true.ancestry.matrix == "22"] <- 2
-im[res$true.ancestry.matrix %in% c("12", "21")] <- 1
-im[res$true.ancestry.matrix == "11"] <- 0
-image(im, axes = FALSE, xlab = "", ylab = "")
-```
-
-
-### Simulations à partir de ms et Seq-Gen
-
-Dans le scénario d'introgression via flux de gènes, nous nous inspirons des modèles de simulation décrits dans [@martin2014evaluating]. Ces modèles sont largement repris dans la littérature pour l'évaluation de statistiques telles que $RND_{min}$ [@rosenzweig2016powerful] et $Bd_f$ [@pfeifer2017estimates]. Chaque simulation est constituée de 100 individus. Un individu est généré en concaténant un certain nombre de séquences de nucléotides, d'une longueur fixée à 5000 paires de bases par séquence. Chacune de ces séquences est elle-même simulée suivant un modèle neutre ou alternatif. Le modèle neutre décrit un scénario démographique classique de populations divergentes. Le modèle alternatif décrit quant à lui un scénario légèrement différent, et servira à caractériser les séquences *introgressées*. Les lignes de commande *ms* permettant de générer les séquences de nucléotides pour le modèle neutre ainsi que pour le modèle alternatif sont données ci-dessous :
-
-&nbsp;
-
-- Modèle neutre :
-
-```
-./ms 200 1 -I 4 50 50 50 50 -ej 1 2 1 -ej 2 3 1 -ej 3 4 1
--r 50 5000 -T
-```
-
-```{r background, results="asis", echo=FALSE, out.extra="scale=0.5", fig.align = 'center', fig.cap="Modèle neutre. $12N$ genérations auparavant, premier épisode de divergence donnant naissance à P1 et à O. $8N$ générations auparavant, deuxième épisode de divergence voyant l'apparition de P3. $4N$ générations auparavant, dernier épisode de divergence et apparition de P2."}
-include_graphics("figure/background.png")
-```
-
-&nbsp;
-
-- Modèle alternatif :
-
-```
-./ms 200 1 -I 4 50 50 50 50 -ej 1 2 1 -ej 2 3 1 -ej 3 4 1
--es 0.1 2 0.8 -ej 0.1 5 3 -r 50 5000 -T
-```
-
-```{r alternate, results="asis", echo=FALSE, out.extra="scale=0.5", fig.align = 'center', fig.cap="Modèle alternatif. $12N$ genérations auparavant, premier épisode de divergence donnant naissance à P1 et à O. $8N$ générations auparavant, deuxième épisode de divergence voyant l'apparition de P3. $4N$ générations auparavant, dernier épisode de divergence et apparition de P2. $t$ unités de temps auparavant, épisode de flux de gènes de P3 vers la population P2."}
-include_graphics("figure/alternate.png")
-```
-
-La variable $f$ présente en figure \@ref(fig:alternate) représente le taux d'introgression, elle quantifie la proportion d'haplotypes présents dans la population P2 et qui proviennent de la population P3. Ainsi, une valeur de $f$ égale à $1$ reviendrait à simuler un épisode de divergence de la population P3, duquel découlerait la naissance de la population P2. La valeur de $f$ utilisée ci-dessus est $0.2$, signifiant que 20% des haplotypes présents dans la population 2 sont issus de la population P3.
-
-### Résultats de la comparaison des logiciels
-
-```{r}
-im.df <- data.frame(methods = c("Bdf", "D", "f_d", "pcadapt", "RNDmin"),
-                    input = c("genoytpes", "genoytpes", "genoytpes", "genoytpes", "haplotypes"),
-                    nb_of_pop = c("4", "4", "4", ">= 3", "3"),
-                    outgroup = c("Oui", "Oui", "Oui", "Oui", "Oui"))
-
-knitr::kable(im.df,
-             col.names = c("Statistique",
-                           "Format",
-                           "Nombre de populations",
-                           "Dont Outgroup"),
-             format = "latex")
-```
-
-##### Scénario de métissage
-
-Nous comparons ici notre méthode au logiciel RFMix destiné à la détermination de coefficients de métissage local.
-
-```{r ras10g, results="asis", echo=FALSE, fig.cap="10 generations", out.width="500px"}
-include_graphics("figure/facet_admixture_setting_10_gen.pdf")
-```
-
-```{r ras100g, results="asis", echo=FALSE, fig.cap="100 generations", out.width="500px"}
-include_graphics("figure/facet_admixture_setting_100_gen.pdf")
-```
-
-```{r ras1000g, results="asis", echo=FALSE, fig.cap="1000 generations", out.width="500px"}
-include_graphics("figure/facet_admixture_setting_1000_gen.pdf")
-```
-
-
-##### Scénario à flux de gènes
-
-Dans ce paragraphe, nous comparons notre statistique de test à un ensemble de statistiques implémentées dans le package R *PopGenome* : la statistique $D$ de Patterson, RNDmin [@rosenzweig2016powerful] et BDF [@pfeifer2017estimates].
-
-
-
 
 ## Article 3
 
@@ -637,10 +527,6 @@ We replicated the search for adaptive introgression in admixed Populus species [
 We compared power of several introgression statistics in introgression scenarios. When the proportion $f$ of introgression for introgressed region is equal to 1, all individual from the introgressed population descend from the donor population. In this situation of massive introgression, the power of all statistics is equal to $100\%$ except for the $D$ statistics, which has a power of $94\%$ (Figure \@ref(fig:power_introgression)). The power of all statistics remains at $100\%$ when $f \geq 0.7$ except the $D$ statistic whose power decreases to $80\%$ for $f = 80\%$. When $f$ further decreases, powers of all statistics also decrease with the $D$ statistics being the less powerful statistic. The more powerful statistics is $RND_{min}$, followed by $f_D$, $Bd_f$, and pcadapt. For the most difficult scenarios where $f = 5\%$, the power of $RND_{min}$ is $68\%$, the power of $f_d$ is $64\%$, the power of $Bd_f$ is $60\%$, the power of pcadapt is $56\%$ and the power of $D$ is $38\%$.
 
 We consider *Populus* simulated admixed individuals to evaluate if the PCA-based approach manages to identify true outliers for local ancestry. By considering the 5 peaks with highest values of local ancestry, we compare statistical power obtained with the PCA-based approach and with LAI software. For each software, statistical power decreases as a function of $\Delta_q$ as it was expected (Figure \@ref(fig:power-admix)). Among all software we consider, RFMix and Loter maximize statistical power whatever the value of the time since admixture $\lambda$ and of the difference of allele frequency between introgressed and non-introgressed regions (Figure \@ref(fig:power-admix)). Although the power of the PCA approach is reduced, the loss of power is very small because the relative loss of power when compared to RFMix or Loter is comprised between $xx\%$ and $xx\%$. By contrast, the reduction of power obtained with EILA, which is another method that use genotype only, is considerable because it ranges between $xx\%$ and $xx\%$ when compared to Loter.
-
-#### Effect of window size {-}
-
-We consider simulations in a scenario of admixture between *Populus balsamifera* and *Populus trichocarpa* where a given portion of the genome was involved in adaptive introgression (Figure x). We consider that outlier regions corresponds to SNPs for which the average *balsamifera* ancestry coefficient is beyond three standard deviations of the average ancestry coefficients. Provided that the window size $s$ used to estimate local PCA scores is smaller than 0.11cM, we found that the FDR is between $ff$ and $ff$. When $s \leq 0.11$cM, the minimal value of $ss\%$ is obtained for the smallest window size and the largest number of generations since admixture whereas the largest value of FDR is obtained for the largest value of window size. When the window size $s>0.11cM$, largest values of FDR can be obtained. For $s = d$ and $xx$ generations occurred since admixture, the FDR is of $ee\%$.
 
 #### Comparison with software for Local Ancestry Inference {-}
 

@@ -287,24 +287,22 @@
     {\fontsize{12}{14}\selectfont et de l'école doctorale} {\fontsize{12}{14}\selectfont\bf "Ingénierie de la Santé, de la Cognition et Environnement" (EDISCE)}
     \vfil
     \bigskip
-    \bigskip
     \begin{flushleft}
     {\fontsize{18}{20}\fontfamily{ppl}\selectfont\bf \@title}
     \end{flushleft}
     \centerline{}
-    \vskip 1.5em
     {\fontsize{12}{14}\selectfont Thèse soutenue publiquement le \@date, \par
-    devant le jury composé de :
+    devant le jury composé de : \\
       \textbf{Michael BLUM} \\
       Directeur de Recherche, CNRS, Directeur de these \\
       \textbf{Stéphane Dray} \\
       Directeur de Recherche, CNRS, Rapporteur\\
       \textbf{Yves Vigouroux} \\
-      Directeur de Recherche, IRD, Rapporteur
+      Directeur de Recherche, IRD, Rapporteur \\
       \textbf{Hélène Badouin} \\
       Maître de Conférences, CNRS, Examinateur\\
       \textbf{Olivier François} \\
-      Maître de Conférences, CNRS, Examinateur \\
+      Professeur des Universités, Grenoble INP, Examinateur \\
     }
 
   \end{minipage}\par

@@ -4,39 +4,13 @@
 
 # Détails
 
-### Rapport entre la communalité et l'indice de fixation
+### Rapport entre la communalité et l'indice de fixation {-}
 
-Pour établir le lien entre la $F_{ST}$ et la communalité, nous nous plaçons dans le cas de deux populations $A$ et $B$, composées respectivement de $n_1$ et $n_2$ individus. Nous rappelons que la communalité correspond à la somme quadratique des loadings pondérés par la variance des composantes principales. Notons $n = n_1 + n_2$, $\boldsymbol{G}$ la matrice de génotypes et $G$ le vecteur de taille $n$ contenant le génotype des individus pour un allèle donné (G correspond à une ligne de $\boldsymbol{G}$). En reprenant la définition \@ref(def:fst) de la $F_{ST}$ dans le cas $N = 2$, les fréquences alléliques $p_i$ s'écrivent $p_1 = \sum_{i=1}^n \delta_{1i} G_{i} / \sum_{i=1}^n \delta_{1i}$ et  $p_2 = \sum_{i=1}^n \delta_{2i} G_{i} / \sum_{i=1}^n \delta_{2i}$ où $\delta_{ki} = 1$ si l'individu $i$ appartient à la population $k$ et $0$ sinon. Commençons par exprimer la $F_{ST}$ en fonction des génotypes :
-
-\begin{equation}
-  \begin{split}
-  F_{ST} & = \frac{1}{2-1}\frac{\sum_{i=1}^2 (p_i - \bar{p})^2}{\bar{p}(1-\bar{p})} \\
-  & = \frac{1}{\bar{p}(1-\bar{p})} \left(\left(\frac{\sum_{i=1}^n \delta_{1i} G_{i}}{\sum_{i=1}^n \delta_{1i}} - \bar{p}\right)^2 + \left(\frac{\sum_{i=1}^n \delta_{2i} G_{i}}{\sum_{i=1}^n \delta_{2i}} - \bar{p}\right)^2\right)\\
-  & = \frac{1}{\bar{p}(1-\bar{p})} \left(\left(\frac{\sum_{i=1}^n \delta_{1i} (G_{i} - \bar{p})}{n_1}\right)^2 + \left(\frac{\sum_{i=1}^n \delta_{2i} (G_{i} - \bar{p})}{n_2}\right)^2\right)\\
-  \end{split}
-  (\#eq:fst-communality-proof)
-\end{equation}
-
-Notant $\tilde{G}_i = \frac{G_i - \bar{p}}{\sqrt{\bar{p}(1-\bar{p})}}$ :
+Pour faire le parallèle avec la communalité, il est nécessaire de trouver une matrice colonne $U_{\delta}^{\prime} \in \mathcal{M}_{n, 1}(\mathbb{R})$ telle que $F_{ST} = ||\tilde{G}^T U_{\delta}^{\prime}||_2^2$. Pour ce faire, plaçons-nous dans le cas $N=2$ et cherchons une matrice de rotation telle que $U_{\delta}R$ ait sa première colonne constante, c'est-à-dire telle que :
 
 \begin{equation}
-  F_{ST} = \left(\sum_{i=1}^n \frac{\delta_{1i}}{n_1} \tilde{G_{i}}\right)^2 + \left(\sum_{i=1}^n \frac{\delta_{2i}}{n_2} \tilde{G_{i}}\right)^2\\
-  (\#eq:fst-communality-proof-2)
-\end{equation}
-
-ce qui peut se réécrire $F_{ST} = ||\tilde{G}^T U_{\delta}||_2^2$ où $U_{\delta}  = (\frac{\delta_{ji}}{n_j})_{1 \leq i \leq n, \; 1\leq j \leq 2} \in M_{n, 2}(\mathbb{R})$. Si le premier et le quatrième individu appartiennent à la population $A$ et que le deuxième et le troisième individu appartiennent à la population $B$, la matrice $U_{\delta}$ s'écrit :
-
-$$U_{\delta} = \begin{pmatrix}\frac{1}{n_1} & 0\\
-0 & \frac{1}{n_2}\\
-0 & \frac{1}{n_2}\\
-\frac{1}{n_1} & 0
-\end{pmatrix}$$
-
-Pour faire le parallèle avec la communalité, il est nécessaire de trouver une matrice colonne $U_{\delta}^{\prime} \in M_{n, 1}(\mathbb{R})$ telle que $F_{ST} = ||\tilde{G}^T U_{\delta}^{\prime}||_2^2$. Pour ce faire, nous allons chercher une matrice de rotation telle que $U_{\delta}R$ ait sa première colonne constante, c'est-à-dire telle que :
-
-\begin{equation}
-  \begin{pmatrix}\frac{1}{n_1} & 0\\
-    0 & \frac{1}{n_2}
+  \begin{pmatrix}\frac{1}{\sqrt{2}n_1} & 0\\
+    0 & \frac{1}{\sqrt{2}n_2}
   \end{pmatrix}R =
   \begin{pmatrix} a & x\\
     a & y
@@ -53,8 +27,8 @@ $$R = \begin{pmatrix}\cos\theta & -\sin\theta\\
 En injectant $R$ dans \@ref(eq:condition-1), on obtient :
 
 \begin{equation}
-  \begin{pmatrix}\frac{\cos\theta}{n_1} & -\frac{\sin\theta}{n_1}\\
-    \frac{\sin\theta}{n_2} & \frac{\cos\theta}{n_2}
+  \begin{pmatrix}\frac{\cos\theta}{\sqrt{2}n_1} & -\frac{\sin\theta}{\sqrt{2}n_1}\\
+    \frac{\sin\theta}{\sqrt{2}n_2} & \frac{\cos\theta}{\sqrt{2}n_2}
   \end{pmatrix} =
   \begin{pmatrix} a & x\\
     a & y
@@ -62,7 +36,7 @@ En injectant $R$ dans \@ref(eq:condition-1), on obtient :
   (\#eq:condition-2)
 \end{equation}
 
-\@ref(eq:condition-2) implique que l'angle de la rotation vérifie la relation $\frac{\cos\theta}{n_1} = \frac{\sin\theta}{n_2}$, qui a pour solution dans $]-\frac{\pi}{2}, \frac{\pi}{2}[$, $\theta = \arctan(\frac{n_2}{n_1})$. Nous en déduisons ainsi les valeurs de $x$ et de $y$ :
+\@ref(eq:condition-2) implique que l'angle de la rotation vérifie la relation $\frac{\cos\theta}{\sqrt{2}n_1} = \frac{\sin\theta}{\sqrt{2}n_2}$, d'où $\theta = \arctan(\frac{n_2}{n_1})$. Nous en déduisons ainsi les valeurs de $x$ et de $y$ :
 
 \begin{equation}
   \begin{split}
@@ -84,21 +58,21 @@ Or :
 
 Notant $R$ la rotation d'angle $\arctan(\frac{n_2}{n_1})$, on a finalament :
 
-$$U_{\delta}R = \begin{pmatrix}a & -\delta_{11}  \frac{n_2}{\sqrt{n_1^2+n_2^2}} + \delta_{21} \frac{n_1}{\sqrt{n_1^2+n_2^2}}\\
-a & -\delta_{12}  \frac{n_2}{\sqrt{n_1^2+n_2^2}} + \delta_{22} \frac{n_1}{\sqrt{n_1^2+n_2^2}}\\
+$$U_{\delta}R = \begin{pmatrix}a & -\delta_{11}  \frac{n_2}{\sqrt{2(n_1^2+n_2^2)}} + \delta_{21} \frac{n_1}{\sqrt{2(n_1^2+n_2^2)}}\\
+a & -\delta_{12}  \frac{n_2}{\sqrt{2(n_1^2+n_2^2)}} + \delta_{22} \frac{n_1}{\sqrt{2(n_1^2+n_2^2)}}\\
 \vdots & \vdots \\
-a & -\delta_{1n}  \frac{n_2}{\sqrt{n_1^2+n_2^2}} + \delta_{2n} \frac{n_1}{\sqrt{n_1^2+n_2^2}}
+a & -\delta_{1n}  \frac{n_2}{\sqrt{2(n_1^2+n_2^2)}} + \delta_{2n} \frac{n_1}{\sqrt{2(n_1^2+n_2^2)}}
 \end{pmatrix}$$
 
 Puisque $R$ est une rotation, $||\tilde{G}^T U_{\delta}||_2 = ||\tilde{G}^T U_{\delta}R||_2$. En développant $\tilde{G}^T U_{\delta}R$, on obtient :
 
 \begin{equation}
   \begin{split}
-   \tilde{G}^T U_{\delta}R = \left(\sum_{i=1}^n a \tilde{G}_i, \sum_{i=1}^n \left(-\delta_{1i}  \frac{n_2}{\sqrt{n_1^2+n_2^2}} + \delta_{2i} \frac{n_1}{\sqrt{n_1^2+n_2^2}}\right)\tilde{G}_i \right)
+   \tilde{G}^T U_{\delta}R = \left(\sum_{i=1}^n a \tilde{G}_i, \sum_{i=1}^n \left(-\delta_{1i}  \frac{n_2}{\sqrt{2(n_1^2+n_2^2)}} + \delta_{2i} \frac{n_1}{\sqrt{2(n_1^2+n_2^2)}}\right)\tilde{G}_i \right)
   \end{split}
 \end{equation}
 
-Or $\sum_{i=1}^n \tilde{G}_i = 0$ par définition de $\tilde{G}$, ce qui permet d'écrire, en posant $U_{\delta}^{\prime} \in M_{n,1}(\mathbb{R})$ la matrice colonne correspondant à la deuxième colonne de $U_{\delta}R$ :
+Or $\sum_{i=1}^n \tilde{G}_i = 0$ par définition de $\tilde{G}$, ce qui permet d'écrire, en posant $U_{\delta}^{\prime} \in \mathcal{M}_{n,1}(\mathbb{R})$ la matrice colonne correspondant à la deuxième colonne de $U_{\delta}R$ :
 
 \begin{equation}
   \begin{split}
@@ -108,7 +82,7 @@ Or $\sum_{i=1}^n \tilde{G}_i = 0$ par définition de $\tilde{G}$, ce qui permet 
   \end{split}
 \end{equation}
 
-```{r}
+```{r, eval=FALSE}
 n1 <- 1/5
 n2 <- 1/8
 xx <- c(-1/4, 1/4)
@@ -142,12 +116,11 @@ data.frame(x = n.x, y = n.y) %>%
 
 ```
 
-Notant $\tilde{\boldsymbol{G}} = U \Sigma V^T$ la SVD de rang 1, la communalité a pour expression $\rho_1^2 = (\Sigma V)^2 = ||\tilde{G}^TU||_2^2$.
-Remarquons que $U_{\delta}^{\prime}$ a une expression similaire à celle des scores de l'ACP exprimée dans @mcvean2009genealogical. Ceci nous permet de considérer la $F_{ST}$ comme un cas particulier de la communalité où les scores de l'ACP sont identiques pour tous les individus appartenant à une même population. À l'inverse, cela permet de voir la communalité comme une extension de la $F_{ST}$ à l'échelle individuelle.
+Remarquons que $U_{\delta}^{\prime}$ a une expression similaire à celle des scores de l'ACP exprimée dans @mcvean2009genealogical.
 
-#### Une généralisation de la statistique $T_{F-LK}$ {-}
+### Une généralisation de la statistique $T_{F-LK}$ {-}
 
-Soit $U\Sigma V^T$ la décomposition en valeurs singulières de $\tilde{G}$. Notons $\mathcal{F}$ la matrice d'apparentement génétique interpopulationnel. En utilisant l'estimateur usuel de la matrice de covariance, nous avons :
+Soit $U\Sigma V^T$ la décomposition en valeurs singulières tronquée de rang $K$ de $\tilde{G}$. Notons $\mathcal{F}$ la matrice d'apparentement génétique interpopulationnel. En utilisant l'estimateur usuel de la matrice de covariance, nous avons :
 
 \begin{equation}
   \mathcal{F} = \frac{1}{p}U_{\delta}^T\tilde{G}\tilde{G}^TU_{\delta} 
@@ -166,170 +139,131 @@ De la même manière qu'en proposition \@ref(prp:fst-communality), nous pouvons 
   \begin{split}
     T_{F-LK} &= \tilde{G}_{.,j}^T U_{\delta} \mathcal{F}^{-1} U_{\delta}^T \tilde{G}_{.,j} \\
     &= \tilde{G}_{.,j}^T U_{\delta} (U_{\delta}^TG_{RM}U_{\delta})^{-1} U_{\delta}^T \tilde{G}_{.,j} \\
-    &\simeq \tilde{G}_{.,j}^T U_{\delta} (U_{\delta}^T U \Sigma ^2 U^T U_{\delta})^{-1} U_{\delta}^T \tilde{G}_{.,j} 
   \end{split}
 \end{equation}
 
-
-### L'Analyse en Composantes Principales régularisée
-
-L'Analyse en Composantes Principales parcimonieuse est utilisée pour donner une meilleure interprétabilité des composantes principales. Les composantes principales classiques sont des combinaisons linéaires de toutes les variables de départ, si bien que n'importe quelle composante principale renvoie potentiellement à toutes les variables du jeu de données. L'Analyse en Composantes Principales permet de contourner ce problème en ne sélectionnant qu'un certain nombre de variables pour construire ses composantes principales, attribuant des valeurs nulles aux autres variables.
-
-```{r, eval=FALSE}
-create.fdr.pow = function(list, ground.truth, lmax = length(list), smooth = TRUE, soft.name){
-  fdr <- 0
-  pow <- 0
-  s <- seq(1, lmax, by = 1)
-  for (k in s){
-    l <- list[1:k]
-    fdr <- c(fdr, simulate::compute.fdr(l, ground.truth))
-    pow <- c(pow, simulate::compute.power(l, ground.truth))
-  }
-  res <- list()
-  idx <- sort(fdr, decreasing = FALSE, index.return = TRUE)$ix
-  fdr <- fdr[idx]
-  pow <- pow[idx]
-  if (smooth == FALSE){
-    res$fdr <- fdr
-    res$pow <- pow
-  } else if (smooth == TRUE){
-    pow.old <- 0
-    fdr.old <- 0
-    aux.fdr <- 0
-    aux.pow <- 0
-    for (val in 1:length(fdr)){
-      if (pow[val] >= pow.old){
-        aux.fdr <- c(aux.fdr, fdr[val])
-        aux.pow <- c(aux.pow, pow[val])
-        pow.old <- pow[val]
-      }
-    }
-    res$fdr <- aux.fdr
-    res$pow <- aux.pow
-  }
-  return(data.frame(Software = soft.name, 
-                    FDR = fdr,
-                    Power = pow))
-}
-
-#d <- readRDS("data/div.rds")
-
-dir <- "~/Documents/thesis/git/simulations/divergence_model/"
-n.simu <- c(25, 50, 75, 100, 150, 175)
-
-pow <- 0
-fdr <- 0
-pow.pcadapt <- 0
-fdr.pcadapt <- 0
-for (i in 1:length(n.simu)) {
-  geno <- t(as.matrix(read.table(paste0(dir, "div3pops_Eur_", n.simu[i]))))
-  gt <- scan(paste0(dir, "div3pops_Eur_", n.simu[i], ".gt"))
-  x <- pcadapt(geno, K = 2)
-  p <- apply(geno, MARGIN = 1, FUN = function(X) {mean(X) / 2})
-  G <- scale(t(geno), center = TRUE, scale = sqrt(2 * p * (1 - p)))
-  obj.spca <- elasticnet::spca(G, K = 2, para = c(0.1, 0.1))
-  h2 <- obj.spca$pev[1] * obj.spca$loadings[, 1]^2 + obj.spca$pev[2] * obj.spca$loadings[, 2]^2
-
-  rnk <- sort(h2, decreasing = TRUE, index.return = TRUE)$ix
-  rnk.pcadapt <- sort(x$pvalues, decreasing = FALSE, index.return = TRUE)$ix
-  pow <- pow + sapply(1:1000, FUN = function(h) {simulate::compute.power(rnk[1:h], gt)})
-  fdr <- fdr + sapply(1:1000, FUN = function(h) {simulate::compute.fdr(rnk[1:h], gt)})
-  pow.pcadapt <- pow.pcadapt + sapply(1:1000, FUN = function(h) {simulate::compute.power(rnk.pcadapt[1:h], gt)})
-  fdr.pcadapt <- fdr.pcadapt + sapply(1:1000, FUN = function(h) {simulate::compute.fdr(rnk.pcadapt[1:h], gt)})
-}
-plot(fdr / length(n.simu), pow / length(n.simu))
-points(fdr.pcadapt / length(n.simu), pow.pcadapt / length(n.simu), col = "red")
-```
+Encore une fois, si l'on considère $U$ plutôt que $U_{\delta}$, l'expression $\tilde{G}_{.,j}^T U_{\delta} (U_{\delta}^TG_{RM}U_{\delta})^{-1} U_{\delta}^T \tilde{G}_{.,j}$ se simplifierait en $\tilde{G}_{.,j}^T U \Sigma^{-2} U^T \tilde{G}_{.,j}$ étant donnée l'approximation $U^TG_{RM}U \simeq \Sigma^2$, ce qui permet de faire le lien entre la statistique $T_{F-LK}$ et la distance de Mahalanobis calculée à partir des loadings.
 
 # Informations supplémentaires
 
 ## Article 1 {-}
 
+
 (ref:ndf-figS1-cap) Principal component analysis for SNP data simulated under the divergence model depicted in Figures 1 and 2 of the main text.
+
 
 ```{r ndf-figS1, results='asis', fig.cap='(ref:ndf-figS1-cap)'}
 include_graphics("figure/ndf-figS1.png")
 ```
 
+\newpage
+
 (ref:ndf-figS2-cap) False discovery rate of the 1% top-ranked SNPs obtained with $h^2$ and with $F_{ST}$ under an island model.
+
 
 ```{r ndf-figS2, results='asis', fig.cap='(ref:ndf-figS2-cap)'}
 include_graphics("figure/ndf-figS2.png")
 ```
 
+
 (ref:ndf-figS3-cap) Decay of eigenvalues of the covariance matrix for divergence models, the 1000 Genome data, and POPRES.
+
 
 ```{r ndf-figS3, results='asis', fig.cap='(ref:ndf-figS3-cap)'}
 include_graphics("figure/ndf-figS3.png")
 ```
 
+
 (ref:ndf-figS4-cap) Communality statistic as a function of $F_{ST}$ for SNPs simulated with a divergence model.
+
 
 ```{r ndf-figS4, results='asis', fig.cap='(ref:ndf-figS4-cap)'}
 include_graphics("figure/ndf-figS4.png")
 ```
 
+
 (ref:ndf-figS5-cap) Histograms of the squared normalized loadings $V_{jk}^2$, $k = 1, 2$, obtained for SNPs simulated with divergence models and for SNPs of the 1000 Genomes data.
+
 
 ```{r ndf-figS5, results='asis', fig.cap='(ref:ndf-figS5-cap)'}
 include_graphics("figure/ndf-figS5.png")
 ```
 
+
 (ref:ndf-figS6-cap) Repartition of the 5% top-ranked SNPs of each PCA-based statistic under the two divergence models.
+
 
 ```{r ndf-figS6, results='asis', fig.cap='(ref:ndf-figS6-cap)'}
 include_graphics("figure/ndf-figS6.png")
 ```
 
+
 (ref:ndf-figS7-cap) False discovery rate as a function of the selection coefficient under the two divergence models.
+
 
 ```{r ndf-figS7, results='asis', fig.cap='(ref:ndf-figS7-cap)'}
 include_graphics("figure/ndf-figS7.png")
 ```
 
+
 (ref:ndf-figS8-cap) False discovery rate as a function of the number $K$ of principal components under the two divergence models.
 
 ```{r ndf-figS8, results='asis', fig.cap='(ref:ndf-figS8-cap)'}
+
 include_graphics("figure/ndf-figS8.png")
 ```
 
+
 (ref:ndf-figS9-cap) Comparison between $h^2$ and $F_{ST}$ in a isolation-with-migration model.
 
-```{r ndf-figS9, results='asis', fig.cap='(ref:ndf-figS9-cap)'}
+
+```{r ndf-figS9, results='asis', fig.cap='(ref:ndf-figS9-cap)', out.width="75%"}
 include_graphics("figure/ndf-figS9.png")
 ```
 
+
 (ref:ndf-figS10-cap) Principal component analysis of SNPs simulated with an isolation-with-migration model.
+
 
 ```{r ndf-figS10, results='asis', fig.cap='(ref:ndf-figS10-cap)'}
 include_graphics("figure/ndf-figS10.png")
 ```
 
+
 (ref:ndf-figS11-cap) Principal component analysis of the 1000 Genome data.
+
 
 ```{r ndf-figS11, results='asis', fig.cap='(ref:ndf-figS11-cap)'}
 include_graphics("figure/ndf-figS11.png")
 ```
 
+
 (ref:ndf-figS12-cap) Number of contiguous windows containing one or more outlier SNPs.
+
 
 ```{r ndf-figS12, results='asis', fig.cap='(ref:ndf-figS12-cap)'}
 include_graphics("figure/ndf-figS12.png")
 ```
 
-(ref:ndf-figS13-cap) Manhattan plot for the POPRES data of the squared loadings $\rho_{j2}^2 with the second principal component.
+
+(ref:ndf-figS13-cap) Manhattan plot for the POPRES data of the squared loadings $\rho_{j2}^2$ with the second principal component.
+
 
 ```{r ndf-figS13, results='asis', fig.cap='(ref:ndf-figS13-cap)'}
 include_graphics("figure/ndf-figS13.png")
 ```
 
+
 (ref:ndf-figS14-cap) Q-Q plots of the $p$-values, which are based on the communality $h^2$ statistic, under an island and a divergence model.
+
 
 ```{r ndf-figS14, results='asis', fig.cap='(ref:ndf-figS14-cap)'}
 include_graphics("figure/ndf-figS14.png")
 ```
 
+
 (ref:ndf-figS15-cap) Control of the false discovery rate for SNPs simulated under an island and a divergence model.
+
 
 ```{r ndf-figS15, results='asis', fig.cap='(ref:ndf-figS15-cap)'}
 include_graphics("figure/ndf-figS15.png")
@@ -340,6 +274,7 @@ include_graphics("figure/ndf-figS15.png")
 ## Article 2 {-}
 
 (ref:FigureSI1-cap) Schematic description of the island and divergence model. For the island model, adaptation occurs simultaneously in each population. For the divergence model, adaptation takes place in the branch leading to the second population.
+
 
 ```{r FigureSI1, fig.cap='(ref:FigureSI1-cap)'}
 ### Island
@@ -415,6 +350,8 @@ p4 <- ggplot(df.triangle, aes(x = x, y = y)) +
 
 cowplot::plot_grid(p1, p4, labels = c("Island model", "Divergence model"), ncol = 2)
 ```
+
+\newpage
 
 (ref:FigureSI2-cap) Proportion of false discoveries and statistical power as a function of the number of principal components in a model of range expansion.
 
@@ -624,6 +561,8 @@ readRDS("data/runtime-molecol.rds") %>%
 include_graphics("figure/ancestry.png")
 ```
 
+\newpage
+
 (ref:losspower-admix-cap) Relative loss of power of the different methods when compared to an ideal method called *oracle*, which would know ancestry chunks for each admixed individual. The relative power is averaged over the difference $\Delta_q$ of ancestry between neutral and outlier regions. Simulations use phased genotype data from $25$ *Populus balsamifera* individuals and $25$ *Populus trichocarpa* individuals and assume that admixture took place $\lambda$ generations ago. A total of $25$ admixed individuals were generated assuming $70\%$ of *Populus balsamifera* ancestry except from the 5 outlier $500$ SNP regions where *Populus balsamifera* ancestry is of $70\%-\Delta_q$ where $\Delta_q$ is equal to $0.05$, $0.10$, $0.15$, $0.20$, $0.30$, $0.40$, or $0.50$.
 
 ```{r losspower-admix, results='asis', fig.cap='(ref:losspower-admix-cap)'}
@@ -639,77 +578,84 @@ include_graphics("figure/power_Dq_max.png")
 (ref:si-power-admix-cap) Proportion of true outlier peaks as a function of the number of top peaks found with pcadapt and different LAI methods (EILA, Loter and RFMix) in a scenario where 2 Populus populations experienced admixture. The different panels correspond to the different possible values for the number of generations since admixture occurred ($\lambda=\{10,100,1000\}$) and to the different values of the difference of ancestry $\Delta_q$ between neutral and outlier regions.
 
 ```{r si-power-admix, results='asis', fig.cap='(ref:si-power-admix-cap)'}
-#include_graphics("figure/power_Dq_curves.png")
-adm.df <- readRDS("data/admixture_power_top_hits.rds")
-adm.df %>%
-  ggplot(aes(x = NumberOfTopHits,
-             y = Power,
-             colour = Method)) +
-  xlab("Number of top hits") +
-  ylab("Power") +
-  scale_color_manual(values = c("#000000", # Oracle
-                                "white",
-                                "white",
-                                "#D55E00", # Loter
-                                "#009E73", # RFMix
-                                "white",
-                                "white",
-                                "#E69F00", # EILA
-                                "#56B4E9"), # pcadapt
-                     drop = FALSE) +
-  geom_line(size = 1) +
-  facet_grid(Dp ~ TimeSinceAdmixture) +
-  scale_y_continuous(breaks = c(0.5, 1)) +
-  scale_x_continuous(breaks = c(0, 25, 50)) +
-  theme_bw(base_size = 20) + guides(colour = guide_legend(title = " ")) +
-  theme(axis.text = element_text(face = "bold"),
-        axis.title.x = element_text(margin = margin(t = 20, r = 0, b = 0, l = 0)),
-        axis.title = element_text(face = "bold"),
-        title = element_text(face = "bold"),
-        strip.text = element_text(face = "bold"),
-        legend.text = element_text(face = "bold"),
-        legend.key.height = unit(3, "line"),
-        legend.key.width = unit(3, "line"),
-        panel.spacing = unit(0.5, "lines"))
+include_graphics("figure/power_Dq_curves.png")
+# adm.df <- readRDS("data/admixture_power_top_hits.rds")
+# adm.df %>%
+#   ggplot(aes(x = NumberOfTopHits,
+#              y = Power,
+#              colour = Method)) +
+#   xlab("Number of top hits") +
+#   ylab("Power") +
+#   scale_color_manual(values = c("#000000", # Oracle
+#                                 "white",
+#                                 "white",
+#                                 "#D55E00", # Loter
+#                                 "#009E73", # RFMix
+#                                 "white",
+#                                 "white",
+#                                 "#E69F00", # EILA
+#                                 "#56B4E9"), # pcadapt
+#                      drop = FALSE) +
+#   geom_line(size = 1) +
+#   facet_grid(Dp ~ TimeSinceAdmixture) +
+#   scale_y_continuous(breaks = c(0.5, 1)) +
+#   scale_x_continuous(breaks = c(0, 25, 50)) +
+#   theme_bw(base_size = 20) + guides(colour = guide_legend(title = " ")) +
+#   theme(axis.text = element_text(face = "bold"),
+#         axis.title.x = element_text(margin = margin(t = 20, r = 0, b = 0, l = 0)),
+#         axis.title = element_text(face = "bold"),
+#         title = element_text(face = "bold"),
+#         strip.text = element_text(face = "bold"),
+#         legend.text = element_text(face = "bold"),
+#         legend.key.height = unit(3, "line"),
+#         legend.key.width = unit(3, "line"),
+#         panel.spacing = unit(0.5, "lines"))
 ```
 
 (ref:GF-power-top-hits-cap) Power as a function of the number of top hits.
 
 ```{r GF-power-top-hits, fig.cap='(ref:GF-power-top-hits-cap)'}
-gf.df <- readRDS("data/GF_power_top_hits.rds")
-gf.df %>%
-  filter(mutationRate == "Constant mutation rate", GF <= 0.5) %>%
-  ggplot(aes(x = NumberOfTopHits,
-             y = Power,
-             colour = Method)) +
-  xlab("Number of top hits") +
-  ylab("Power") +
-  geom_line(size = 1) +
-  facet_grid(GF~tGF) +
-  scale_color_manual(labels = c(expression(bold(Bd)[italic(f)]),
-                                expression(bolditalic(D)),
-                                expression(bolditalic(f[italic(d)])),
-                                expression(bold(pcadapt)),
-                                expression(bolditalic(RND)[min])),
-                     values = c("#D55E00", # Bdf
-                                "#E69F00", # D
-                                "#009E73", # f
-                                "#56B4E9", # pcadapt
-                                "#CC79A7"), # RNDmin
-                     drop = FALSE) +
-  scale_y_continuous(breaks = c(0.5, 1)) +
-  scale_x_continuous(breaks = c(0, 25, 50)) +
-  theme_bw(base_size = 20) + guides(colour = guide_legend(title = " ")) +
-  theme(axis.text = element_text(face = "bold"),
-        axis.title.x = element_text(margin = margin(t = 20, r = 0, b = 0, l = 0)),
-        axis.title = element_text(face = "bold"),
-        title = element_text(face = "bold"),
-        strip.text = element_text(face = "bold"),
-        legend.text = element_text(face = "bold"),
-        legend.key.height = unit(3, "line"),
-        legend.text.align = 0,
-        legend.key.width = unit(3, "line"),
-        panel.spacing = unit(0.5, "lines"))
+include_graphics("figure/power_f_introgression_curves_constant.png")
+# gf.df <- readRDS("data/GF_power_top_hits.rds")
+# gf.df %>%
+#   filter(mutationRate == "Constant mutation rate", GF <= 0.5) %>%
+#   ggplot(aes(x = NumberOfTopHits,
+#              y = Power,
+#              colour = Method)) +
+#   xlab("Number of top hits") +
+#   ylab("Power") +
+#   geom_line(size = 1) +
+#   facet_grid(GF~tGF) +
+#   scale_color_manual(labels = c(expression(bold(Bd)[italic(f)]),
+#                                 expression(bolditalic(D)),
+#                                 expression(bolditalic(f[italic(d)])),
+#                                 expression(bold(pcadapt)),
+#                                 expression(bolditalic(RND)[min])),
+#                      values = c("#D55E00", # Bdf
+#                                 "#E69F00", # D
+#                                 "#009E73", # f
+#                                 "#56B4E9", # pcadapt
+#                                 "#CC79A7"), # RNDmin
+#                      drop = FALSE) +
+#   scale_y_continuous(breaks = c(0.5, 1)) +
+#   scale_x_continuous(breaks = c(0, 25, 50)) +
+#   theme_bw(base_size = 20) + guides(colour = guide_legend(title = " ")) +
+#   theme(axis.text = element_text(face = "bold"),
+#         axis.title.x = element_text(margin = margin(t = 20, r = 0, b = 0, l = 0)),
+#         axis.title = element_text(face = "bold"),
+#         title = element_text(face = "bold"),
+#         strip.text = element_text(face = "bold"),
+#         legend.text = element_text(face = "bold"),
+#         legend.key.height = unit(3, "line"),
+#         legend.text.align = 0,
+#         legend.key.width = unit(3, "line"),
+#         panel.spacing = unit(0.5, "lines"))
+```
+
+(ref:power-introgression-cap) Power as a function of the proportion of introgression.
+
+```{r power-introgression, results='asis', fig.cap='(ref:power-introgression-cap)'}
+include_graphics("figure/power_f_introgression.png")
 ```
 
 (ref:introgression-cap) Schematic description of simulations under an introgression scenario.
@@ -724,38 +670,6 @@ include_graphics("figure/introgression.png")
 include_graphics("figure/admixture.png")
 ```
 
-(ref:annotation-cap) Transcripts detected with pcadapt in chromosome 6 and not detected in [@suarez2016] located in regions with excess of *Populus balsamifera* ancestry.
-
-```{r annotation, results='asis', message=FALSE}
-name <- c("Potri.006G156000.1",
-          "Potri.006G156100.1",
-          "Potri.006G156200.1",
-          "Potri.006G161800.1",
-          "Potri.006G161900.1")
-
-region <- c("14266001:14305734",
-        "14266001:14305734",
-        "14266001:14305734",
-        "15556790:15791830",
-        "15556790:15791830")
-
-func <- c("Sulfate transporter",
-        "Not named",
-        "Not named",
-        "Not named",
-        "Vernalization intensive protein")
-
-data.frame(name = name,
-           region = region,
-           func = func) %>%
-  knitr::kable(col.names = c("Transcript",
-                             "Region",
-                             "PANTHER annotation"),
-               caption = '(ref:annotation-cap)',
-               booktabs = TRUE,
-               escape = TRUE) %>%
-  kable_styling(full_width = T)
-```
 
 
 # R & Python
@@ -768,7 +682,7 @@ Nous mettons ici à disposition une partie des codes qui ont servi à produire l
 
 (ref:island-pca-cap) Exemple de simulation réalisée à l'aide de *ms* [@hudson2002generating].
 
-```{r island-pca, fig.cap='(ref:island-pca-cap)', echo=TRUE}
+```{r island-pca, fig.cap='(ref:island-pca-cap)', echo=TRUE, eval=FALSE}
 if (!file.exists("ms/ms")) {
   system("gcc -o ms/ms ms/ms.c ms/streec.c ms/rand1.c -lm")
 }
@@ -861,12 +775,6 @@ g <- cbind(g.neutral, g.adaptive)
 x <- pcadapt::pcadapt(t(g), K = 2)
 pop <- c(rep("A", 50), rep("B", 50), rep("C", 50))
 plot(x, option = "scores", pop = pop)
-```
-
-(ref:island-manhattan-cap) Manhattan plot obtenu à partir de l'analyse de la simulation \@ref(fig:island-pca).
-
-```{r island-manhattan, fig.cap='(ref:island-manhattan-cap)', echo=TRUE}
-plot(x, option = "manhattan")
 ```
 
 ### Modèle de divergence

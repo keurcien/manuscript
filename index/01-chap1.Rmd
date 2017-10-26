@@ -259,14 +259,14 @@ Dans le cas où les locus sont soumis uniquement à la dérive génétique, $T_{
 
 ### Le modèle $F$
 
-Une autre idée consiste à affirmer qu'en l'absence de sélection, dans un modèle en îles, la proportion d'allèles immigrants^[venant d'une autre population.] doit être la même pour tous les locus [@beaumont2004identifying]. Cette proportion d'allèles immigrants mesure la dérive génétique subie par la population qui intègre ces allèles [@villemereuil2015new]. En effet, une population échangeant moins d'allèles avec les autres populations se retrouverait alors plus différenciée. Les locus susceptibles d'être sous sélection sont ceux présentant une proportion d'allèles migrants anormalement basse [@petry1983effect; @bazin2010likelihood]. @beaumont2004identifying proposent alors un modèle de régression logistique pour la $F_{ST}$ [@balding2003likelihood; @balding2008handbook], en la modélisant par des effets $\alpha$ spécifiques au locus (taux de mutation, sélection) et des effets $\beta$ spécifiques à la population (taille de population efficace, taux de migration), c'est le modèle $F$ :
+Une autre idée consiste à affirmer qu'en l'absence de sélection, dans un modèle en îles \@ref(fig:demographic-models), la proportion d'allèles immigrants^[venant d'une autre population.] doit être la même pour tous les locus [@beaumont2004identifying]. Cette proportion d'allèles immigrants mesure la dérive génétique subie par la population qui intègre ces allèles [@villemereuil2015new]. En effet, une population échangeant moins d'allèles avec les autres populations se retrouverait alors plus différenciée. Les locus susceptibles d'être sous sélection sont ceux présentant une proportion d'allèles migrants anormalement basse [@petry1983effect; @bazin2010likelihood]. @beaumont2004identifying proposent alors un modèle de régression logistique pour la $F_{ST}$ [@balding2003likelihood; @balding2008handbook], en la modélisant par des effets $\alpha$ spécifiques au locus (taux de mutation, sélection) et des effets $\beta$ spécifiques à la population (taille de population efficace, taux de migration), c'est le modèle $F$ :
 
 \begin{equation}
   \log \left( \frac{F_{ST}}{1 - F_{ST}} \right) = \alpha + \beta
   (\#eq:Bayescan-statistic-implicit)
 \end{equation}
 
-La décomposition de la $F_{ST}$, en une somme d'effets locus-spécifique et population-spécifique, permet d'identifier les locus à forte $F_{ST}$ qui présentent un effet qui n'est pas partagé par les autres locus. Le modèle $F$ ne prend pas en compte la structure hiérarchique [@foll2014widespread].
+La décomposition de la $F_{ST}$, en une somme d'effets locus-spécifique et population-spécifique, permet d'identifier les locus à forte $F_{ST}$ qui présentent un effet qui n'est pas partagé par les autres locus. Le modèle $F$ ne prend pas en compte la structure hiérarchique [@foll2014widespread]. Ce modèle est implémenté dans le logiciel Bayescan.
 
 ------
 
@@ -287,7 +287,9 @@ L'Analyse en Composantes Principales est un outil incontournable pour l'analyse 
 
 L'Analyse en Composantes Principales est une méthode statistique consistant à transformer un ensemble de variables possiblement corrélées en un nouvel ensemble de variables orthogonales et donc non corrélées appelées *composantes principales*. De plus, elle est définie de telle sorte que la première composante principale maximise la variance, ce qui signifie que parmi toutes les droites affines de l'espace de départ, la première composante correspond à celle où la projection orthogonale des observations présente la dispersion (autrement dit la variance) la plus grande (Figure \@ref(fig:pca-definition)). De la même manière, la deuxième composante principale correspond à la droite affine maximisant la variance, sous la contraite d'être orthogonale à la composante principale précédente (Figure \@ref(fig:pca-definition)). Les composantes principales suivantes se déduisent donc des précédentes en suivant ce schéma itératif. La contrainte d'orthogonalité impose que le nombre de composantes principales soit inférieur au nombre de variables et au nombre d'observations. En pratique, le calcul des composantes principales repose sur la diagonalisation de la matrice de covariance ou de la matrice de corrélation.
 
-(ref:pca-definition-cap) Exemple de données distribuées selon une Gaussienne multivariée. La droite rouge correspond à l'axe de projection maximisant la variance, et donc par définition, à la première composante principale. La droite verte correspond à la deuxième composante principale et se déduit de la première grâce à la contraite d'orthogonalité et au fait qu'il n'y a ici que deux variables.
+\newpage
+
+(ref:pca-definition-cap) Analyse en Composantes Principales de données distribuées selon une Gaussienne multivariée. La droite rouge correspond à l'axe de projection maximisant la variance, et donc par définition, à la première composante principale. La droite verte correspond à la deuxième composante principale et se déduit de la première grâce à la contraite d'orthogonalité et au fait qu'il n'y a ici que deux variables.
 
 ```{r pca-definition, fig.cap='(ref:pca-definition-cap)'}
 X <- matrix(c(0.1, -0.2, -0.2, 0.1), nrow = 2)
@@ -329,7 +331,7 @@ L'utilisation de l'Analyse en Composantes Principales en génétique des populat
   (\#eq:GRM)
 \end{equation}
 
-(ref:correlogram-cap) À gauche une matrice d'apparentement génétique interpopulationnelle calculée à partir de la simulation d'un modèle en îles à trois populations. À droite une matrice d'apparentement génétique interindividuelle. Ces matrices d'apparentement ont été estimées à partir d'une simulation que j'ai effectuée d'un modèle en îles à trois populations.
+(ref:correlogram-cap) À gauche une matrice d'apparentement génétique interpopulationnelle calculée à partir de la simulation d'un modèle en îles à trois populations. À droite une matrice d'apparentement génétique interindividuelle. Ces matrices d'apparentement ont été estimées à partir d'une simulation d'un modèle en îles à trois populations.
 
 ```{r correlogram, fig.cap='(ref:correlogram-cap)'}
 G <- readRDS("data/isl.rds")
@@ -383,7 +385,7 @@ ggplot(aes(X, Y, z = Z)) +
 
 En génétique des populations, l'ACP est devenu un outil de visualisation extrêmement utilisé. Cela s'explique notamment par sa capacité à rendre compte de la structure de populations à l'aide d'un faible nombre d'axes principaux (Figure \@ref(fig:hapmap)), appelés aussi *axes de variation génétique* [@price2006principal]. 
 
-(ref:hapmap-cap) ACP réalisée sur la phase 3 du jeu de données HapMap à l'aide de la librarie R pcadapt [@gibbs2003international]. Les deux premières composantes principales distinguent trois groupes génétiques correspondant aux populations africaines, asiatiques et européennes.
+(ref:hapmap-cap) ACP réalisée sur la phase 3 du jeu de données HapMap à l'aide de la librarie R pcadapt [@gibbs2003international]. Le jeu de données HapMap est un jeu de données humaines incluant une grande diversité de populations. Les deux premières composantes principales distinguent trois groupes génétiques correspondant aux populations africaines, asiatiques et européennes.
 
 ```{r hapmap, fig.cap = '(ref:hapmap-cap)', out.width='\\textwidth'}
 obj.hapmap <- readRDS("data/hapmap.rds")
@@ -443,6 +445,8 @@ ggplot(ggdf, aes(x = PC2, y = PC1, fill = pop)) +
 
 Une autre particularité de l'ACP réside dans la possibilité d'inférer les *coefficients de métissage* ou *coefficients d'ascendance* à partir des composantes principales [@mcvean2009genealogical; @ma2012principal]. Un coefficient de métissage quantifie pour un individu donné la proportion du génôme provenant d'un groupe génétique spécifique (appelé aussi population source ou population ancestrale). L'un des premiers articles à établir un lien entre l'ACP et les coefficients de métissage global fut sur l'interprétation généalogique de l'ACP de @mcvean2009genealogical (Figure \@ref(fig:mcvean)). Nous reviendrons sur cette notion dans le chapitre consacré à l'introgression.
 
+\newpage
+
 (ref:mcvean-cap) Coefficients de métissage et ACP [@mcvean2009genealogical]. **A.** Chaque ligne de la figure correspond à un chromosome. Chacune de ces lignes représente la projection des individus issus des populations CEU, ASW et YRI sur la première composante principale. **B.** Chaque point représente un individu correspondant à la moyenne des projections précédentes, ramenées à l'intervalle $[0, 1]$ avec une transformation affine. 
 
 ```{r mcvean, results = 'asis', fig.cap = '(ref:mcvean-cap)', out.width = '300px'}
@@ -473,7 +477,7 @@ La première approche présentée repose sur la corrélation des locus avec chaq
 
 ```{definition, corr, name="Corrélation à un axe principal", echo=TRUE}
 
-Soit $G \in M_{np}(\{0, 1, 2\})$, où $n$ désigne le nombre d'individus et $p$ le nombre de locus. Soit $U \Sigma V^T$ la décomposition en valeurs singulières de rang $K$ de $\tilde{G}$. Notant $\sqrt{\lambda_1}, \dots, \sqrt{\lambda_K}$ les élements diagonaux de $\Sigma$, la corrélation $\rho_{jk}$ du locus $j \in [|1, p|]$ avec le $k$-ième axe principal est donné par la formule ci-dessous [@cadima1995loading] :
+Soit $G \in \mathcal{M}_{np}(\{0, 1, 2\})$, où $n$ désigne le nombre d'individus et $p$ le nombre de locus. Soit $U \Sigma V^T$ la décomposition en valeurs singulières de rang $K$ de $\tilde{G}$. Notant $\sqrt{\lambda_1}, \dots, \sqrt{\lambda_K}$ les élements diagonaux de $\Sigma$, la corrélation $\rho_{jk}$ du locus $j \in [|1, p|]$ avec le $k$-ième axe principal est donné par la formule ci-dessous [@cadima1995loading] :
 
 \begin{equation}
   \rho_{jk} = \frac{\sqrt{\lambda_{k}}V_{jk}}{\sqrt{n-1}}
@@ -506,7 +510,7 @@ Le choix de cette statistique est fondé sur l'interprétation usuelle de la com
 Pour chacun des scénarios démographiques étudiés (modèle en île et modèle de divergence à 3 et 4 populations), nous avons montré numériquement que la $F_{ST}$ et la communalité sont corrélées à plus de $90\%$ [@duforet2015detecting]. Dans la suite de ce manuscript, nous explicitons un modèle à facteurs où la $F_{ST}$ correspond à la proportion de variance expliquée, ce qui permet de réécrire la $F_{ST}$ sous une forme analytique analogue à celle de la communalité $h^2$.
 
 ```{proposition, udelta, echo=TRUE}
-Soient $N$ le nombre de populations, $n_j$ le nombre d'individus appartenant à la $j$-ème population, $n$ le nombre total d'individus et $\delta_{ji}$ le symbole de Kronecker tel que $\delta_{ji} = 1$ si l'individu $i$ appartient à la $j$-ème population et $0$ sinon. Notant $U_{\delta} = \left(\frac{\delta_{ji}}{n_j}\right)_{1 \leq i \leq n, \; 1\leq j \leq N} \in M_{n, N}(\mathbb{R})$, il existe une matrice $L \in M_{Np}(\mathbb{R})$ telle que :
+Soient $N$ le nombre de populations, $n_j$ le nombre d'individus appartenant à la $j$-ème population, $n$ le nombre total d'individus et $\delta_{ji}$ le symbole de Kronecker tel que $\delta_{ji} = 1$ si l'individu $i$ appartient à la $j$-ème population et $0$ sinon. Notant $U_{\delta} = \left(\frac{\delta_{ji}}{\sqrt{2(N-1)}n_j}\right)_{1 \leq i \leq n, \; 1\leq j \leq N} \in \mathcal{M}_{n, N}(\mathbb{R})$, il existe une matrice $L \in \mathcal{M}_{Np}(\mathbb{R})$ telle que :
 
 $$\tilde{G} = U_{\delta}L.$$
 ```
@@ -514,7 +518,7 @@ $$\tilde{G} = U_{\delta}L.$$
 
 
 ```{proof, echo=TRUE}
-En constatant que $U_{\delta}^TU_{\delta} = \text{Diag}\left(\frac{1}{n_1}, \dots, \frac{1}{n_N}\right)$, nous pouvons définir $L = (U_{\delta}^TU_{\delta})^{-1}U_{\delta}\tilde{G}$, si bien que $\tilde{G} = U_{\delta}L$.
+En constatant que $U_{\delta}^TU_{\delta} = \text{Diag}\left(\frac{1}{2(N-1)n_1}, \dots, \frac{1}{2(N-1)n_N}\right)$, nous pouvons définir $L = (U_{\delta}^TU_{\delta})^{-1}U_{\delta}^T\tilde{G}$, si bien que $\tilde{G} = U_{\delta}L$.
 ```
 
 
@@ -529,7 +533,24 @@ $$F_{ST} = ||\tilde{G}_{.,j}^T U_{\delta}||_2^2.$$
 
 
 ```{proof, echo=TRUE}
-En annexe.
+En reprenant les notations de la proposition \@ref(prp:udelta) et en rappelant que $p_k = \frac{\sum_{i=1}^n \delta_{ki} G_{ij}}{\sum_{i=1}^n 2\delta_{ki}}$,
+\begin{equation}
+  \begin{split}
+  F_{ST} & = \frac{1}{N-1}\frac{\sum_{k=1}^N (p_k - \bar{p})^2}{\bar{p}(1-\bar{p})} \\
+  & = \frac{1}{(N-1)\bar{p}(1-\bar{p})}\sum_{k=1}^N \left(\frac{\sum_{i=1}^n \delta_{ki} G_{ij}}{\sum_{i=1}^n 2\delta_{ki}} - \bar{p}\right)^2\\
+  & = \frac{1}{N-1}\sum_{k=1}^N \left(\frac{\sum_{i=1}^n \delta_{ki} (G_{ij} - 2\bar{p})}{2n_k\sqrt{\bar{p}(1-\bar{p})}}\right)^2\\
+  \end{split}
+\end{equation}
+
+Or $\tilde{G}_{ij} = \frac{G_{ij} - 2\bar{p}}{\sqrt{2\bar{p}(1-\bar{p})}}$ :
+
+\begin{equation}
+  \begin{split}
+  F_{ST} &= \sum_{k=1}^N \left(\sum_{i=1}^n \frac{\delta_{ki}}{\sqrt{2(N-1)}n_k} \tilde{G_{ij}}\right)^2 \\
+  &= ||\tilde{G}_{.,j}^T U_{\delta}||_2^2.
+  \end{split}
+\end{equation}
+
 ```
 
 
@@ -578,7 +599,7 @@ df %>%
 
 #### Limites {-}
 
-De par sa définition, la communalité est dépendante de la proportion de variance expliquée par chaque composante principale retenue et donc de l'amplitude relative des valeurs singulières $\sqrt{\lambda_1}, \dots, \sqrt{\lambda_K}$ de $\tilde{G}$. Dans des cas de figures où $\lambda_1 \gg \lambda_2$, $h^2 \sim \rho_1^2$, excluant la possibilité de détecter d'éventuels signaux d'adaptation sur les composantes suivantes. Or ceci s'explique très bien en exploitant le caractère géométrique des statistiques telles que la communalité qui sont distribuées selon un $\chi^2$. Puisqu'il s'agit de sommes quadratiques de lois normales, les courbes de niveau décrites par ces statistiques sont des ellipsoïdes. Les courbes de niveau peuvent être vues comme le pendant géométrique des seuils de $p$-valeur. Si l'on s'intéresse aux courbes de niveau de la communalité, nous nous apercevons en effet qu'elle aura tendance à favoriser la détection de SNPs corrélés avec la première composante, malgré la présence éventuelle de SNPs fortement corrélés avec les composantes suivantes. Pour l'illustrer, plaçons-nous dans le cas $K=2$ (supposant que les deux premières composantes principales aient été retenues). Notant $X$ (resp. $Y$) la variable aléatoire associée aux loadings de la première (resp. seconde) composantes principale. La communalité s'écrit $h^2 = \lambda_1 X^2 + \lambda_2 Y^2 = \left(\frac{X}{\sqrt{\lambda_1}}\right)^2 + \left(\frac{Y}{\sqrt{\lambda_2}}\right)^2$ avec $\lambda_1 > \lambda_2$. En dimension $2$, les lignes de niveaux de $h^2$ décrivent des ellipses dont le petit axe est orienté selon $X$ (et paramétré par $\frac{1}{\sqrt{\lambda_1}}$) (Figure \@ref(fig:levelplot)), justifiant ainsi qu'il est plus facile de se trouver en-dehors de l'ellipse en ayant une forte valeur de $X$ qu'une forte valeur de $Y$.
+De par sa définition, la communalité est dépendante de la proportion de variance expliquée par chaque composante principale retenue et donc de l'amplitude relative des valeurs singulières $\sqrt{\lambda_1}, \dots, \sqrt{\lambda_K}$ de $\tilde{G}$. Dans des cas de figures où $\lambda_1 \gg \lambda_2$, $h^2$ est équivalente à $\rho_1^2$, excluant la possibilité de détecter d'éventuels signaux d'adaptation sur les composantes suivantes. Or ceci s'explique très bien en exploitant le caractère géométrique des statistiques telles que la communalité qui sont distribuées selon un $\chi^2$. Puisqu'il s'agit de sommes quadratiques de lois normales, les courbes de niveau décrites par ces statistiques sont des ellipsoïdes. Les courbes de niveau peuvent être vues comme le pendant géométrique des seuils de $p$-valeur. Si l'on s'intéresse aux courbes de niveau de la communalité, nous nous apercevons en effet qu'elle aura tendance à favoriser la détection de SNPs corrélés avec la première composante, malgré la présence éventuelle de SNPs fortement corrélés avec les composantes suivantes. Pour l'illustrer, plaçons-nous dans le cas $K=2$ (supposant que les deux premières composantes principales aient été retenues). Notant $X$ (resp. $Y$) la variable aléatoire associée aux loadings de la première (resp. seconde) composante principale. La communalité s'écrit $h^2 = \lambda_1 X^2 + \lambda_2 Y^2 = \left(\frac{X}{\sqrt{\lambda_1}}\right)^2 + \left(\frac{Y}{\sqrt{\lambda_2}}\right)^2$ avec $\lambda_1 > \lambda_2$. En dimension $2$, les lignes de niveaux de $h^2$ décrivent des ellipses dont le petit axe est orienté selon $X$ (et paramétré par $\frac{1}{\sqrt{\lambda_1}}$) (Figure \@ref(fig:levelplot)), justifiant ainsi qu'il est plus facile de se trouver en-dehors de l'ellipse en ayant une forte valeur de $X$ qu'une forte valeur de $Y$.
 
 (ref:levelplot-cap) À gauche les lignes de niveau de la communalité avec $\lambda_1 = 2\lambda_2$ où l'axe des abscisse et l'axe des ordonnées correspondent aux loadings de chaque composante principale. À droite les lignes de niveau de la distance de Mahalanobis.
 
@@ -616,7 +637,7 @@ Ce paragraphe résume de façon détaillée les résultats obtenus dans l'articl
 Nous avons décidé d'utiliser les coefficients de régression standardisés plutôt que les loadings pour calculer la distance de Mahalanobis.
 
 ```{definition, zscores, name="Coefficients de régression standardisés", echo=TRUE}
-Soit $U \Sigma V^T$ la décomposition en valeurs singulières de rang $K$ de $\tilde{G}$. Notant $\epsilon = \tilde{G} - U \Sigma V^T \in M_{np}(\mathbb{R})$, les coefficients de régression standardisés $z$, appelés encore $z$-scores, sont définis pour chaque locus $j$ par la relation ci-dessous [@saporta2006probabilites] :
+Soit $U \Sigma V^T$ la décomposition en valeurs singulières de rang $K$ de $\tilde{G}$. Notant $\epsilon = \tilde{G} - U \Sigma V^T \in \mathcal{M}_{np}(\mathbb{R})$, les coefficients de régression standardisés $z$, appelés encore $z$-scores, sont définis pour chaque locus $j$ par la relation ci-dessous [@saporta2006probabilites] :
 
 \begin{equation}
   z_j = \frac{U^TG_{.,j}}{\sqrt{\frac{||\epsilon_{.,j}||_2^2}{n - K - 1}}}
@@ -627,7 +648,7 @@ Soit $U \Sigma V^T$ la décomposition en valeurs singulières de rang $K$ de $\t
 La distance de Mahalanobis est une statistique classique de détection de valeurs aberrantes pour des données multivariées, ce qui signifie qu'elle permet de déterminer si une observation $x$ provient effectivement d'un ensemble d'observations $X$. Dans le cas de la communalité par exemple, nous cherchions à détecter les locus significativement isolés de l'ensemble des locus neutres, à partir de la distribution des corrélations. La distance de Mahalanobis apparaît donc comme une alternative naturelle à la communalité pour la détection de locus sous sélection.
 
 ```{definition, mahalanobis, name="Distance de Mahalanobis", echo=TRUE}
-Soit $z \in \mathbb{R}^K$, et $Z = (z_1, \dots, z_p) \in M_{pK}(\mathbb{R})$ une matrice représentant un ensemble de $p$ $z$-scores $K$-dimensionnels. La distance de Mahalanobis de $z$ relativement à cet ensemble est donnée par la formule ci-dessous :
+Soit $z \in \mathbb{R}^K$, et $Z = (z_1, \dots, z_p) \in \mathcal{M}_{pK}(\mathbb{R})$ une matrice représentant un ensemble de $p$ $z$-scores $K$-dimensionnels. La distance de Mahalanobis de $z$ relativement à cet ensemble est donnée par la formule ci-dessous :
 
 \begin{equation}
     D^2(z) = (z - \bar{z})^T \Sigma^{-1} (z - \bar{z}),
@@ -652,6 +673,8 @@ La statistique de test $T_{F-LK}$ de @bonhomme2010detecting et la $F_{ST}$ gén�
 - nous regardons ensuite quelle ellipse contient le moins d'observations aberrantes, tout en contenant au moins $95\%$ des locus neutres. 
 
 La figure \@ref(fig:ogk-mcd) montre que l'utilisation d'une méthode d'estimation robuste est nécessaire, même pour des jeux de données présentant moins de $10\%$ de données aberrantes. Quant à la comparaison entre l'estimateur OGK et l'estimateur MCD, les deux méthodes semblent effectivement tenir compte de la présence de données aberrantes pour ajuster le calcul de la matrice de covariance. Nous notons néanmoins que l'estimateur OGK retient moins de données aberrantes tout en recouvrant une proportion de locus neutres visiblement supérieure à $95\%$ au sein de son ellipse de confiance à $95\%$. Notre choix d'estimateur s'est donc porté sur l'estimateur OGK et a été réimplémenté dans la librairie pcadapt.
+
+\newpage
 
 (ref:ogk-mcd-cap) Comparaison des estimations de la matrice de covariance. Les matrices de covariance peuvent être interprétées géométriquement en termes d'ellipses. Une ellipse de confiance au seuil $\alpha$ est censée contenir une proportion $\alpha$ de l'ensemble des observations effectivement issues de la distribution (correspondant aux observations neutres). Nous constatons que l'estimateur classique de covariance surestime les valeurs propres de la matrice de covariance même lorsque la proportion de données aberrantes est faible.
 
@@ -769,7 +792,7 @@ Nous justifions ici de façon empirique l'utilisation des coefficients de régre
 
 Cette procédure de comparaison nous permet par exemple d'évaluer si le taux de fausses découvertes est bien contrôlé ou encore si une méthode est trop conservative ou non. En figure \@ref(fig:loadings-zscores), nous constatons que les deux statistiques sont bien contrôlées, c'est-à-dire que pour chacun des seuils de significativité, aucune des deux statistiques ne présentent un taux de fausses découvertes supérieur à ce seuil. La figure \@ref(fig:loadings-zscores) met en évidence le côté relativement conservatif de la distance de Mahalanobis calculée à partir des loadings, ce qui a pour effet de diminuer la puissance du test.
 
-(ref:loadings-zscores-cap) Comparaison des distances de Mahalanobis calculées à partir des loadings et des $z$-scores. La ligne en pointillé représente le taux de fausses découvertes attendu pour chaque seuil de significativité.
+(ref:loadings-zscores-cap) Comparaison des distances de Mahalanobis calculées à partir des loadings et des $z$-scores. Les taux de fausses de découvertes et les puissances sont calculées puis moyennées sur l'ensemble des simulations de modèles en îles utilisées dans l'article 2. La ligne en pointillé représente le taux de fausses découvertes attendu pour chaque seuil de significativité.
 
 ```{r, loadings-zscores, fig.cap='(ref:loadings-zscores-cap)'}
 VZ <- readRDS("data/VZ.rds")
@@ -854,6 +877,8 @@ should theoretically give the same importance to each PC because the normalized 
 
 The method of selection scan should be able to handle a large number $p$ of genetic variants. In order to compute truncated SVD with large values of $p$, we compute the $n \times n$ covariance matrix $\Omega = YY^T/(p-1)$. The covariance matrix $\Omega$ is typically of much smaller dimension than the $p \times p$ covariance matrix. Considering the $n \times n$ covariance matrix $\Omega$ speeds up matrix operations. Computation of the covariance matrix is the most costly operation and it requires a number of arithmetic operations proportional to $p n^2$. After computing the covariance matrix $\Omega$, we compute its first $K$ eigenvalues and eigenvectors to find $\Sigma^2/(p-1)$ and $U$. Eigenanalysis is performed with the *dsyevr* routine of the linear algebra package LAPACK [@anderson1999lapack]. The matrix $V$, which captures the relationship between each SNPs and population structure, is obtained by the matrix operation $V^T = \Sigma^{-1} U^T Y$. The software *PCAdapt fast*, process data as a stream and never store in order to have a very low memory access whatever the size of the data.
 
+\newpage
+
 ### Results {-}
 
 #### Island Model {-}
@@ -864,17 +889,21 @@ To investigate the relationship between communality $h^2$ and $F_{ST}$, we consi
 
 To compare the performance of different PCA-based summary statistics, we simulate genetic variation in models of population divergence. The divergence models assume that there are three populations, $A$, $B_1$ and $B_2$ with $B_1$ and $B_2$ being the most related populations (figs. \@ref(fig:ndf-fig1) and \@ref(fig:ndf-fig2)). The first simulation scheme assumes that local adaptation took place in the lineages corresponding to the environments of populations $A$ and $B_1$ (fig. \@ref(fig:ndf-fig1)). The SNPs, which are assumed to be independent, are divided into three groups: 9,500 SNPs evolve neutrally, 250 SNPs confer a selective advantage in the environment of $A$, and 250 other SNPs confer a selective advantage in the environment of $B_1$. Genetic differentiation, measured by pairwise $F_{ST}$, is equal to 14% when comparing population $A$ to the other ones and is equal to 5% when comparing populations $B_1$ and $B_2$. Performing PCA with $K = 2$ shows that the first component separates population $A$ from $B_1$ and $B_2$ whereas the second component separates $B_1$ from $B_2$ (supplementary fig. \@ref(fig:ndf-figS1)). The choice of $K = 2$ is evident when looking at the scree plot because the eigenvalues, which are proportional to the proportion of variance explained by each PC, drop beyond $K = 2$ and stay almost constant as $K$ further increases (supplementary fig. \@ref(fig:ndf-figS3)).
 
+\newpage
+
 (ref:ndf-fig1-cap) Repartition of the 1% top-ranked SNPs for each PCA-based statistic under a divergence model with two types of adaptive constraints. Thicker and colored lineages correspond to lineages where adaptation took place. The squared loadings with PC1 $\rho_{j1}^2$ pick a large proportion of SNPs involved in selection in population $A$ whereas the squared loadings with PC2 $\rho_{j2}^2$ pick SNPs involved in selection in population $B_1$. This difference is reflected in the different repartition of the top-ranked SNPs for the communality $h^2$ and the statistic ${h^{\prime}}^2$.
 
-```{r ndf-fig1, results='asis', fig.cap='(ref:ndf-fig1-cap)'}
+```{r ndf-fig1, results='asis', fig.cap='(ref:ndf-fig1-cap)', out.width="50%"}
 include_graphics("figure/ndf-fig1.png")
 ```
 
 (ref:ndf-fig2-cap) Repartition of the 1% top-ranked SNPs of each PCA-based statistic under a divergence model with four types of adaptive constraints. Thicker and colored lineages correspond to lineages where adaptation occurred. The different types of SNPs picked by the squared loadings $\rho_{j1}^2$ and $\rho_{j2}^2$ are also found when comparing the communality $h^2$ and the statistic ${h^{\prime}}^2$.
 
-```{r ndf-fig2, results='asis', fig.cap='(ref:ndf-fig2-cap)'}
+```{r ndf-fig2, results='asis', fig.cap='(ref:ndf-fig2-cap)', out.width="50%"}
 include_graphics("figure/ndf-fig2.png")
 ```
+
+\newpage
 
 We investigate the relationship between the communality statistic $h^2$, which measures the proportion of variance explained by the first two PCs, and the $F_{ST}$ statistic. We find a squared Pearson correlation coefficient between the two statistics larger than 98.8% in the simulations corresponding to figures \@ref(fig:ndf-fig1) and \@ref(fig:ndf-fig2) (supplementary fig. \@ref(fig:ndf-figS4)). For these two simulations, we look at the SNPs in the top 1% (respectively, 5%) of the ranked lists based on $h^2$ and $F_{ST}$, and we find an overlap coefficient always larger than 93% for the lists provided by the two different statistics (respectively, 95%). Providing a ranking of the SNPs almost similar to the ranking provided by $F_{ST}$ is therefore possible without considering that individuals originate from predefined populations.
 
@@ -894,37 +923,39 @@ We also consider a more general isolation-with-migration model. In the divergenc
 
 The main results obtained under the divergence models can be described as follows. The principal components correspond to different evolutionary lineages of the divergence tree. The communality statistic $h^2$ provides similar list of candidate SNPs than $F_{ST}$ and it is mostly influenced by the first principal component which can be problematic if other PCs also convey adaptive events. To counteract this limitation, which can potentially lead to the loss of important signals of selection, we show that looking at the squared loadings with each of the principal components provide adaptive SNPs that are related to different evolutionary events. When adding migration rates between lineages, we find that the main results are unchanged up to a certain level of migration rate. Above this level of migration rate, the relationship between $F_{ST}$ and $h^2$ does not hold anymore and genome scans based on either PCA or $F_{ST}$ produce a majority of false positives.
 
+\newpage
+
 #### 1000 Genomes Data {-}
 
 Since we are interested in selective pressures that occurred during the human diaspora out of Africa, we decide to exclude individuals whose genetic makeup is the result of recent admixture events (African Americans, Columbians, Puerto Ricans, and Mexicans). The first three principal components capture population structure whereas the following components separate individuals within populations (fig. \@ref(fig:ndf-fig3) and supplementary fig. \@ref(fig:ndf-figS11)). The first and second PCs ascertain population structure between Africa, Asia, and Europe (fig. \@ref(fig:ndf-fig3)) and the third principal component separates the Yoruba from the Luhya population (supplementary fig. \@ref(fig:ndf-figS11)). The decay of eigenvalues suggests to use $K = 2$ because the eigenvalues drop between $K = 2$ and $K = 3$ where a plateau of eigenvalues is reached (supplementary fig. \@ref(fig:ndf-figS3)).
 
 (ref:ndf-fig3-cap) PCA with $K = 2$ applied to the 1000 Genomes data. The sampled populations are the following: British in England and Scotland (GBR), Utah residents with Northern and Western European ancestry (CEU), Finnish in Finland (FIN), Iberian populations in Spain (IBS), Toscani in Italy (TSI), Han Chinese in Bejing (CHB), Southern Han Chinese (CHS), Japanese in Tokyo (JPT), Luhya in Kenya (LWK), Yoruba in Nigeria (YRI).
 
-```{r ndf-fig3, results='asis', fig.cap='(ref:ndf-fig3-cap)'}
+```{r ndf-fig3, results='asis', fig.cap='(ref:ndf-fig3-cap)', out.width="75%"}
 include_graphics("figure/ndf-fig3.png")
 ```
 
 When performing a genome scan with PCA, there are different choices of statistics. The first choice is the $h^2$ communality statistic. Using the three continents as labels, there is a squared correlation between $h^2$ and $F_{ST}$ of $R^2 = 0.989$. To investigate if $h^2$ is mostly influenced by the first PC, we determine if the outliers for the $h^2$ statistics are related with PC1 or with PC2. Among the top 0.1% of SNPs with the largest values of $h^2$, we find that 74% are in the top 0.1% of the squared loadings $\rho_{j1}^2$ corresponding to PC1 and 20% are in the top 0.1% of the squared loadings $\rho_{j2}^2$ corresponding to PC2. The second possible choice of summary statistics is the ${h^{\prime}}^2$ statistic. Investigating the repartition of the 0.1% outliers for ${h^{\prime}}$, we find that 0.005% are in the top 0.1% of the squared loadings $\rho_{j1}^2$ corresponding to PC1 and 85% are in the top 0.1% of the squared loadings $\rho_{j2}^2$ corresponding to PC2. The ${h^{\prime}}^2$ statistic is mostly influenced by the second PC because the distribution of the  $V_{j2}^2$ (normalized squared loadings) has a longer tail than the corresponding distribution for PC1 (supplementary fig. \@ref(fig:ndf-figS5)). Because the $h^2$ statistic is mostly influenced by PC1 and ${h^{\prime}}^2$ is mostly influenced by PC2, confirming the results obtained under the divergence models, we rather decide to perform two separate genome scans based on the squared loadings $\rho_{j1}^2$ and $\rho_{j2}^2$.
 
-The two Manhattan plots based on the squared loadings for PC1 and PC2 are displayed in figures \@ref(fig:ndf-fig4) and \@ref(fig:ndf-fig5) (supplementary table S1, Supplementary Material online, contains the loadings for all variants). Because of linkage disequilibrium (LD), Manhattan plots generally produce clustered outliers. To investigate if the top 0.1% outliers are clustered in the genome, we count--for various window sizes--the proportion of contiguous windows containing at least one outlier. We find that outlier SNPs correlated with PC1 or with PC2 are more clustered than expected if they would have been uniformly distributed among the 36,536,154 variants (supplementary fig. \@ref(fig:ndf-figS12)). Additionally, the clustering is larger for the outliers related to the second PC as they cluster in fewer windows (supplementary fig. \@ref(fig:ndf-figS12)). As the genome scan for PC2 captures more recent adaptive events, it reveals larger genomic windows that experienced fewer recombination events.
+The two Manhattan plots based on the squared loadings for PC1 and PC2 are displayed in figures \@ref(fig:ndf-fig4) and \@ref(fig:ndf-fig5). Because of linkage disequilibrium (LD), Manhattan plots generally produce clustered outliers. To investigate if the top 0.1% outliers are clustered in the genome, we count--for various window sizes--the proportion of contiguous windows containing at least one outlier. We find that outlier SNPs correlated with PC1 or with PC2 are more clustered than expected if they would have been uniformly distributed among the 36,536,154 variants (supplementary fig. \@ref(fig:ndf-figS12)). Additionally, the clustering is larger for the outliers related to the second PC as they cluster in fewer windows (supplementary fig. \@ref(fig:ndf-figS12)). As the genome scan for PC2 captures more recent adaptive events, it reveals larger genomic windows that experienced fewer recombination events.
 
 (ref:ndf-fig4-cap) Manhattan plot for the 1000 Genomes data of the squared loadings $\rho_{j1}^2$ with the first principal component. For sake of presentation, only the top-ranked SNPs (top 0.1%) are displayed and the 100 top-ranked SNPs are colored in red.
 
-```{r ndf-fig4, results='asis', fig.cap='(ref:ndf-fig4-cap)'}
+```{r ndf-fig4, results='asis', fig.cap='(ref:ndf-fig4-cap)', out.width="50%"}
 include_graphics("figure/ndf-fig4.png")
 ```
 
 (ref:ndf-fig5-cap) Manhattan plot for the 1000 Genomes data of the squared loadings $\rho_{j2}^2$ with the second principal component. For sake of presentation, only the top-ranked SNPs (top 0.1%) are displayed and the 100 top-ranked SNPs are colored in red.
 
-```{r ndf-fig5, results='asis', fig.cap='(ref:ndf-fig5-cap)'}
+```{r ndf-fig5, results='asis', fig.cap='(ref:ndf-fig5-cap)', out.width="50%"}
 include_graphics("figure/ndf-fig5.png")
 ```
 
 The 1000 Genome data contain many low-frequency SNPs; 82% of the SNPs have a minor allele frequency smaller than 5%. However, these low-frequency variants are not found among outlier SNPs. There are no SNP with a minor allele frequency smaller than 5% among the 0.1% of the SNPs most correlated with PC1 or with PC2.
 
-The 100 SNPs that are the most correlated with the first PC are located in 24 genomic regions (supplementary table S2, Supplementary Material online). Most of the regions contain just one or a few SNPs except a peak in the gene APPBP2 that contains 33 out of the 100 top SNPs, a peak encompassing the RTTN and CD226 genes containing 17 SNPS and a peak in the ATP1A1 gene containing seven SNPs (fig. \@ref(fig:ndf-fig4)). Confirming a larger clustering for PC2 outliers, the 100 SNPs that are the most correlated with PC2 cluster in fewer genomic regions (supplementary table S3, Supplementary Material online). They are located in 14 genomic regions including a region overlapping with EDAR contains 44 top hits, two regions containing eight SNPs and located in the pigmentation genes SLC24A5 and SLC45A2, and two regions with seven top hit SNPs, one in the gene KCNMA1 and another one encompassing the RGLA/MYO5C genes (fig. \@ref(fig:ndf-fig5)).
+The 100 SNPs that are the most correlated with the first PC are located in 24 genomic regions. Most of the regions contain just one or a few SNPs except a peak in the gene APPBP2 that contains 33 out of the 100 top SNPs, a peak encompassing the RTTN and CD226 genes containing 17 SNPS and a peak in the ATP1A1 gene containing seven SNPs (fig. \@ref(fig:ndf-fig4)). Confirming a larger clustering for PC2 outliers, the 100 SNPs that are the most correlated with PC2 cluster in fewer genomic regions. They are located in 14 genomic regions including a region overlapping with EDAR contains 44 top hits, two regions containing eight SNPs and located in the pigmentation genes SLC24A5 and SLC45A2, and two regions with seven top hit SNPs, one in the gene KCNMA1 and another one encompassing the RGLA/MYO5C genes (fig. \@ref(fig:ndf-fig5)).
 
-We perform Gene Ontology (GO) enrichment analyses using Gowinda for the SNPs that are the most correlated with PC1 and PC2. For PC1, we find, among others, enrichment ($\text{FDR} \leq 5 \%$) for ontologies related to the regulation of arterial blood pressure, the endocrine system and the immunity response (interleukin production, response to viruses) (supplementary table S4, Supplementary Material online). For PC2, we find enrichment ($\text{FDR} \leq 5 \%$) related to olfactory receptors, keratinocyte and epidermal cell differentiation, and ethanol metabolism (supplementary table S5, Supplementary Material online). We also search for polygenic adaptation by looking for biological pathways enriched with outlier genes [@daub2013evidence]. For PC1, we find one enriched ($\text{FDR} \leq 5 \%$) pathway consisting of the beta defensin pathway (supplementary table S6, Supplementary Material online). The beta defensin pathway contains mainly genes involved in the innate immune system consisting of 36 defensin genes and of two Toll-Like receptors (TLR1 and TLR2). There are additionally two chemokine receptors (CCR2 and CCR6) involved in the beta defensin pathway. For PC2, we also find one enriched pathway consisting of fatty acid omega oxidation ($\text{FDR} \leq 5 \%$, supplementary table S7, Supplementary Material online). This pathway consists of genes involved in alcohol oxidation (CYP, ALD, and ALDH genes). Performing a less stringent enrichment analysis which can find pathways containing overlapping genes, we find more enriched pathways: the beta defensin and the defensin pathways for PC1 and ethanol oxidation, glycolysis/gluconeogenesis and fatty acid omega oxidation for PC2 (supplementary table S8, Supplementary Material online).
+We perform Gene Ontology (GO) enrichment analyses using Gowinda for the SNPs that are the most correlated with PC1 and PC2. For PC1, we find, among others, enrichment ($\text{FDR} \leq 5 \%$) for ontologies related to the regulation of arterial blood pressure, the endocrine system and the immunity response (interleukin production, response to viruses). For PC2, we find enrichment ($\text{FDR} \leq 5 \%$) related to olfactory receptors, keratinocyte and epidermal cell differentiation, and ethanol metabolism. We also search for polygenic adaptation by looking for biological pathways enriched with outlier genes [@daub2013evidence]. For PC1, we find one enriched ($\text{FDR} \leq 5 \%$) pathway consisting of the beta defensin pathway. The beta defensin pathway contains mainly genes involved in the innate immune system consisting of 36 defensin genes and of two Toll-Like receptors (TLR1 and TLR2). There are additionally two chemokine receptors (CCR2 and CCR6) involved in the beta defensin pathway. For PC2, we also find one enriched pathway consisting of fatty acid omega oxidation ($\text{FDR} \leq 5 \%$). This pathway consists of genes involved in alcohol oxidation (CYP, ALD, and ALDH genes). Performing a less stringent enrichment analysis which can find pathways containing overlapping genes, we find more enriched pathways: the beta defensin and the defensin pathways for PC1 and ethanol oxidation, glycolysis/gluconeogenesis and fatty acid omega oxidation for PC2.
 
 To further validate the proposed list of candidate SNPs involved in local adaptation, we test for an enrichment of genic or nonsynonymous SNP among the SNPs that are the most correlated with the PC. We measure the enrichment among outliers by computing odds ratio [@kudaravalli2008gene; @fagny2014exploring]. For PC1, we do not find significant enrichments (table \@ref(tab:ndf-table1)) except when measuring the enrichment of genic regions compared with nongenic regions (OR = 10.18 for the 100 most correlated SNPs, $P \leq 5 \%$ using a permutation procedure). For PC2, we find an enrichment of genic regions among outliers as well as an enrichment of nonsynonymous SNPs (table \@ref(tab:ndf-table1)). By contrast with the enrichment of genic regions for SNPs extremely correlated with the first PC, the enrichment for the variants extremely correlated with PC2 outliers is significant when using different thresholds to define outliers (table \@ref(tab:ndf-table1)).
 
@@ -989,13 +1020,13 @@ To provide an example of genome scans based on PCA when there are no clusters of
 
 (ref:ndf-fig6-cap) PCA with $K = 2$ applied to the POPRES data.
 
-```{r ndf-fig6, results='asis', fig.cap='(ref:ndf-fig6-cap)'}
+```{r ndf-fig6, results='asis', fig.cap='(ref:ndf-fig6-cap)', out.width="50%"}
 include_graphics("figure/ndf-fig6.png")
 ```
 
 (ref:ndf-fig7-cap) Manhattan plot for the POPRES data of the squared loadings $\rho_{j1}^2$ with the first principal component. For sake of presentation, only the top-ranked SNPs (top 5%) are displayed and the 100 top-ranked SNPs are colored in red.
 
-```{r ndf-fig7, results='asis', fig.cap='(ref:ndf-fig7-cap)'}
+```{r ndf-fig7, results='asis', fig.cap='(ref:ndf-fig7-cap)', out.width="50%"}
 include_graphics("figure/ndf-fig7.png")
 ```
 
@@ -1011,7 +1042,7 @@ In addition to ranking the SNPs when performing a genome scan, a threshold shoul
 where $c = \sum_{k=1}^K \lambda_k / (p \times (n - 1))$ is the proportion of variance explained by the first $K$ PCs. The chi-square approximation of equation \@ref(eq:chi-square) bears similarity with the approximation of @lewontin1973distribution that states that $F_{ST} \times (n_{\text{pops}}-1)/\bar{F}_{ST}$ follows a chi-square approximation with $(n_{\text{pops}}-1)$ degrees of freedom where $\bar{F}_{ST}$ is the mean $F_{ST}$ over loci and $(n_{\text{pops}}-1)$ is the number of populations. In the simulations of an island model and of a divergence model, quantile-to-quantile plots indicate a good fit to the theoretical chi-square distribution of expression \@ref(eq:chi-square) (supplementary fig. \@ref(fig:ndf-figS14)). When using the chi-square approximation to compute $P$-values, we evaluate if FDR can be controlled using Benjamini–Hochberg correction (Benjamini and Hochberg 1995). We find that the actual proportion of false discoveries corresponds to the target FDR for the island model but the procedure is too conservative for the divergence model (supplementary fig. \@ref(fig:ndf-figS15)). For instance, when controlling FDR at a level of 25%, the actual proportion of false discoveries is of 15%. A recent test based on $F_{ST}$ and a chi-square approximation was also found to be conservative [@whitlock2015reliable].
 Analysing the phase 1 release of the 1000 Genomes data demonstrates the suitability of a genome scan based on PCA to detect signals of positive selection. We search for variants extremely correlated with the first PC, which corresponds to differentiation between Africa and Eurasia and with the second PC, which corresponds to differentiation between Europe and Asia. For variants most correlated with the second PC, there is a significant enrichment of genic and nonsynonymous SNPs whereas the enrichment is less detectable for variants related to the first PC. The enrichment analysis confirms that positive selection may favor local adaptation of human population by increasing differentiation in genic regions especially in nonsynonymous variants [@barreiro2008natural]. Consistent with LD, we find that candidate variants are clustered along the genome with a larger clustering for variants correlated with the Europe–Asia axis of differentiation (PC2). The difference of clustering illustrates that statistical methods based on LD for detecting selection will perform differently depending on the time frame under which adaptation had the opportunity to occur [@sabeti2006positive]. The fact that population divergence, and its concomitant adaptive events, between Europe and Asia is more recent that the out-of-Africa event is a putative explanation of the difference of clustering between PC1 and PC2 outliers. Explaining the difference of enrichment between PC1 and PC2 outliers is more difficult. The weaker enrichment for PC1 outliers can be attributed either to a larger number of false discoveries or to a larger importance of other forms of natural selection such as background selection [@hernandez2011classic].
 
-When looking at the 100 SNPs most correlated with PC1 or PC2, we find genes for which selection in humans was already documented (9/24 for PC1 and 5/14 for PC2, supplementary table S9, Supplementary Material online). Known targets for selection include genes involved in pigmentation (MATP, OCA2 for PC1 and SLC45A2, SLC24A5, and MYO5C for PC2), in the regulation of sweating (EDAR for PC2), and in adaptation to pathogens (DARC, SLC39A4, and VAV2 for PC1). A 100 kb region in the vicinity of the APPBPP2 gene contains one-third of the 100 SNPs most correlated with PC1. This APPBPP2 region is a known candidate for selection and has been identified by looking for miRNA binding sites with extreme population differentiation [@li2012evidence]. APPBPP2 is a nervous system gene that has been associated with Alzheimer disease, and it may have experienced a selective sweep [@williamson2007localizing]. For some SNPs in APPBPP2, the differences of allele frequencies between Eurasiatic population and sub-Saharan populations from Africa are of the order of 90% ([http://popgen.uchicago.edu/ggv/](http://popgen.uchicago.edu/ggv/), last accessed December 2015) calling for a further functional analysis. Moreover, looking at the 100 SNPs most correlated with PC1 and PC2 confirms the importance of noncoding RNA (FAM230B, D21S2088E, LOC100133461, LINC00290, LINC01347, LINC00681), such as miRNA (MIR429), as a substrate for human adaptation [@li2012evidence; @grossman2013identifying]. Among the other regions with a large number of candidate SNPs, we also found the RTTN/CD226 regions, which contain many SNPs correlated with PC1. In different selection scans, the RTTN genes has been detected [@carlson2005genomic; @barreiro2008natural], and it is involved in the development of the human skeletal system [@wu2010positive]. An other region with many SNPs correlated with PC1 contains the ATP1A1 gene involved in osmoregulation and associated with hypertension [@gurdasani2015african]. The regions containing the largest number of SNPs correlated with PC2 are well-documented instances of adaptation in humans and includes the EDAR, SLC24A5, and SLC45A2 genes. The KCNMA1 gene contains seven SNPs correlated with PC2 and is involved in breast cancer and obesity [@jiao2011genome; @oeggerli2012role]. As for KCNMA1, the MYO5C has already been reported in selection scans although no mechanism of biological adaption has been proposed yet [@chen2010population; @fumagalli2010genome]. To summarize, the list of most correlated SNPs with the PCs identifies well-known genes related to biological adaptation in humans (EDAR, SLC24A5, SLC45A2, DARC), but also provides candidate genes that deserve further studies such as the APPBPP2, TP1A1, RTTN, KCNMA1, and MYO5C genes, as well as the ncRNAs listed above.
+When looking at the 100 SNPs most correlated with PC1 or PC2, we find genes for which selection in humans was already documented (9/24 for PC1 and 5/14 for PC2). Known targets for selection include genes involved in pigmentation (MATP, OCA2 for PC1 and SLC45A2, SLC24A5, and MYO5C for PC2), in the regulation of sweating (EDAR for PC2), and in adaptation to pathogens (DARC, SLC39A4, and VAV2 for PC1). A 100 kb region in the vicinity of the APPBPP2 gene contains one-third of the 100 SNPs most correlated with PC1. This APPBPP2 region is a known candidate for selection and has been identified by looking for miRNA binding sites with extreme population differentiation [@li2012evidence]. APPBPP2 is a nervous system gene that has been associated with Alzheimer disease, and it may have experienced a selective sweep [@williamson2007localizing]. For some SNPs in APPBPP2, the differences of allele frequencies between Eurasiatic population and sub-Saharan populations from Africa are of the order of 90% ([http://popgen.uchicago.edu/ggv/](http://popgen.uchicago.edu/ggv/), last accessed December 2015) calling for a further functional analysis. Moreover, looking at the 100 SNPs most correlated with PC1 and PC2 confirms the importance of noncoding RNA (FAM230B, D21S2088E, LOC100133461, LINC00290, LINC01347, LINC00681), such as miRNA (MIR429), as a substrate for human adaptation [@li2012evidence; @grossman2013identifying]. Among the other regions with a large number of candidate SNPs, we also found the RTTN/CD226 regions, which contain many SNPs correlated with PC1. In different selection scans, the RTTN genes has been detected [@carlson2005genomic; @barreiro2008natural], and it is involved in the development of the human skeletal system [@wu2010positive]. An other region with many SNPs correlated with PC1 contains the ATP1A1 gene involved in osmoregulation and associated with hypertension [@gurdasani2015african]. The regions containing the largest number of SNPs correlated with PC2 are well-documented instances of adaptation in humans and includes the EDAR, SLC24A5, and SLC45A2 genes. The KCNMA1 gene contains seven SNPs correlated with PC2 and is involved in breast cancer and obesity [@jiao2011genome; @oeggerli2012role]. As for KCNMA1, the MYO5C has already been reported in selection scans although no mechanism of biological adaption has been proposed yet [@chen2010population; @fumagalli2010genome]. To summarize, the list of most correlated SNPs with the PCs identifies well-known genes related to biological adaptation in humans (EDAR, SLC24A5, SLC45A2, DARC), but also provides candidate genes that deserve further studies such as the APPBPP2, TP1A1, RTTN, KCNMA1, and MYO5C genes, as well as the ncRNAs listed above.
 
 We also show that a scan based on PCA can also be used to detect more subtle footprints of positive selection. We conduct an enrichment analysis that detects polygenic adaptation at the level of biological pathways [@daub2013evidence]. We find that genes in the beta-defensin pathway are enriched in SNPs correlated with PC1. The beta-defensin genes are key components of the innate immune system and have evolved through positive selection in the catarrhine primate lineages [@hollox2008directional]. As for the HLA complex, some beta-defensin genes (DEFB1, DEFB127) show evidence of long-term balancing selection with major haplotypic clades coexisting since millions of years [@cagliani2008signature; @hollox2008directional]. We also find that genes in the omega fatty acid oxidation pathways are enriched in SNPs correlated with PC2. This pathway was also found when investigating polygenic adaptation to altitude in humans [@foll2014widespread]. The proposed explanation was that omega oxidation becomes a more important metabolic pathway when beta oxidation is defective, which can occur in case of hypoxia [@foll2014widespread]. However, this explanation is not valid in the context of the 1000 Genomes data when there are no populations living in hypoxic environments. Proposing phenotypes on which selection operates is complicated by the fact that the omega fatty acid oxidation pathway strongly overlaps with two other pathways: ethanol oxidation and glycolysis. Evidence of selection on the alcohol dehydrogenase locus have already been provided [@han2007evidence] with some authors proposing that a lower risk for alcoholism might have been beneficial after rice domestication in Asia [@peng2010adh1b]. This hypothesis is speculative and we lack a confirmed biological mechanism explaining the enrichment of the fatty acid oxidation pathway. More generally, the enrichment of the beta-defensin and of the omega fatty acid oxidation pathways confirms the importance of pathogenic pressure and of metabolism in human adaptation to different environments [@hancock2008adaptations; @barreiro2010evolutionary; @fumagalli2011signatures; @daub2013evidence].
 
@@ -1450,7 +1481,7 @@ We first compare statistical power obtained with the different statistical metho
 
 (ref:bayes-comm-maha-cap) Bayes factor corresponds to the test statistic implemented in the Bayesian version of *pcadapt* [@duforet2014genome]; the communality statistic was the default statistic in version 1.x of the R package *pcadapt* [@duforet2015detecting], and Mahalanobis distances are available since the release of the 2.0 version of the package. When there is hierarchical population structure (divergence model and range expansion), the Mahalanobis distance provides more powerful genome scans compared with the test statistic previously implemented in pcadapt. The abbreviation dist. stands for distance. Statistical power is averaged over the observed proportion of false discoveries (ranging between 0% and 50%).
 
-```{r bayes-comm-maha, fig.cap='(ref:bayes-comm-maha-cap)'}
+```{r bayes-comm-maha, fig.cap='(ref:bayes-comm-maha-cap)', fig.height=5}
 data.frame(power = c(0.291, 0.319, 0.316,
                      0.02, 0.04, 0.2,
                      0.13, 0.34, 0.46),
@@ -1495,7 +1526,7 @@ Then, we compare statistical power in a divergence model where adaptation took p
 
 (ref:power-div-cap) Statistical power averaged over the expected proportion of false discoveries (ranging between 0% and 50%) for the divergence model with three populations. We assume that adaptation took place in an external branch that follows the most recent population divergence event.
 
-```{r power-div, fig.cap='(ref:power-div-cap)'}
+```{r power-div, fig.cap='(ref:power-div-cap)', fig.height=5}
 readRDS("data/isldivrexp.rds") %>%
   filter(model == "div") %>%
   ggplot(aes(x = software,
@@ -1525,7 +1556,7 @@ The last model we consider is the model of range expansion. The package *pcadapt
 
 (ref:power-rexp-cap) Statistical power averaged over the expected proportion of false discoveries (ranging between 0% and 50%) for a range expansion model with two refugia. Adaptation took place during the recolonization event.
 
-```{r power-rexp, fig.cap='(ref:power-rexp-cap)'}
+```{r power-rexp, fig.cap='(ref:power-rexp-cap)', fig.height=5}
 readRDS("data/isldivrexp.rds") %>%
   filter(model == "rexp") %>%
   ggplot(aes(x = software,

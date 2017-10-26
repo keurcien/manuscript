@@ -30,7 +30,7 @@ C'est de cette manière qu'en 1920, Edmond Barbier, dans sa notice relative à l
 
 À la théorie néo-darwinienne est souvent opposée la théorie neutraliste développée par Motoo Kimura dans son ouvrage *The neutral theory of molecular evolution* [@kimura1983neutral], bien que ces deux théories ne soient pas incompatibles. La première suggère que les mutations apparaissent à la faveur de la sélection naturelle. La seconde affirme quant à elle que l'évolution ne serait que le résultat de mutations qui surviennent de façon tout à fait aléatoire, tout en étant sélectionnées selon le même mécanisme de sélection naturelle proposé par Darwin. 
 
-(ref:kimuravsdarwin-cap) Représentation schématique des probabilités d'occurrence pour chaque type de mutation pour la théorie sélectionniste de Darwin et pour la théorie neutraliste de Kimura [@bromham2003modern].
+(ref:kimuravsdarwin-cap) Représentation schématique des probabilités d'occurrence pour chaque type de mutation pour la théorie sélectionniste de Darwin et pour la théorie neutraliste de Kimura [@bromham2003modern]. Selon la théorie de Darwin, la plupart des mutations sont délétères et le reste des mutations confère un avantage sélectif. Selon la théorie de Kimura, une partie des mutations qui apparaissent n'ont pas d'effet sur la valeur sélective. Ces mutations sont dites neutres.
 
 ```{r kimuravsdarwin, fig.cap = '(ref:kimuravsdarwin-cap)', fig.height=3}
 data.frame(theory = sort(rep(c("Darwin", "Kimura"), 3)),
@@ -68,7 +68,9 @@ Ce changement de paradigme nous invite de ce fait à observer la sélection natu
 
 La dérive génétique correspond à tout ce qu'il y a d'aléatoire dans l'évolution d'une population. C'est le *hasard des choses*. Le nombre de descendants ou le choix de partenaire sexuel sont des exemples de phénomènes aléatoires participant à la dérive génétique. Le principe de dérive génétique est illustré en figure \@ref(fig:drift), à l'aide du modèle de Wright-Fisher tel qu'il est présenté dans l'ouvrage *Population Genetics* [@gillespie2010population]. Ce modèle simpliste suppose que la taille de la population est constante et que chaque individu de la ${n+1}^\text{ème}$ génération est issu du brassage génétique de deux individus tirés aléatoirement de la $n^\text{ème}$ génération.
 
-(ref:drift-cap) Simulation numérique de la dérive génétique. La fréquence de l'allèle étudié est simulée pour 5 populations constituées chacune de 20, 100 ou 1000 individus sur une période de 100 générations. Dans chaque population, la fréquence de l'allèle est initialement de 0.20 [@gillespie2010population].
+\newpage
+
+(ref:drift-cap) Simulation numérique de la dérive génétique à l'aide du modèle de Wright-Fisher. La fréquence de l'allèle étudié est simulée pour 5 populations constituées chacune de 20, 100 ou 1000 individus sur une période de 100 générations. Dans chaque population, la fréquence de l'allèle est initialement de 0.20 [@gillespie2010population].
 
 ```{r drift, fig.height=7, fig.cap='(ref:drift-cap)'}
 nb_generations <- 100
@@ -145,13 +147,13 @@ Le flux de gène est généralement le résultat d'évènements migratoires init
 
 #### La sélection naturelle {-}
 
-En biologie évolutive, la sélection naturelle est la force évolutive qui tend à préserver les allèles conférant des avantages quant à la viabilité ou la fertilité d'un individu. Elle agit sur les traits qui sont héritables. La grande majorité de ces traits sont transmis aux descendants en suivant le mécanisme d'hérédité génétique. 
+En biologie évolutive, la sélection naturelle est la force qui tend à préserver les allèles conférant des avantages quant à la viabilité ou la fertilité d'un individu. Elle agit sur les traits qui sont héritables. La grande majorité de ces traits sont transmis aux descendants en suivant le mécanisme d'hérédité génétique. 
 
 ### Adaptation locale
 
 #### Principe
 
-La diversité climatique et la diversité géologique terrestre ont naturellement façonné des environnements aux constitutions physiques et chimiques variées. À celles-ci viennent s'ajouter des caractéristiques écologiques résultant des interactions entre l'environnement et les organismes qui y évoluent *lato sensu*. La valeur sélective, désignant la capacité de survie et de reproduction, de ces organismes peut être impactée par les caractéristiques environnementales auxquelles ils sont exposés. Si cette valeur sélective est associée à un trait phénotypique, on dit que ce trait confère un avantage adaptatif et on parle dans ce cas d'*adaptation locale*. Une population sera ainsi dite adaptée à son environnement si elle développe, par le biais de la sélection naturelle, un ou plusieurs allèles associés à un trait adaptatif augmentant la valeur sélective des individus la constituant, en réponse aux pressions environnementales auxquelles ces individus sont soumis. À titre d'exemple, nous pouvons citer l'adaptation des populations tibétaines et andines à la haute altitude [@beall2007two].
+La diversité climatique et la diversité géologique terrestre ont naturellement façonné des environnements aux constitutions physiques et chimiques variées. À celles-ci viennent s'ajouter des caractéristiques écologiques résultant des interactions entre l'environnement et les organismes qui y évoluent *lato sensu*. La valeur sélective de ces organismes, désignant leur capacité de survie et de reproduction, peut être impactée par les caractéristiques environnementales auxquelles ils sont exposés. Si cette valeur sélective est associée à un trait phénotypique, on dit que ce trait confère un avantage adaptatif et on parle dans ce cas d'*adaptation locale*. Une population sera ainsi dite adaptée à son environnement si elle développe, par le biais de la sélection naturelle, un ou plusieurs allèles associés à un trait adaptatif augmentant la valeur sélective des individus la constituant. Ceci en réponse aux pressions environnementales auxquelles ces individus sont soumis. À titre d'exemple, nous pouvons citer l'adaptation des populations tibétaines et andines à la haute altitude [@beall2007two].
 
 (ref:andeanvstibetan-cap) Exemples de phénotypes liés à l'adaptation à la haute altitude distinguant les populations andines des populations tibétaines [@jeong2014adaptations].
 
@@ -179,7 +181,7 @@ Chez l'Homme moderne, les habitudes alimentaires et les modes de vie constituent
 
 #### L'hybridation et le flux de gène comme sources d'adaptation
 
-Un caractère (par exemple un variant allélique) peut être sélectionné au sein d'une population de différentes manières : 
+Un caractère (un variant allélique par exemple) peut être sélectionné au sein d'une population de différentes manières : 
 
 - le caractère y est déjà présent et devient adaptif suite à un changement d'environnement (*standing genetic variation*).
 
@@ -226,8 +228,6 @@ df %>%
 ```
 
 Toutefois, compte tenu de la popularité croissante des technologies NGS [@muir2016real] et des considérables volumes de données qu'elles génèrent, de nouvelles problématiques se posent quant à leur stockage et leur analyse, nécessitant l'utilisation de puissantes ressources de calcul ainsi que le développement d'algorithmes plus adaptés [@gogol2012overview].
-
-D'un point de vue statistique, l'accumulation de données, aussi bien en termes d'observations qu'en termes de variables, tend à opacifier la limite, si elle existe, entre ce qui relève du signal que l'on cherche à détecter, et ce qui n'en relève pas. Ce phénomène bien connu en statistiques porte le nom de *fléau de la dimension* [@giraud2014introduction].
 
 ### Les marqueurs génétiques
 
@@ -642,13 +642,11 @@ plot_grid(p1, p2, p3, labels = c("A", "B", "C"))
 
 Dans la mesure du possible, l'allèle de référence (resp. alternatif) est choisi de façon à correspondre à l'allèle ancestral (resp. dérivé). En pratique, le choix de l'allèle de référence et de l'allèle alternatif peut se faire de façon totalement arbitraire sans que cela n'influe sur les méthodes statistiques basées sur la variance des allèles, ce qui sera généralement le cas pour celles qui sont présentées ici. 
 
-Les matrices de génotypes seront généralement notées $G$ et seront considérées comme des éléments de $M_{pn}(\{0,1,2\})$, où $p$ désigne le nombre de locus et $n$ le nombre d'individus. Ainsi, $G_{.,i}$ désignera le vecteur de taille $p$ composé du génotype de l'individu $i$. De même, $G_{j,.}$ désignera le vecteur de taille $n$ contenant les comptages de l'allèle alternatif pour les différents individus au locus $j$. À la matrice $G$ sera associée la matrice $\tilde{G}$, normalisée pour les lignes (c'est-à-dire pour les SNPs). Notant $f_j$ la fréquence allélique de l'allèle alternatif (ou de l'allèle de référence), nous définissons $\tilde{G}_{j,.}$ par :
+Les matrices de génotypes seront généralement notées $G$ et seront considérées comme des éléments de $\mathcal{M}_{np}(\{0,1,2\})$, où $p$ désigne le nombre de locus et $n$ le nombre d'individus. Ainsi, $G_{i,.}$ désignera le vecteur de taille $p$ composé du génotype de l'individu $i$. De même, $G_{.,j}$ désignera le vecteur de taille $n$ contenant les comptages de l'allèle alternatif pour les différents individus au locus $j$. À la matrice $G$ sera associée la matrice $\tilde{G}$, normalisée pour les lignes (c'est-à-dire pour les SNPs). Notant $f_j$ la fréquence allélique de l'allèle alternatif (ou de l'allèle de référence), nous définissons $\tilde{G}_{.,j}$ par :
 
 \begin{equation}
-  \tilde{G}_{j,.} = \frac{G_{j,.} - 2f_j}{\sqrt{2f_j(1-f_j)}}
+  \tilde{G}_{.,j} = \frac{G_{.,j} - 2f_j}{\sqrt{2f_j(1-f_j)}}
 \end{equation}
-
-Le choix de cette normalisation sera discuté plus tard.
 
 ## Les motivations de la thèse
 
@@ -656,15 +654,17 @@ La production de données génétiques, volumineuses par la quantité d'informat
 
 Pour détecter les gènes responsables de cette adaptation, @xu2010genome ont réalisé un scan génomique en analysant la différenciation génétique entre une population constituée de tibétains et une autre constituée de Hans. Le résultat de ce scan génomique^[se présente généralement sous la forme d'un graphique, appelé *Manhattan plot*, représentant la statistique de test utilisée en fonction de l'emplacement chromosomique.] est présenté en figure \@ref(fig:tibetan-scan). 
 
-(ref:tibetan-scan-cap) Scan génomique utilisant la $F_{ST}$ (mesure de différenciation génétique de référence) que nous introduirons dans le chapitre suivant. Deux régions génomiques présentant des valeurs de $F_{ST}$ significativement élevées ont été identifiées sur les chromosomes 1 et 2 [@xu2010genome].
+Les SNPs qui ont la différenciation la plus élevée se trouvent dans le facteur de transcription EPAS1 qui est un facteur de transcription activé en condition d'hypoxie. À la suite de ces scans de différenciation, il a été montré en utilisant la statistique $D$ (Table \@ref(tab:tibetan-introgression)) que les variants adaptatifs sur EPAS1 ont été transmis grâce à l'introgression issue de l'Homme de Denisova [@hu2017evolutionary].
 
-```{r tibetan-scan, results='asis', fig.cap='(ref:tibetan-scan-cap)'}
+\newpage
+
+(ref:tibetan-scan-cap) Scan génomique réalisé sur des populations de tibétains et de Hans utilisant la $F_{ST}$ (mesure de différenciation génétique de référence que nous introduirons dans le chapitre suivant). Deux régions génomiques présentant des valeurs de $F_{ST}$ significativement élevées ont été identifiées sur les chromosomes 1 et 2 [@xu2010genome].
+
+```{r tibetan-scan, results='asis', fig.cap='(ref:tibetan-scan-cap)', out.width="75%"}
 include_graphics("figure/tibetan_fst.png")
 ```
 
-Les SNPs qui ont la différenciation la plus élevée se trouvent dans le facteur de transcription EPAS1 qui est un facteur de transcription activé en condition d'hypoxie. À la suite de ces scans de différenciation, il a été montré en utilisant la statistique $D$ (Table \@ref(tab:tibetan-introgression)) que les variants adaptatifs sur EPAS1 ont été transmis grâce à l'introgression issue de l'Homme de Denisova [@hu2017evolutionary].
-
-(ref:tibetan-introgression-cap) Scan génomique pour l'introgression utilisant la statistique $D$ ($D^{*}$ correspond à la normalisation de la statistique $D$ que nous introduirons dans le chapitre. Nous retrouvons bien EPAS1 dans la liste des gènes hérités de l'Homme de Denisova) [@hu2017evolutionary].
+(ref:tibetan-introgression-cap) Scan génomique pour l'introgression chez les tibétains utilisant la statistique $D$ ($D^{*}$ correspond à la normalisation de la statistique $D$ que nous introduirons dans le chapitre. Nous retrouvons bien EPAS1 dans la liste des gènes hérités de l'Homme de Denisova) [@hu2017evolutionary].
 
 ```{r tibetan-introgression, results='asis', message=FALSE}
 Chr <- c(7, 2, 2, 5, 12, 4)
@@ -688,6 +688,8 @@ data.frame(Chr = Chr,
   kable_styling(full_width = T)
 ```
 
+
+\newpage
 
 Principalement réalisés sur des données humaines, les scans génomiques se sont progressivement étendus à d'autres espèces, modèles et non-modèles [@haasl2016detecting], et les SNPs sont désormais les marqueurs les plus utilisés (Figure \@ref(fig:gwss)).
 
@@ -771,8 +773,8 @@ Toutefois, certains outils statistiques ayant été développés ne sont plus ad
 
 ### Résultats principaux et organisation du manuscript
 
-Sur la base du travail de thèse de Nicolas Duforet-Frebourg [@duforet2014statistiques], nous avons cherché dans un premier temps à améliorer la méthodologie statistique implémentée dans le logiciel PCAdapt, ainsi que les performances computationnelles, afin de garantir la possibilité de l'utiliser sur des génômes plus denses et disposant d'une plus grande résolution. Afin de permettre la publication de l'article [@duforet2015detecting], j'ai réalisé des simulations de modèles en îles et de divergence afin de valider l'approche basée sur la communalité pour réaliser des scans à sélection. J'ai ensuite développé la librairie R pcadapt et proposé une statistique de scan à sélection plus puissante que la communalité qui est la distance robuste de Mahalanobis. Ce travail correspond à la publication [@luu2017pcadapt]. La dernière contribution principale de ma thèse correspond au développement d'une méthode statistique basée sur l'ACP qui permet d'identifier les régions du génôme impliquée dans les évènement d'introgression adaptive. Ce travail correspond au manuscript *Scanning genomes for adaptive introgression using principal component analysis* en annexe et fera l'objet d'une soumission prochainement.
+Sur la base du travail de thèse de Nicolas Duforet-Frebourg [@duforet2014statistiques], nous avons cherché dans un premier temps à améliorer la méthodologie statistique implémentée dans le logiciel PCAdapt, ainsi que les performances computationnelles, afin de garantir la possibilité de l'utiliser sur des génômes plus denses et disposant d'une plus grande résolution. Afin de permettre la publication de l'article [@duforet2015detecting], j'ai réalisé des simulations de modèles en îles et de divergence afin de valider l'approche basée sur la communalité pour réaliser des scans à sélection. J'ai ensuite développé la librairie R pcadapt et proposé une statistique de scan à sélection plus puissante que la communalité qui est . Ce travail correspond à la publication [@luu2017pcadapt]. La dernière contribution principale de ma thèse correspond au développement d'une méthode statistique basée sur l'ACP qui permet d'identifier les régions du génôme impliquée dans les évènement d'introgression adaptive. Ce travail correspond au manuscript *Scanning genomes for adaptive introgression using principal component analysis* et fera l'objet d'une soumission prochainement.
 
-Dans le chapitre 2, nous commençons par décrire les différents modèles, historiques et contemporains, utilisés pour réaliser des scans génomiques pour la sélection. Ce premier chapitre rappelle ensuite quelle est l'utilisation de l'Analyse en Composantes Principales en génétique des populations. La fin du chapitre 2 rappelle les résultats obtenus avec la communalité et la distance de Mahalanobis, qui sont implémentées dans la librairie pcadapt, et qui correspondent aux publications [@duforet2015detecting; @luu2017pcadapt]. Le chapitre 3 illustre traite de l'introgression adaptative. Les chapitres 2 et 3 montrent donc comment l'ACP peut être exploitée de façon à détecter des signaux de sélection ainsi que des régions d'introgression adaptative. Enfin, nous terminerons avec les aspects computationnels et numériques qui nous ont préoccupé tout au long de la thèse, en présentant quelques comparatifs de performances réalisées avec divers algorithmes.
+Dans le chapitre 2, nous commençons par décrire les différents modèles, historiques et contemporains, utilisés pour réaliser des scans génomiques pour la sélection. Ce premier chapitre rappelle ensuite quelle est l'utilisation de l'Analyse en Composantes Principales en génétique des populations. La fin du chapitre 2 rappelle les résultats obtenus avec la communalité et la distance de Mahalanobis, qui sont implémentées dans la librairie pcadapt, et qui correspondent aux publications [@duforet2015detecting; @luu2017pcadapt]. Le chapitre 3 traite de l'introgression adaptative. Les chapitres 2 et 3 montrent comment l'ACP peut être exploitée de façon à détecter des signaux de sélection ainsi que des régions d'introgression adaptative. Enfin, nous terminerons avec les aspects computationnels et numériques qui nous ont préoccupé tout au long de la thèse, en présentant quelques comparatifs de performances réalisés avec divers algorithmes.
 
 

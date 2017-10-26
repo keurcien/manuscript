@@ -2,13 +2,11 @@
 
 Dans cette partie, nous nous intéresserons brièvement à l'aspect computationnel des méthodes qui ont été présentées dans les chapitres précédents. Le développement d'outils logiciels destinés à l'exploration de données génétiques volumineuses requiert qu'une attention particulière soit portée à l'utilisation des ressources de calcul. Étant donné que nous nous intéressons à la possibilité de réaliser des scans génomiques pour des données génétiques de grande taille, il me semble intéressant de préciser les points sur lesquels des améliorations ont été faites d'un point de vue computationnel.
 
-## Évolution de pcadapt
-
-### Du langage C au langage R
+## Du langage C au langage R
 
 La première version de pcadapt a été implémentée par Nicolas Duforet-Frebourg. Le logiciel a été initialement développé en C mais nous avons décidé de poursuivre le développement du logiciel en R/Rcpp, afin de simplifier son utilisation et de bénéficier des performances du langage C++, mais surtout de la portabilité, des outils de visualisation et de documentation du langage R. La librairie pcadapt est disponible sur CRAN. 
 
-### Du calcul de la matrice de covariance à l'algorithme IRAM
+## Du calcul de la matrice de covariance à l'algorithme IRAM
 
 Nous rappelons ici que nous nous intéressons seulement aux premières composantes principales obtenues avec l'ACP, ce qui signifie qu'il n'est pas nécessaire d'effectuer la décomposition en valeurs singulières (SVD) complète de la matrice d'apparentement génétique $G_{RM} \in \mathcal{M}_{n}(\mathbb{R})$ (où $n$ est le nombre d'individus). Il s'agit de ce que l'on appelle une décomposition en valeurs singulières tronquée. Pour effectuer l'ACP à partir d'une matrice de génotypes $\tilde{G} \in \mathcal{M}_{np}(\mathbb{R})$, il est donc nécessaire de calculer la matrice d'apparentement génétique $G_{RM}$ pour ensuite calculer la SVD de $G_{RM}$. En suivant cette procédure, le calcul de la matrice $G_{RM}$ est l'étape la plus coûteuse d'un point de vue algorithmique, car de complexité quadratique en le nombre d'individus. Cependant de nouvelles méthodes permettent d'effectuer la SVD tronquée de $G_{RM}$ sans qu'il n'y ait besoin de calculer explicitement $G_{RM}$. La méthode que nous avons choisie d'utiliser pour le calcul de l'ACP est basée sur l'algorithme IRAM (Implicitly Restarted Arnoldi Method) [@lehoucq1996deflation; @calvetti1994implicitly]. 
 
@@ -30,7 +28,8 @@ for (i in 1:length(nIND)) {
   x <- microbenchmark::microbenchmark(
     RSpectra::svds(m %*% t(m), k = 2),
     RSpectra::svds(m, k = 2),
-    times = 1
+    times = 1,
+    control = list(order = "inorder")
   )
   df$Time[df$Method == "classic" & df$nIND == nIND[i]] <- x$time[1] * 1e-9
   df$Time[df$Method == "iram" & df$nIND == nIND[i]] <- x$time[2] * 1e-9
@@ -42,16 +41,14 @@ df %>%
   geom_point(size = 2) +
   xlab("Nombre d'observations") +
   ylab("Temps (en secondes)") +
-  scale_color_manual(name = "Méthode", 
+  scale_color_manual(name = "Méthode",
                      labels = c("Classique", "IRAM"),
                      values = c("#E69F00", "#0072B2")) +
   theme_bw()
   
 ```
 
-
-
-#### ACP et valeurs manquantes {-}
+## ACP et valeurs manquantes
 
 Pour tenir compte de la présence de données manquantes dans le calcul de l'ACP, plusieurs stratégies peuvent être envisagées [@dray2015principal] :
 
@@ -74,8 +71,9 @@ using namespace Rcpp;
 NumericMatrix PairGRM(const NumericMatrix &G,
                       const NumericVector &p) {
 
-  // In our algorithms, individuals are stored in columns and SNPs are stored
-  // in rows.
+  // In our algorithms, individuals are stored in columns 
+  // and SNPs are stored in rows.
+   
   int nSNP = G.nrow(); // number of SNPs
   int nIND = G.ncol(); // number of individuals
   NumericMatrix GRM(nIND, nIND); // Genetic Relationship Matrix
@@ -86,7 +84,8 @@ NumericMatrix PairGRM(const NumericMatrix &G,
       // value = GRM(i, j)
       double value = 0;
       double tmp = 0; 
-      // number of missing values for each pair of individuals (i, j)
+      // number of missing values for each pair 
+      // of individuals (i, j)
       // nbmv = \sum_{k = 1}^{nSNP} \delta_{ik} \delta{jk}
       int nbmv = 0;
 
@@ -108,13 +107,15 @@ NumericMatrix PairGRM(const NumericMatrix &G,
 }
 ```
 
-#### Algorithme IRAM et données manquantes {-}
+### Algorithme IRAM et données manquantes {-}
 
 Cependant, comme cela a été dit dans le paragraphe précédent, nous souhaitons nous détacher du calcul de la matrice $G_{RM}$. Nous avons donc cherché à adapter l'algorithme IRAM pour qu'il puisse tenir compte de la présence de données manquantes, à la manière de la fonction `PairGRM` décrite ci-dessus. Pour cela nous avons adopté la même démarche, mais en l'appliquant aux produits $\tilde{G}^Tx$ et $\tilde{G}y$ où $x \in \mathbb{R}^n$ et $y \in \mathbb{R}^p$. Plus précisément, plutôt que de calculer $\tilde{G}^Tx$ et $\tilde{G}y$, nous calculons les produits $\frac{1}{n}\tilde{G}^Tx$ et $\frac{1}{p}\tilde{G}y$ ce qui nous permet de tenir compte des données manquantes de la façon suivante :
 
 \begin{equation}
-  \forall j \in [|1,p|], \; \left(\frac{1}{n}\tilde{G}^Tx\right)_j = \frac{1}{\sum_{i=1}^n \delta_{ij}} \sum_{i = 1}^n \tilde{G}_{ij} \delta_{ij} x_i,  \\
-  \forall i \in [|1,n|], \; \left(\frac{1}{p}\tilde{G}y\right)_i = \frac{1}{\sum_{j=1}^p \delta_{ij}} \sum_{j = 1}^p \tilde{G}_{ij} \delta_{ij} y_j,
+  \begin{split}
+  \forall j \in [|1,p|], \; \left(\frac{1}{n}\tilde{G}^Tx\right)_j &= \frac{1}{\sum_{i=1}^n \delta_{ij}} \sum_{i = 1}^n \tilde{G}_{ij} \delta_{ij} x_i,  \\
+  \forall i \in [|1,n|], \; \left(\frac{1}{p}\tilde{G}y\right)_i &= \frac{1}{\sum_{j=1}^p \delta_{ij}} \sum_{j = 1}^p \tilde{G}_{ij} \delta_{ij} y_j,
+  \end{split}
   (\#eq:prodMatVec)
 \end{equation}
 
@@ -169,7 +170,7 @@ NumericVector prodtGx(const NumericMatrix &G,
 }
 ```
 
-#### Précision de la SVD en présence de données manquantes {-}
+### Précision de la SVD en présence de données manquantes {-}
 
 Nous comparons ici les différentes méthodes dont nous avons parlé dans le paragraphe précédent, à savoir flashpca, PairGRM et notre nouvelle méthode. La comparaison est réalisée sur un échantillon du jeu de données POPRES. Nous évaluons la sensibilité des différentes méthodes à la présence de données manquantes en comparant les valeurs singulières et les scores de l'ACP obtenus par chacune des méthodes en présence de données manquantes aux valeurs singulières et scores de l'ACP obtenus avec flashpca en l'absence de données manquantes. Les résultats de cette comparaison sont donnés en figure 
 
@@ -270,7 +271,7 @@ df %>%
 
 En conclusion, la possibilité de déduire la SVD d'une matrice $A$ à partir de la SVD d'une matrice proportionnelle à celle-ci nous a permis d'adapter la méthode IRAM au cas de matrices contenant des données manquantes. Par ailleurs, d'après nos comparaisons numériques, notre nouvelle méthode est moins sensible à la présence de données manquantes.
 
-### Du format .pcadapt au format .bed
+## Du format .pcadapt au format .bed
 
 Le format .pcadapt stocke la matrice de génotypes dans un fichier texte où chaque ligne représente un marqueur génétique. Les caractères sont séparés par un espace et les valeurs manquantes sont encodées par des `9`. Ce format a été utilisé car le calcul de l'ACP pouvait être effectué sans qu'il n'y ait besoin de charger la matrice de génotypes dans la mémoire vive. La matrice $G_{RM}$ était alors calculée de façon incrémentale, en parcourant le fichier ligne par ligne (et donc SNP par SNP). Ce format, bien que très simple, présente quelques inconvénients :
 
@@ -298,6 +299,8 @@ data.frame(value = c("0", "NA", "1", "2"),
 ```
 
 Pour résumer, un fichier .bed et un fichier .pcadapt contiennent exactement la même information. Un fichier .bed occupe exactement 8 fois moins d'espace mémoire physique qu'un fichier au format .pcadapt. Nous avons donc décidé de développer nos algorithmes afin qu'ils puissent être directement utilisés sur des fichiers .bed sans qu'il n'y ait besoin de les convertir au format .pcadapt. 
+
+\newpage
 
 ## Interface Shiny
 

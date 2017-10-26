@@ -1,74 +1,72 @@
 # Aspect computationnel 
 
-Dans cette partie, nous nous intéresserons brièvement à l'aspect computationnel des méthodes qui ont été présentées dans les chapitres précédents. Le développement d'outils logiciels destinés à l'exploration de données génétiques volumineuses requiert qu'une attention toute particulière soit portée à l'utilisation des ressources de calcul. Étant donné que nous nous intéressons à la possibilité de réaliser des scans génomiques pour des données génétiques de grande taille, il me semble intéressant de préciser les points sur lesquels des améliorations ont été faites d'un point de vue computationnel.
+Dans cette partie, nous nous intéresserons brièvement à l'aspect computationnel des méthodes qui ont été présentées dans les chapitres précédents. Le développement d'outils logiciels destinés à l'exploration de données génétiques volumineuses requiert qu'une attention particulière soit portée à l'utilisation des ressources de calcul. Étant donné que nous nous intéressons à la possibilité de réaliser des scans génomiques pour des données génétiques de grande taille, il me semble intéressant de préciser les points sur lesquels des améliorations ont été faites d'un point de vue computationnel.
 
+## Évolution de pcadapt
 
-Blockwise computation of covariance matrix
-Random SVD
-Storage in binary format
-Memory-mapping
+### Du langage C au langage R
 
-## Données d'entrée
+La première version de pcadapt a été implémentée par Nicolas Duforet-Frebourg. Le logiciel a été initialement développé en C mais nous avons décidé de poursuivre le développement du logiciel en R/Rcpp, afin de simplifier son utilisation et de bénéficier des performances du langage C++, mais surtout de la portabilité, des outils de visualisation et de documentation du langage R. La librairie pcadapt est disponible sur CRAN. 
 
-La matrice de génotype est stockée dans un fichier texte où chaque ligne représente un marqueur génétique. Les caractères sont séparés par un espace et les valeurs manquantes sont encodées par des `9`. Ce format a été utilisé car le calcul de l'ACP pouvait être effectué en parcourant une seule fois le fichier, ligne par ligne, correspondant au sens de lecture du fichier.
+### Du calcul de la matrice de covariance à l'algorithme IRAM
 
-Ce format, bien que très simple, n'est en réalité pas adapté au traitement informatique. Il présente plusieurs désavantages :
+Nous rappelons ici que nous nous intéressons seulement aux premières composantes principales obtenues avec l'ACP, ce qui signifie qu'il n'est pas nécessaire d'effectuer la décomposition en valeurs singulières (SVD) complète de la matrice d'apparentement génétique $G_{RM} \in \mathcal{M}_{n}(\mathbb{R})$ (où $n$ est le nombre d'individus). Il s'agit de ce que l'on appelle une décomposition en valeurs singulières tronquée. Pour effectuer l'ACP à partir d'une matrice de génotypes $\tilde{G} \in \mathcal{M}_{np}(\mathbb{R})$, il est donc nécessaire de calculer la matrice d'apparentement génétique $G_{RM}$ pour ensuite calculer la SVD de $G_{RM}$. En suivant cette procédure, le calcul de la matrice $G_{RM}$ est l'étape la plus coûteuse d'un point de vue algorithmique, car de complexité quadratique en le nombre d'individus. Cependant de nouvelles méthodes permettent d'effectuer la SVD tronquée de $G_{RM}$ sans qu'il n'y ait besoin de calculer explicitement $G_{RM}$. La méthode que nous avons choisie d'utiliser pour le calcul de l'ACP est basée sur l'algorithme IRAM (Implicitly Restarted Arnoldi Method) [@lehoucq1996deflation; @calvetti1994implicitly]. 
 
-- Les espaces n'encodent aucune information. La moitié de l'espace mémoire occupée par le fichier est donc essentiellement vide d'un point de vue informatif.
+L'algorithme IRAM repose sur l'idée que les vecteurs propres d'une matrice carrée $A \in \mathcal{M}_{n}(\mathbb{R})$ peuvent être estimés en construisant une base orthogonale de l'espace vectoriel $\mathcal{K}_k(x) = \text{Vect}(x, Ax, A^2x, \dots, A^kx)$ engendré par les itérations de $A$ où $x \in \mathbb{R}^n$ et $k \in \mathbb{N}$. $\mathcal{K}_k(x)$ est connu sous le nom d'espace de Krylov. Dans notre cas, la matrice carrée que l'on souhaite décomposer est la matrice $G_{RM}$. Pour construire les espaces de Krylov associés à $G_{RM}$, il faut donc calculer les produits $G_{RM}x$. Pour ne pas avoir à calculer $G_{RM}$ lors du calcul de $G_{RM}x$ (nous rappelons que $G_{RM} = \frac{1}{p}\tilde{G}\tilde{G}^T$), il suffit de calculer d'abord $y = \frac{1}{\sqrt{p}}\tilde{G}^Tx$ puis $\frac{1}{\sqrt{p}}\tilde{G}y$, résultant en un coût algorithmique linéaire en $n$ et en $p$. 
 
-- Les génotypes 0, 1, 2 et 9 sont encodés en ASCII, comme tout caractère (au sens informatique du terme), sur un octet (ou 8 bits). Si bien qu'un octet peut en réalité contenir l'information de quatre génotypes (2 bits par génotype). Si l'on s'en réfère au format .bed, les génotypes sont encodés de la façon suivante :
+(ref:svd-speed-cap) Comparaison des temps de calcul pour la SVD tronquée de rang 2 obtenue avec la méthode classique et la méthode IRAM. Le nombre de variables est fixé à 10000 et le nombre d'observations varie de 25 à 1000. Nous constatons que pour un nombre d'observations élevé, l'algorithme IRAM est plus efficace que la méthode nécessitant de calculer la matrice de covariance.
 
-A DETAILLER
+```{r svd-speed, results='asis', fig.cap='(ref:svd-speed-cap)', warning=FALSE}
+nIND <- c(25, 50, 100, 250, 500, 1000)
+nSNP <- 10000
+df <- data.frame(Method = c(rep("classic", length(nIND)),
+                            rep("iram", length(nIND))),
+                 nIND = nIND,
+                 Time = 0)
 
-- L'accès en lecture à un fichier texte est bien moins rapide que l'accès à un fichier binaire.
+for (i in 1:length(nIND)) {
+  m <- matrix(runif(nIND[i] * nSNP), nrow = nIND[i])
+  m <- scale(m)
+  x <- microbenchmark::microbenchmark(
+    RSpectra::svds(m %*% t(m), k = 2),
+    RSpectra::svds(m, k = 2),
+    times = 1
+  )
+  df$Time[df$Method == "classic" & df$nIND == nIND[i]] <- x$time[1] * 1e-9
+  df$Time[df$Method == "iram" & df$nIND == nIND[i]] <- x$time[2] * 1e-9
+}
 
-- Le format .pcadapt n'est utilisé que par pcadapt.
-
-Pour résumer, un fichier .bed et un fichier .pcadapt contiennent exactement la même information. Un fichier .bed occupe exactement 8 fois moins d'espace mémoire physique d'un fichier .pcadapt. Même sans tenir compte de la vitesse de lecture, selon que l'on lit un fichier binaire ou un fichier texte, il est 8 fois plus rapide de récupérer une entrée de la matrice de génotype.
-
-## Memory-mapping
-
-La version C de PCAdapt utilisait le fait qu'il était possible de calculer la matrice de covariance entre les individus en stockant un certain nombre de SNPs à chaque fois. Afin de ne pas charger entièrement la matrice de génotypes dans la mémoire vive, les valeurs de la matrice étaient lues depuis le fichier. Les principaux inconvénients de cette façon de procéder résident dans l'accès au fichier en tant que *stream* :
-
-- Accès lent
-
-- Accès aléatoire impossible^[l'accès aléatoire (pour une matrice) correspond au fait de pouvoir accéder à l'élément $(i, j)$ de la matrice sans avoir à lire les valeurs qui le précèdent.].
-
-La library C++ `boost` permet de *mapper* un fichier, créant des accès aléatoires à ce fichier sans qu'il y ait besoin de charger le fichier.
-
-## Interface Shiny
-
-Grâce au logiciel R, il est possible de pousser encore plus loin la simplification d'utilisation des logiciels et des packages développés. À l'instar du package adegenet, nous proposons une interface web utilisable localement et facilement déployable sur des serveurs distants.
-
-(ref:shiny-app-cap) Interface Shiny de la librairie pcadapt. 
-
-```{r shiny-app, fig.cap='(ref:shiny-app-cap)', out.width="100%"}
-knitr::include_app("https://keurcien.shinyapps.io/app-pcadapt")
+df %>% 
+  ggplot(aes(x = nIND, y = Time, color = Method)) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  xlab("Nombre d'observations") +
+  ylab("Temps (en secondes)") +
+  scale_color_manual(name = "Méthode", 
+                     labels = c("Classique", "IRAM"),
+                     values = c("#E69F00", "#0072B2")) +
+  theme_bw()
+  
 ```
 
-## ACP et données manquantes
-
-Pour rappel, en génétique des populations, réaliser l'ACP sur des données de génômes consiste à faire la décomposition en valeurs singulières de la matrice de relation génétique.
-
-\begin{equation}
-  GRM_{ij} = \frac{1}{p} \sum_{k = 1}^p \frac{(G_{ki} - 2p_k) \times (G_{kj} - 2p_k)}{2p_i(1-p_i)}
-\end{equation}
 
 
-Pour tenir compte de la présence de données manquantes, plusieurs stratégies peuvent être envisagées [@dray2015principal] :
+#### ACP et valeurs manquantes {-}
 
-- Imputer : remplacer chaque entrée manquante par une valeur qu'elle peut potentiellement prendre. Certaines méthodes imputent les valeurs manquantes par les moyennes correspondantes [@abraham2014fast], ou suggèrent d'utiliser des logiciels destinés à l'imputation [@browning2016genotype; @delaneau2012linear].
+Pour tenir compte de la présence de données manquantes dans le calcul de l'ACP, plusieurs stratégies peuvent être envisagées [@dray2015principal] :
 
-- Tenir compte des données manquantes dans le calcul d'estimateurs : par exemple pour calculer la corrélation entre deux individus $i$ et $j$, sont exclus du calcul tout marqueur génétique manquant chez l'individu $i$ ou $j$. La relation \@ref(eq:GRM) devient alors :
+- Imputer : chaque entrée manquante est remplacée par une valeur et l'ACP est réalisée à partir de la matrice de génotypes complétée. Dans le logiciel flashpca par exemple, si la valeur $G_{ij}$ est manquante, elle complétée par la valeur moyenne observée sur le $j$-ème locus [@abraham2014fast]. D'autres suggèrent encore d'utiliser des logiciels spécifiquement conçus pour l'imputation de données génétiques comme Beagle ou SHAPEIT [@browning2016genotype; @delaneau2012linear].
+
+- Tenir compte des données manquantes dans le calcul de $G_{RM}$ : lors du calcul de la corrélation entre deux individus $i$ et $j$, sont exclus du calcul tout marqueur génétique manquant chez l'individu $i$ ou $j$.
 
 \begin{equation}
-  GRM_{ij} = \frac{1}{\sum_{k=1}^p \delta_{ki}\delta_{kj}} \sum_{k = 1}^p \frac{(G_{ki} - 2p_k) \times (G_{kj} - 2p_k)}{2p_k(1-p_k)} \delta_{ki} \delta_{kj}
+  G_{RM, ij} = \frac{1}{\sum_{k=1}^p \delta_{ik}\delta_{jk}} \sum_{k = 1}^p \frac{(G_{ik} - 2p_k) \times (G_{jk} - 2p_k)}{2p_k(1-p_k)} \delta_{ik} \delta_{jk}
   (\#eq:GRM-missing)
 \end{equation}
 
-où $\delta_{ki} = 0$ si $G_{ki}$ est manquant et $\delta_{ki} = 1$ sinon.
+où $\delta_{ik} = 0$ si $G_{ik}$ est manquant et $\delta_{ik} = 1$ sinon. Dans le cas où il n'y a pas de valeur manquante, nous retrouvons bien l'expression donnée par l'équation \@ref(eq:GRM). Un exemple d'implémentation en Rcpp du calcul de $G_{RM}$ tenant compte des données manquantes est donné ci-dessous.
 
-```{r engine='Rcpp', eval=FALSE, echo=TRUE}
+```{r engine='Rcpp', eval=TRUE, echo=TRUE}
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -76,6 +74,8 @@ using namespace Rcpp;
 NumericMatrix PairGRM(const NumericMatrix &G,
                       const NumericVector &p) {
 
+  // In our algorithms, individuals are stored in columns and SNPs are stored
+  // in rows.
   int nSNP = G.nrow(); // number of SNPs
   int nIND = G.ncol(); // number of individuals
   NumericMatrix GRM(nIND, nIND); // Genetic Relationship Matrix
@@ -87,7 +87,7 @@ NumericMatrix PairGRM(const NumericMatrix &G,
       double value = 0;
       double tmp = 0; 
       // number of missing values for each pair of individuals (i, j)
-      // nbmv = \sum_{k = 1}^{nSNP} \delta_{ki} \delta{kj}
+      // nbmv = \sum_{k = 1}^{nSNP} \delta_{ik} \delta{jk}
       int nbmv = 0;
 
       // Loop over the SNPs to compute the dot product
@@ -100,91 +100,209 @@ NumericMatrix PairGRM(const NumericMatrix &G,
           nbmv++;
         }
       }
-
       // Divide by the number of non-missing values for (i, j)
       GRM(i, j) = value / (nSNP - nbmv);
-
     }
   }
-
   return GRM;
-
 }
 ```
 
-Le calcul de la matrice des relations génétiques affiche une complexité algorithmique en $O(pn^2)$ et est donc très coûteux d'un point de vue computationnel. Des méthodes provenant de la théorie des matrices aléatoires proposent des algorithmes permettant d'effectuer la décomposition en valeurs singulières en $O(pn)$ [@baglama2005augmented]. Cependant, la littérature est assez peu fournie quant à la possibilité d'utiliser ces méthodes à des données comportant des données manquantes [@baglama2005augmented]. Nous proposons ici une façon de compter
+#### Algorithme IRAM et données manquantes {-}
 
-```{r, eval = FALSE}
-pMv <- function(X, x, m, s) {
+Cependant, comme cela a été dit dans le paragraphe précédent, nous souhaitons nous détacher du calcul de la matrice $G_{RM}$. Nous avons donc cherché à adapter l'algorithme IRAM pour qu'il puisse tenir compte de la présence de données manquantes, à la manière de la fonction `PairGRM` décrite ci-dessus. Pour cela nous avons adopté la même démarche, mais en l'appliquant aux produits $\tilde{G}^Tx$ et $\tilde{G}y$ où $x \in \mathbb{R}^n$ et $y \in \mathbb{R}^p$. Plus précisément, plutôt que de calculer $\tilde{G}^Tx$ et $\tilde{G}y$, nous calculons les produits $\frac{1}{n}\tilde{G}^Tx$ et $\frac{1}{p}\tilde{G}y$ ce qui nous permet de tenir compte des données manquantes de la façon suivante :
 
+\begin{equation}
+  \forall j \in [|1,p|], \; \left(\frac{1}{n}\tilde{G}^Tx\right)_j = \frac{1}{\sum_{i=1}^n \delta_{ij}} \sum_{i = 1}^n \tilde{G}_{ij} \delta_{ij} x_i,  \\
+  \forall i \in [|1,n|], \; \left(\frac{1}{p}\tilde{G}y\right)_i = \frac{1}{\sum_{j=1}^p \delta_{ij}} \sum_{j = 1}^p \tilde{G}_{ij} \delta_{ij} y_j,
+  (\#eq:prodMatVec)
+\end{equation}
+
+où $\delta_{ij} = 0$ si $G_{ij}$ est manquant et $\delta_{ij} = 1$ sinon. En l'absence de données manquantes, cette méthode donne une estimation du produit $\frac{1}{np}\tilde{G}\tilde{G}^Tx = \frac{1}{n}G_{RM}x$, ce qui signifie que si l'on applique l'algorithme IRAM en utilisant les produits définis à l'équation \@ref(eq:prodMatVec), nous nous retrouvons à effectuer la SVD de $\frac{1}{n}G_{RM}$ et non pas celle de $G_{RM}$. Pour déduire la SVD de $G_{RM}$ à partir de la SVD de $\frac{1}{n}G_{RM}$, il suffit simplement de multiplier les valeurs propres de $\frac{1}{n}G_{RM}$ par $n$, les vecteurs propres étant les mêmes pour les deux décompositions (à une rotation près).
+
+```{r engine='Rcpp', eval=TRUE}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericVector prodGx(const NumericMatrix &G,
+                     const NumericVector &x,
+                     const NumericVector &p) {
+  int nSNP = G.nrow();
+  int nIND = G.ncol();
+  NumericVector res(nSNP);
+  for (int k = 0; k < nSNP; k++) {
+    double value = 0;
+    int nbmv = 0;
+    for (int j = 0; j < nIND; j++) {
+      if ((!NumericVector::is_na(G(k, j)))) {
+        value += (G(k, j) - 2 * p[k]) * x[j] / (sqrt(2 * p[k] * (1 - p[k])));
+      } else {
+        nbmv++;
+      }
+    } 
+    res[k] = value / (nIND - nbmv);
+  }
+  return(res);
 }
 
-rsvdm <- function(X, k) {
-  miss.ind <- apply(X, MARGIN = 1, FUN = function(h) {sum(is.na(h))})
-  miss.snp <- apply(X, MARGIN = 2, FUN = function(h) {sum(is.na(h))})
-  p.ind <- (ncol(X) - miss.ind) / ncol(X)
-  p.snp <- (nrow(X) - miss.snp) / nrow(X)
-  X.fill <- X
-  X.fill[is.na(X)] <- 0
-  m <- apply(X, MARGIN = 2, FUN = function(h) {mean(h, na.rm = TRUE) / 2})
-  s <- sqrt(2 * m * (1 - m))
+// [[Rcpp::export]]
+NumericVector prodtGx(const NumericMatrix &G,
+                      const NumericVector &x,
+                      const NumericVector &p) {
+  int nSNP = G.nrow();
+  int nIND = G.ncol();
+  NumericVector res(nIND);
+  for (int j = 0; j < nIND; j++) {
+    double value = 0;
+    int nbmv = 0;
+    for (int k = 0; k < nSNP; k++) {
+      if ((!NumericVector::is_na(G(k, j)))) {
+        value += (G(k, j) - 2 * p[k]) * x[k] / (sqrt(2 * p[k] * (1 - p[k])));  
+      } else {
+        nbmv++;
+      }
+    }
+    res[j] = value / (nSNP - nbmv);
+  }
+  return(res);
+}
+```
 
+#### Précision de la SVD en présence de données manquantes {-}
+
+Nous comparons ici les différentes méthodes dont nous avons parlé dans le paragraphe précédent, à savoir flashpca, PairGRM et notre nouvelle méthode. La comparaison est réalisée sur un échantillon du jeu de données POPRES. Nous évaluons la sensibilité des différentes méthodes à la présence de données manquantes en comparant les valeurs singulières et les scores de l'ACP obtenus par chacune des méthodes en présence de données manquantes aux valeurs singulières et scores de l'ACP obtenus avec flashpca en l'absence de données manquantes. Les résultats de cette comparaison sont donnés en figure 
+
+(ref:missing-values-comparison-cap) Comparaison des scores d'ACP obtenus avec flashpca, PairGRM et pcadapt pour différentes proportions de valeurs manquantes distribuées uniformément. Nous calculons l'erreur moyenne quadratique (EMQ) pour le calcul des 5 premiers axes de l'ACP et 5 premières valeurs singulières.
+
+```{r missing-values-comparison, results='asis', fig.cap='(ref:missing-values-comparison-cap)', warning=FALSE}
+G <- readRDS("data/subset_popres.rds")
+f <- apply(G, MARGIN = 1, FUN = function(h) {mean(h) / 2})
+
+iram = function(X, k, p) {
   A <- function(x, args) {
-    # Input vector of length p
-    x <- (x * p.snp / s)
-    return((X.fill %*% x - 2 * sum(x * m)))
+    return(prodtGx(X, x, p)) # Input vector of length p
   }
   Atrans <- function(x, args) {
-    # Input vector of length n
-    x <- x * p.ind
-    return(((t(X.fill) %*% x  - 2 * sum(x) * m) / s))
+    return(prodGx(G, x, p)) # Input vector of length n
   }
   res <- RSpectra::svds(A, k, nu = k, nv = 0, Atrans = Atrans,
                         opts = list(tol = 1e-4, maxitr = 100),
-                        dim = c(nrow(X), ncol(X)))
+                        dim = c(ncol(X), nrow(X)))
   return(res)
 }
 
-obj.rsvd <- rsvdm(t(geno.unif), 2)
-
-rds <- readRDS("data/Case2.rds")
-G <- rds$geno
-nIND <- ncol(rds$geno)
-nSNP <- nrow(rds$geno)
-
-### PCA with no missing value
-maf <- pcadapt::cmpt_minor_af(G, 2)
-Gs <- scale(t(G), center = TRUE, scale = sqrt(2 * maf * (1 - maf)))
-ref.svd <- RSpectra::svds(Gs, k = 2)
-
-geno.unif <- rds$geno
-
-# Total percentage of missing values
-mv.tot.p <- 0.10
-n.mv <- floor(nIND * nSNP * mv.tot.p)
-
-# Uniform distribution of missing values (MAR)
-idx.mv <- sample(1:(nSNP * nIND), n.mv, TRUE)
-geno.unif[idx.mv] <- NA
-
-# Median imputation
-geno.median <- geno.unif
-snp.median <- apply(geno.unif, MARGIN = 1, FUN = function(X) {median(X, na.rm = TRUE)})
-for (i in 1:length(snp.median)) {
-  geno.median[i, which(is.na(geno.unif[i, ]))] <- snp.median[i]
+PC_rmse = function(U1, U2) {
+  res <- 0
+  for (k in 1:ncol(U1)) {
+    res <- res + min(Metrics::rmse(U1[, k], U2[, k]),
+                     Metrics::rmse(U1[, k], -U2[, k]))
+  }
+  return(res)
 }
 
-pcadapt.svd <- pcadapt(geno.unif, K = 2, min.maf = 0)
-median.svd <- pcadapt(geno.median, K = 2, min.maf = 0)
-plot(ref.svd$u[, 1], pcadapt.svd$scores[, 1])
+list.methods <- c("flashpca", "PairGRM", "pcadapt")
+N.rep <- 25
+n.comp <- 5
+pmv <- c(0, 1, 5, 10, 25) / 100
 
-sum(abs(ref.svd$u[, 1] - pcadapt.svd$scores[, 1])^2)
-sum(abs(ref.svd$u[, 1] - median.svd$scores[, 1])^2)
-sum(abs(ref.svd$u[, 1] - obj.rsvd$u[, 1])^2)
+df <- rbind(data.frame(Percentage = rep(pmv, length(list.methods)),
+                       Method = c(sort(rep(list.methods, length(pmv)))),
+                       RMSE = 0,
+                       X = "Scores"),
+            data.frame(Percentage = rep(pmv, length(list.methods)),
+                       Method = c(sort(rep(list.methods, length(pmv)))),
+                       RMSE = 0,
+                       X = "Valeurs singulières"))
 
+for (i in 1:length(pmv)) {
+  for (n.rep in 1:N.rep) {
+    G.miss <- G
+    nbmv <- round(pmv[i] * ncol(G) * nrow(G))
+    # Generate uniformly distributed missing values
+    mv <- sample(1:length(G), nbmv, replace = FALSE)
+    G.miss[mv] <- NA
+
+    f.miss <- apply(G.miss, 
+                    MARGIN = 1, 
+                    FUN = function(h) {mean(h, na.rm = TRUE) / 2})
+    
+    # PCA with no missing values
+    obj.true <- flashpcaR::flashpca(t(G), ndim = n.comp)
+    
+    for (k in 1:length(list.methods)) {
+      # PCA with missing values
+      if (list.methods[k] == "flashpca") {
+        obj.flash <- flashpcaR::flashpca(t(G.miss), ndim = n.comp)
+        x <- PC_rmse(obj.true$vectors, obj.flash$vectors)
+        y <- Metrics::rmse(obj.true$values, obj.flash$values)
+      } else if (list.methods[k] == "PairGRM") {
+        GRM <- PairGRM(G.miss, f.miss)  
+        obj.PairGRM <- svd(GRM)
+        x <- PC_rmse(obj.true$vectors, obj.PairGRM$u[, 1:n.comp])
+        y <- Metrics::rmse(obj.true$values, obj.PairGRM$d[1:n.comp])
+      } else if (list.methods[k] == "pcadapt") {
+        obj.IRAM <- iram(G.miss, k = n.comp, p = f.miss)
+        x <- PC_rmse(obj.true$vectors, obj.IRAM$u)
+        y <- Metrics::rmse(obj.true$values, obj.IRAM$d^2 * ncol(G))
+      }
+      idx.u <- (df$Percentage == pmv[i] & df$Method == list.methods[k] & df$X == "Scores")
+      idx.d <- (df$Percentage == pmv[i] & df$Method == list.methods[k] & df$X == "Valeurs singulières")
+      df$RMSE[idx.u] <- df$RMSE[idx.u] + x / N.rep
+      df$RMSE[idx.d] <- df$RMSE[idx.d] + y / N.rep
+    }
+  }
+}
+
+df %>% 
+  ggplot(aes(x = Percentage, 
+             y = RMSE, 
+             color = Method)) +
+  facet_wrap(~X, scales = "free") +
+  xlab("Proportion de données manquantes") +
+  ylab("EMQ moyen") +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  scale_color_manual(name = "Méthode", values = c("#E69F00", "#009E73", "#0072B2")) +
+  theme_bw() +
+  theme(legend.position = "bottom")
 ```
 
+En conclusion, la possibilité de déduire la SVD d'une matrice $A$ à partir de la SVD d'une matrice proportionnelle à celle-ci nous a permis d'adapter la méthode IRAM au cas de matrices contenant des données manquantes. Par ailleurs, d'après nos comparaisons numériques, notre nouvelle méthode est moins sensible à la présence de données manquantes.
 
-Bien évidemment cela ne dépend pas uniquement des algorithmes utilisés et il faut aussi tenir compte des ressources de calcul mises à disposition des utilisateurs. Nous avons néanmoins pris le parti de proposer un outil permettant de réaliser des scans génomiques pour la sélection sur des données pouvant contenir jusqu'à plusieurs millions de marqueurs génétiques génotypés pour plusieurs milliers d'individus, sans que cela ne requiert une utilisation démesurée de mémoire vive.
+### Du format .pcadapt au format .bed
 
+Le format .pcadapt stocke la matrice de génotypes dans un fichier texte où chaque ligne représente un marqueur génétique. Les caractères sont séparés par un espace et les valeurs manquantes sont encodées par des `9`. Ce format a été utilisé car le calcul de l'ACP pouvait être effectué sans qu'il n'y ait besoin de charger la matrice de génotypes dans la mémoire vive. La matrice $G_{RM}$ était alors calculée de façon incrémentale, en parcourant le fichier ligne par ligne (et donc SNP par SNP). Ce format, bien que très simple, présente quelques inconvénients :
 
+- les espaces n'encodent aucune information. La moitié de l'espace mémoire occupée par le fichier est donc essentiellement vide d'un point de vue informatif.
+
+- les génotypes 0, 1, 2 et 9 sont encodés en ASCII et donc chaque valeur occupe un octet (ou 8 bits). 
+
+Le logiciel PLINK [@purcell2007plink] dispose du format de fichier .bed qui présente bien plus d'avantages :
+
+- le format .bed est un format de fichier binaire, l'accès à un fichier binaire est plus rapide que l'accès à un fichier texte.
+
+- sachant qu'il n'y a que 4 valeurs possibles pour un génotype, chaque génotype peut être encodé sur 2 bits (Table \@ref(tab:encoding-plink)).
+
+(ref:encoding-plink-cap) Encodage des génotypes dans le format .bed. Les génotypes sont encodés sur 2 bits ce qui permet de stocker 4 génotypes sur un octet, contrairement au format .pcadapt où chaque génotype est encodé sur un octet. Le quadruplet `2 1 NA 2` sera par exemple encodé par `11100111`.
+
+```{r encoding-plink, results='asis', message=FALSE, eval=TRUE}
+data.frame(value = c("0", "NA", "1", "2"),
+           encoding = c("00", "01", "10", "11")) %>%
+    knitr::kable(col.names = c("Génotype",
+                               "Encodage"),
+               caption = '(ref:encoding-plink-cap)',
+               booktabs = TRUE,
+               escape = TRUE) %>%
+  kable_styling(full_width = T)
+```
+
+Pour résumer, un fichier .bed et un fichier .pcadapt contiennent exactement la même information. Un fichier .bed occupe exactement 8 fois moins d'espace mémoire physique qu'un fichier au format .pcadapt. Nous avons donc décidé de développer nos algorithmes afin qu'ils puissent être directement utilisés sur des fichiers .bed sans qu'il n'y ait besoin de les convertir au format .pcadapt. 
+
+## Interface Shiny
+
+Nous proposons également une interface graphique, basée sur la librairie Shiny, pour une utilisation simplifiée de nos outils statistiques. Cette interface se présente sous la forme d'une application web, et nécessite donc l'utilisation d'un navigateur web.
+
+```{r out.width="100%"}
+knitr::include_app("https://keurcien.shinyapps.io/app-pcadapt")
+```

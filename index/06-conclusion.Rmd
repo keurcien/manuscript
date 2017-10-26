@@ -84,7 +84,4 @@ obj.svd <- RSpectra::svds(cov$cov, k = 2)
 x <- pcadapt(isl$geno, K = 2, min.maf = 0)
 ```
 
-
-
-
-
+### 

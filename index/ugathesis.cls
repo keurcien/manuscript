@@ -294,7 +294,18 @@
     \centerline{}
     \vskip 1.5em
     {\fontsize{12}{14}\selectfont Thèse soutenue publiquement le \@date, \par
-    devant le jury composé de :}
+    devant le jury composé de :
+      \textbf{Michael BLUM} \\
+      Directeur de Recherche, CNRS, Directeur de these \\
+      \textbf{Stéphane Dray} \\
+      Directeur de Recherche, CNRS, Rapporteur\\
+      \textbf{Yves Vigouroux} \\
+      Directeur de Recherche, IRD, Rapporteur
+      \textbf{Hélène Badouin} \\
+      Maître de Conférences, CNRS, Examinateur\\
+      \textbf{Olivier François} \\
+      Maître de Conférences, CNRS, Examinateur \\
+    }
 
   \end{minipage}\par
   \end{titlepage}

@@ -406,6 +406,11 @@ Soit $\tilde{G} = U \Sigma V^T$ la décomposition en valeurs singulières de la 
 
 Les proportions de métissage local de la population $B_{W_i^T}$ sont définies de la même façon que dans le cas global, à la différence qu'elles utilisent les scores locaux $U_{W_i^T}$ à la place des scores globaux $U$. Ainsi, une région sera alors considérée comme introgressée si les proportions de métissage locale calculées sur cette région sont significativement différentes des proportions de métissage calculées à l'échelle du génôme.
 
+#### Calcul des scores locaux {-}
+
+Si nous calculions $U_{W_i^T}$ pour chaque valeur de $i$ de façon naïve, la complexité algorithmique de cette étape serait en $O(nKp^2)$. Pour réduire cette complexité, l'idée est d'exploiter le fait que les fenêtres $W_i^T$ et $W_{i+1}^T$ se chevauchent très probablement, ce qui permet de déduire $U_{W_{i+1}^T}$ à partir de $U_{W_i^T}$ en effectuant moins d'opérations que n'en nécessiterait le calcul individuel de $U_{W_{i+1}^T}$.
+
+
 ### Résultats principaux
 
 **Nous proposons une méthode spécifiquement dédiée à la détection d'introgression.** Le développement d'une méthode destinée spécifiquement à la détection d'introgression est motivé par le fait que des méthodes basées sur l'estimation de coefficients de métissage nécessitent de disposer d'informations parfois difficiles à obtenir comme la phase des haplotypes. Le problème de la détection d'introgression étant plus simple que celui de l'estimation des coefficients de métissage local, nous proposons une approche qui permet de s'affranchir d'étapes relativement lourdes telles que la détermination des haplotypes et de leur phase, allégeant considérablement le temps de calcul nécessaire. À l'aide de simulation numérique réalisées pour les deux types de scénarios d'introgression présentés, nous montrons que notre statistique produit un taux de fausses découvertes et une puissance comparables aux méthodes de l'état de l'art (Figure \@ref(fig:power-admix)), en utilisant seulement la donnée de génotypes.

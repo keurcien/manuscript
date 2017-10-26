@@ -245,12 +245,175 @@ points(fdr.pcadapt / length(n.simu), pow.pcadapt / length(n.simu), col = "red")
 
 ## Article 1 {-}
 
+(ref:ndf-figS1-cap) Principal component analysis for SNP data simulated under the divergence model depicted in Figures 1 and 2 of the main text.
+
+```{r ndf-figS1, results='asis', fig.cap='(ref:ndf-figS1-cap)'}
+include_graphics("figure/ndf-figS1.png")
+```
+
+(ref:ndf-figS2-cap) False discovery rate of the 1% top-ranked SNPs obtained with $h^2$ and with $F_{ST}$ under an island model.
+
+```{r ndf-figS2, results='asis', fig.cap='(ref:ndf-figS2-cap)'}
+include_graphics("figure/ndf-figS2.png")
+```
+
+(ref:ndf-figS3-cap) Decay of eigenvalues of the covariance matrix for divergence models, the 1000 Genome data, and POPRES.
+
+```{r ndf-figS3, results='asis', fig.cap='(ref:ndf-figS3-cap)'}
+include_graphics("figure/ndf-figS3.png")
+```
+
+(ref:ndf-figS4-cap) Communality statistic as a function of $F_{ST}$ for SNPs simulated with a divergence model.
+
+```{r ndf-figS4, results='asis', fig.cap='(ref:ndf-figS4-cap)'}
+include_graphics("figure/ndf-figS4.png")
+```
+
+(ref:ndf-figS5-cap) Histograms of the squared normalized loadings $V_{jk}^2$, $k = 1, 2$, obtained for SNPs simulated with divergence models and for SNPs of the 1000 Genomes data.
+
+```{r ndf-figS5, results='asis', fig.cap='(ref:ndf-figS5-cap)'}
+include_graphics("figure/ndf-figS5.png")
+```
+
+(ref:ndf-figS6-cap) Repartition of the 5% top-ranked SNPs of each PCA-based statistic under the two divergence models.
+
+```{r ndf-figS6, results='asis', fig.cap='(ref:ndf-figS6-cap)'}
+include_graphics("figure/ndf-figS6.png")
+```
+
+(ref:ndf-figS7-cap) False discovery rate as a function of the selection coefficient under the two divergence models.
+
+```{r ndf-figS7, results='asis', fig.cap='(ref:ndf-figS7-cap)'}
+include_graphics("figure/ndf-figS7.png")
+```
+
+(ref:ndf-figS8-cap) False discovery rate as a function of the number $K$ of principal components under the two divergence models.
+
+```{r ndf-figS8, results='asis', fig.cap='(ref:ndf-figS8-cap)'}
+include_graphics("figure/ndf-figS8.png")
+```
+
+(ref:ndf-figS9-cap) Comparison between $h^2$ and $F_{ST}$ in a isolation-with-migration model.
+
+```{r ndf-figS9, results='asis', fig.cap='(ref:ndf-figS9-cap)'}
+include_graphics("figure/ndf-figS9.png")
+```
+
+(ref:ndf-figS10-cap) Principal component analysis of SNPs simulated with an isolation-with-migration model.
+
+```{r ndf-figS10, results='asis', fig.cap='(ref:ndf-figS10-cap)'}
+include_graphics("figure/ndf-figS10.png")
+```
+
+(ref:ndf-figS11-cap) Principal component analysis of the 1000 Genome data.
+
+```{r ndf-figS11, results='asis', fig.cap='(ref:ndf-figS11-cap)'}
+include_graphics("figure/ndf-figS11.png")
+```
+
+(ref:ndf-figS12-cap) Number of contiguous windows containing one or more outlier SNPs.
+
+```{r ndf-figS12, results='asis', fig.cap='(ref:ndf-figS12-cap)'}
+include_graphics("figure/ndf-figS12.png")
+```
+
+(ref:ndf-figS13-cap) Manhattan plot for the POPRES data of the squared loadings $\rho_{j2}^2 with the second principal component.
+
+```{r ndf-figS13, results='asis', fig.cap='(ref:ndf-figS13-cap)'}
+include_graphics("figure/ndf-figS13.png")
+```
+
+(ref:ndf-figS14-cap) Q-Q plots of the $p$-values, which are based on the communality $h^2$ statistic, under an island and a divergence model.
+
+```{r ndf-figS14, results='asis', fig.cap='(ref:ndf-figS14-cap)'}
+include_graphics("figure/ndf-figS14.png")
+```
+
+(ref:ndf-figS15-cap) Control of the false discovery rate for SNPs simulated under an island and a divergence model.
+
+```{r ndf-figS15, results='asis', fig.cap='(ref:ndf-figS15-cap)'}
+include_graphics("figure/ndf-figS15.png")
+```
+
+
+
 ## Article 2 {-}
 
-(ref:FigureSI1-cap) Schematic description of the island and divergence model. For the island model, adaptation occurs simultaneously in each population. For the island model, adaptation takes place in the branch leading to the second population.
+(ref:FigureSI1-cap) Schematic description of the island and divergence model. For the island model, adaptation occurs simultaneously in each population. For the divergence model, adaptation takes place in the branch leading to the second population.
 
-```{r FigureSI1, results='asis', fig.cap='(ref:FigureSI1-cap)'}
-include_graphics("figure/FigureSI1.png")
+```{r FigureSI1, fig.cap='(ref:FigureSI1-cap)'}
+### Island
+triangle.x <- c(0, 1, 2)
+triangle.y <- c(0, sqrt(3), 0)
+df.triangle <- data.frame(x = triangle.x, y = triangle.y)
+df.branch <- data.frame(x1 = 0, x2 = 2, y1 = 0, y2 = 0)
+
+diam <- 0.75
+fullCircle.1 <- circleFun(c(0, 0), diam, start = 0, end = 2, filled = TRUE)
+fullCircle.2 <- circleFun(c(1, sqrt(3)), diam, start = 0, end = 2, filled = TRUE)
+fullCircle.3 <- circleFun(c(2, 0), diam, start = 0, end = 2, filled = TRUE)
+
+p1 <- ggplot(df.triangle, aes(x = x, y = y)) +
+  geom_line(size = 4, colour = "#E69F00") +
+  geom_segment(data = df.branch,
+               aes(x = x1, y = y1, xend = x2, yend = y2),
+               size = 4,
+               colour = "#E69F00") +
+  geom_polygon(data = fullCircle.1, aes(x, y), color = "#56B4E9", fill = "#56B4E9") +
+  geom_polygon(data = fullCircle.2, aes(x, y), color = "#56B4E9", fill = "#56B4E9") +
+  geom_polygon(data = fullCircle.3, aes(x, y), color = "#56B4E9", fill = "#56B4E9") +
+  coord_equal() +
+  annotate("text",
+           x = triangle.x,
+           y = triangle.y,
+           label = c("bold(P)[1]", "bold(P)[2]", "bold(P)[3]"),
+           parse = TRUE, size = 5) +
+  xlim(-1.5, 3.5) +
+  ylim(-1.5, 2.5) +
+  xlab("") +
+  ylab("") +
+  theme_bw() +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank())
+
+### Divergence
+triangle.x <- c(0, 1, 2)
+triangle.y <- c(0, sqrt(3), 0)
+df.triangle <- data.frame(x = triangle.x, y = triangle.y)
+df.branch <- data.frame(x1 = 1, x2 = 1.5, y1 = 0, y2 = sqrt(3) / 2)
+fullCircle.6 <- circleFun(c(1, 0), diam, start = 0, end = 2, filled = TRUE)
+
+p4 <- ggplot(df.triangle, aes(x = x, y = y)) +
+  geom_line(size = 4, colour = "#E69F00") +
+  geom_segment(data = df.branch,
+               aes(x = x1, y = y1, xend = x2, yend = y2),
+               size = 4,
+               colour = "#E69F00") +
+  geom_polygon(data = fullCircle.1, aes(x, y), color = "#56B4E9", fill = "#56B4E9") +
+  geom_polygon(data = fullCircle.6, aes(x, y), color = "#56B4E9", fill = "#56B4E9") +
+  geom_polygon(data = fullCircle.3, aes(x, y), color = "#56B4E9", fill = "#56B4E9") +
+  coord_equal() +
+  annotate("text",
+           x = c(0, 1, 2),
+           y = c(0, 0, 0),
+           label = c("bold(P)[1]", "bold(P)[2]", "bold(P)[3]"),
+           parse = TRUE, size = 5) +
+  xlim(-1.5, 3.5) +
+  ylim(-1.5, 2.5) +
+  xlab("") +
+  ylab("") +
+  theme_bw() +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank())
+
+
+cowplot::plot_grid(p1, p4, labels = c("Island model", "Divergence model"), ncol = 2)
 ```
 
 (ref:FigureSI2-cap) Proportion of false discoveries and statistical power as a function of the number of principal components in a model of range expansion.
@@ -830,13 +993,3 @@ for i in range(nSNP):
 np.savetxt('data/simuPOP.pcadapt', G, fmt = '%i')
 ```
 
-## Détails
-
-### Données manquantes
-
-Les données manquantes sont prises en compte à différentes étapes de la méthode, cela va de l'estimation de matrice de covariance à la régression linéaire multiple. Nous supposons que les données manquantes sont MAR (*missing at random*) ou MCAR (*missing completely at random*) et qu'elles ne dépendent donc pas de leur valeur (elles ne sont pas MNAR).
-
-Pour chaque entrée de la matrice de covariance par individus, le calcul ne tient compte que des paires d'observations présentes.
-
-Si $X_i$ et $X_j$ désignent deux individus, $\text{Cov}(X_i, X_j) = E[(X_i - \bar{X_i})(X_j - \bar{X_j})^T]$
-Un estimateur de $\text{Cov}(X_i, X_j)$ tenant compte des valeurs manquantes donne

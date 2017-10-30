@@ -1,6 +1,6 @@
 # Aspect computationnel 
 
-Dans cette partie, nous nous intéresserons brièvement à l'aspect computationnel des méthodes qui ont été présentées dans les chapitres précédents. Le développement d'outils logiciels destinés à l'exploration de données génétiques volumineuses requiert qu'une attention particulière soit portée à l'utilisation des ressources de calcul. Étant donné que nous nous intéressons à la possibilité de réaliser des scans génomiques pour des données génétiques de grande taille, il me semble intéressant de préciser les points sur lesquels des améliorations ont été faites d'un point de vue computationnel.
+Dans cette partie, nous nous intéresserons brièvement à l'aspect computationnel des méthodes qui ont été présentées dans les chapitres précédents. Le développement d'outils logiciels destinés à l'exploration de données génétiques volumineuses requiert qu'une attention particulière soit portée à l'utilisation des ressources de calcul. Étant donné que nous nous intéressons à la possibilité de réaliser des scans génomiques pour des données génétiques de grande taille, il semblait intéressant de préciser les points sur lesquels des améliorations ont été faites d'un point de vue computationnel.
 
 ## Du langage C au langage R
 
@@ -10,7 +10,7 @@ La première version de pcadapt a été implémentée par Nicolas Duforet-Frebou
 
 Nous rappelons ici que nous nous intéressons seulement aux premières composantes principales obtenues avec l'ACP, ce qui signifie qu'il n'est pas nécessaire d'effectuer la décomposition en valeurs singulières (SVD) complète de la matrice d'apparentement génétique $G_{RM} \in \mathcal{M}_{n}(\mathbb{R})$ (où $n$ est le nombre d'individus). Il s'agit de ce que l'on appelle une décomposition en valeurs singulières tronquée. Pour effectuer l'ACP à partir d'une matrice de génotypes $\tilde{G} \in \mathcal{M}_{np}(\mathbb{R})$, il est donc nécessaire de calculer la matrice d'apparentement génétique $G_{RM}$ pour ensuite calculer la SVD de $G_{RM}$. En suivant cette procédure, le calcul de la matrice $G_{RM}$ est l'étape la plus coûteuse d'un point de vue algorithmique, car de complexité quadratique en le nombre d'individus. Cependant de nouvelles méthodes permettent d'effectuer la SVD tronquée de $G_{RM}$ sans qu'il n'y ait besoin de calculer explicitement $G_{RM}$. La méthode que nous avons choisie d'utiliser pour le calcul de l'ACP est basée sur l'algorithme IRAM (Implicitly Restarted Arnoldi Method) [@lehoucq1996deflation; @calvetti1994implicitly]. 
 
-L'algorithme IRAM repose sur l'idée que les vecteurs propres d'une matrice carrée $A \in \mathcal{M}_{n}(\mathbb{R})$ peuvent être estimés en construisant une base orthogonale de l'espace vectoriel $\mathcal{K}_k(x) = \text{Vect}(x, Ax, A^2x, \dots, A^kx)$ engendré par les itérations de $A$ où $x \in \mathbb{R}^n$ et $k \in \mathbb{N}$. $\mathcal{K}_k(x)$ est connu sous le nom d'espace de Krylov. Dans notre cas, la matrice carrée que l'on souhaite décomposer est la matrice $G_{RM}$. Pour construire les espaces de Krylov associés à $G_{RM}$, il faut donc calculer les produits $G_{RM}x$. Pour ne pas avoir à calculer $G_{RM}$ lors du calcul de $G_{RM}x$ (nous rappelons que $G_{RM} = \frac{1}{p}\tilde{G}\tilde{G}^T$), il suffit de calculer d'abord $y = \frac{1}{\sqrt{p}}\tilde{G}^Tx$ puis $\frac{1}{\sqrt{p}}\tilde{G}y$, résultant en un coût algorithmique linéaire en $n$ et en $p$. 
+L'algorithme IRAM repose sur l'idée que les vecteurs propres d'une matrice carrée $A \in \mathcal{M}_{n}(\mathbb{R})$ peuvent être estimés en construisant une base orthogonale de l'espace vectoriel $\mathcal{K}_k(x) = \text{Vect}(x, Ax, A^2x, \dots, A^kx)$ engendré par les itérations de $A$ où $x \in \mathbb{R}^n$ et $k \in \mathbb{N}$. $\mathcal{K}_k(x)$ est connu sous le nom d'espace de Krylov. Dans notre cas, la matrice carrée que l'on souhaite décomposer est la matrice $G_{RM}$. Pour construire les espaces de Krylov associés à $G_{RM}$, il faut donc calculer les produits $G_{RM}x$. Or, pour ne pas avoir à calculer $G_{RM}$ lors du calcul de $G_{RM}x$ (nous rappelons que $G_{RM} = \frac{1}{p}\tilde{G}\tilde{G}^T$), il suffit de calculer d'abord $y = \frac{1}{\sqrt{p}}\tilde{G}^Tx$ puis $\frac{1}{\sqrt{p}}\tilde{G}y$, résultant en un coût algorithmique linéaire en $n$ et en $p$ (Figure \@ref(fig:svd-speed)). 
 
 (ref:svd-speed-cap) Comparaison des temps de calcul pour la SVD tronquée de rang 2 obtenue avec la méthode classique et la méthode IRAM. Le nombre de variables est fixé à 10000 et le nombre d'observations varie de 25 à 1000. Nous constatons que pour un nombre d'observations élevé, l'algorithme IRAM est plus efficace que la méthode nécessitant de calculer la matrice de covariance.
 
@@ -109,7 +109,7 @@ NumericMatrix PairGRM(const NumericMatrix &G,
 
 ### Algorithme IRAM et données manquantes {-}
 
-Cependant, comme cela a été dit dans le paragraphe précédent, nous souhaitons nous détacher du calcul de la matrice $G_{RM}$. Nous avons donc cherché à adapter l'algorithme IRAM pour qu'il puisse tenir compte de la présence de données manquantes, à la manière de la fonction `PairGRM` décrite ci-dessus. Pour cela nous avons adopté la même démarche, mais en l'appliquant aux produits $\tilde{G}^Tx$ et $\tilde{G}y$ où $x \in \mathbb{R}^n$ et $y \in \mathbb{R}^p$. Plus précisément, plutôt que de calculer $\tilde{G}^Tx$ et $\tilde{G}y$, nous calculons les produits $\frac{1}{n}\tilde{G}^Tx$ et $\frac{1}{p}\tilde{G}y$ ce qui nous permet de tenir compte des données manquantes de la façon suivante :
+Cependant, comme cela a été dit dans le paragraphe précédent, nous souhaitons nous détacher du calcul de la matrice $G_{RM}$. Nous avons donc cherché à adapter l'algorithme IRAM pour qu'il puisse tenir compte de la présence de données manquantes, à la manière de la fonction `PairGRM` décrite ci-dessus. Nous avons donc adopté la même démarche, mais en l'appliquant aux produits $\tilde{G}^Tx$ et $\tilde{G}y$ où $x \in \mathbb{R}^n$ et $y \in \mathbb{R}^p$. Plus précisément, plutôt que de calculer $\tilde{G}^Tx$ et $\tilde{G}y$, nous calculons les produits $\frac{1}{n}\tilde{G}^Tx$ et $\frac{1}{p}\tilde{G}y$, ce qui nous permet de tenir compte des données manquantes de la façon suivante :
 
 \begin{equation}
   \begin{split}
@@ -119,7 +119,7 @@ Cependant, comme cela a été dit dans le paragraphe précédent, nous souhaiton
   (\#eq:prodMatVec)
 \end{equation}
 
-où $\delta_{ij} = 0$ si $G_{ij}$ est manquant et $\delta_{ij} = 1$ sinon. En l'absence de données manquantes, cette méthode donne une estimation du produit $\frac{1}{np}\tilde{G}\tilde{G}^Tx = \frac{1}{n}G_{RM}x$, ce qui signifie que si l'on applique l'algorithme IRAM en utilisant les produits définis à l'équation \@ref(eq:prodMatVec), nous nous retrouvons à effectuer la SVD de $\frac{1}{n}G_{RM}$ et non pas celle de $G_{RM}$. Pour déduire la SVD de $G_{RM}$ à partir de la SVD de $\frac{1}{n}G_{RM}$, il suffit simplement de multiplier les valeurs propres de $\frac{1}{n}G_{RM}$ par $n$, les vecteurs propres étant les mêmes pour les deux décompositions (à une rotation près).
+où $\delta_{ij} = 0$ si $G_{ij}$ est manquant et $\delta_{ij} = 1$ sinon. En l'absence de données manquantes, cette méthode donne une estimation du produit $\frac{1}{np}\tilde{G}\tilde{G}^Tx = \frac{1}{n}G_{RM}x$, ce qui signifie que si l'on applique l'algorithme IRAM en utilisant les produits définis à l'équation \@ref(eq:prodMatVec), nous obtenons la SVD de $\frac{1}{n}G_{RM}$ et non pas celle de $G_{RM}$. Pour déduire la SVD de $G_{RM}$ à partir de la SVD de $\frac{1}{n}G_{RM}$, il suffit simplement de multiplier les valeurs propres de $\frac{1}{n}G_{RM}$ par $n$, les vecteurs propres étant les mêmes pour les deux décompositions.
 
 ```{r engine='Rcpp', eval=TRUE}
 #include <Rcpp.h>
@@ -172,9 +172,9 @@ NumericVector prodtGx(const NumericMatrix &G,
 
 ### Précision de la SVD en présence de données manquantes {-}
 
-Nous comparons ici les différentes méthodes dont nous avons parlé dans le paragraphe précédent, à savoir flashpca, PairGRM et notre nouvelle méthode. La comparaison est réalisée sur un échantillon du jeu de données POPRES. Nous évaluons la sensibilité des différentes méthodes à la présence de données manquantes en comparant les valeurs singulières et les scores de l'ACP obtenus par chacune des méthodes en présence de données manquantes aux valeurs singulières et scores de l'ACP obtenus avec flashpca en l'absence de données manquantes. Les résultats de cette comparaison sont donnés en figure 
+Nous comparons ici les différentes méthodes dont nous avons parlé dans le paragraphe précédent, à savoir flashpca, PairGRM et notre nouvelle méthode. La comparaison est réalisée sur un échantillon du jeu de données POPRES. Nous évaluons la sensibilité des différentes méthodes à la présence de données manquantes en comparant les valeurs singulières et les scores de l'ACP obtenus par chacune des méthodes en présence de données manquantes aux valeurs singulières et scores de l'ACP obtenus avec flashpca en l'absence de données manquantes. Les résultats de cette comparaison sont donnés en figure \@ref(fig:missing-values-comparison).
 
-(ref:missing-values-comparison-cap) Comparaison des scores d'ACP obtenus avec flashpca, PairGRM et pcadapt pour différentes proportions de valeurs manquantes distribuées uniformément. Nous calculons l'erreur moyenne quadratique (EMQ) pour le calcul des 5 premiers axes de l'ACP et 5 premières valeurs singulières.
+(ref:missing-values-comparison-cap) Comparaison des scores d'ACP obtenus avec flashpca, PairGRM et pcadapt pour différentes proportions de valeurs manquantes distribuées uniformément. Nous calculons l'erreur moyenne quadratique pour le calcul des 5 premiers axes de l'ACP et des 5 premières valeurs singulières.
 
 ```{r missing-values-comparison, results='asis', fig.cap='(ref:missing-values-comparison-cap)', warning=FALSE}
 G <- readRDS("data/subset_popres.rds")
@@ -261,7 +261,7 @@ df %>%
              color = Method)) +
   facet_wrap(~X, scales = "free") +
   xlab("Proportion de données manquantes") +
-  ylab("EMQ moyen") +
+  ylab("Erreur moyenne quadratique") +
   geom_line(size = 1) +
   geom_point(size = 2) +
   scale_color_manual(name = "Méthode", values = c("#E69F00", "#009E73", "#0072B2")) +
@@ -269,7 +269,7 @@ df %>%
   theme(legend.position = "bottom")
 ```
 
-En conclusion, la possibilité de déduire la SVD d'une matrice $A$ à partir de la SVD d'une matrice proportionnelle à celle-ci nous a permis d'adapter la méthode IRAM au cas de matrices contenant des données manquantes. Par ailleurs, d'après nos comparaisons numériques, notre nouvelle méthode est moins sensible à la présence de données manquantes.
+En conclusion, la possibilité de déduire la SVD d'une matrice $A$ à partir de la SVD d'une matrice proportionnelle à celle-ci nous a permis d'adapter la méthode IRAM au cas de matrices contenant des données manquantes. Par ailleurs, d'après nos comparaisons numériques, notre nouvelle méthode s'avère être moins sensible à la présence de données manquantes.
 
 ## Du format .pcadapt au format .bed
 
@@ -279,7 +279,7 @@ Le format .pcadapt stocke la matrice de génotypes dans un fichier texte où cha
 
 - les génotypes 0, 1, 2 et 9 sont encodés en ASCII et donc chaque valeur occupe un octet (ou 8 bits). 
 
-Le logiciel PLINK [@purcell2007plink] dispose du format de fichier .bed qui présente bien plus d'avantages :
+Le logiciel PLINK [@purcell2007plink] dispose quant à lui du format de fichier .bed qui semble plus adapté au développement logiciel :
 
 - le format .bed est un format de fichier binaire, l'accès à un fichier binaire est plus rapide que l'accès à un fichier texte.
 
@@ -304,7 +304,7 @@ Pour résumer, un fichier .bed et un fichier .pcadapt contiennent exactement la 
 
 ## Interface Shiny
 
-Nous proposons également une interface graphique, basée sur la librairie Shiny, pour une utilisation simplifiée de nos outils statistiques. Cette interface se présente sous la forme d'une application web, et nécessite donc l'utilisation d'un navigateur web.
+Nous proposons également une interface graphique, basée sur la librairie Shiny, pour une utilisation simplifiée de nos outils statistiques. Cette interface se présente sous la forme d'une application web, et nécessite donc l'utilisation d'un navigateur.
 
 ```{r out.width="100%"}
 knitr::include_app("https://keurcien.shinyapps.io/app-pcadapt")

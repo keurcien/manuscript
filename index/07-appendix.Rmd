@@ -254,7 +254,7 @@ include_graphics("figure/ndf-figS13.png")
 ```
 
 
-(ref:ndf-figS14-cap) Q-Q plots of the $p$-values, which are based on the communality $h^2$ statistic, under an island and a divergence model.
+(ref:ndf-figS14-cap) Q-Q plots of the $P$-values, which are based on the communality $h^2$ statistic, under an island and a divergence model.
 
 
 ```{r ndf-figS14, results='asis', fig.cap='(ref:ndf-figS14-cap)'}
@@ -676,9 +676,9 @@ include_graphics("figure/admixture.png")
 
 ## Simulations et modèles démographiques
 
-Nous mettons ici à disposition une partie des codes qui ont servi à produire les simulations et à leur exploitation.
+Nous mettons ici à disposition une partie des codes qui ont servi à produire les simulations.
 
-### Modèle en île
+### Modèle en îles
 
 (ref:island-pca-cap) Exemple de simulation réalisée à l'aide de *ms* [@hudson2002generating].
 

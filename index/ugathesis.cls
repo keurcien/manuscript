@@ -294,14 +294,14 @@
     {\fontsize{12}{14}\selectfont Thèse soutenue publiquement le \@date, \par
     devant le jury composé de : \\
       \textbf{Michael BLUM} \\
-      Directeur de Recherche, CNRS, Directeur de these \\
-      \textbf{Stéphane Dray} \\
+      Directeur de Recherche, CNRS, Directeur de thèse \\
+      \textbf{Stéphane DRAY} \\
       Directeur de Recherche, CNRS, Rapporteur\\
-      \textbf{Yves Vigouroux} \\
+      \textbf{Yves VIGOUROUX} \\
       Directeur de Recherche, IRD, Rapporteur \\
-      \textbf{Hélène Badouin} \\
+      \textbf{Hélène BADOUIN} \\
       Maître de Conférences, CNRS, Examinateur\\
-      \textbf{Olivier François} \\
+      \textbf{Olivier FRANÇOIS} \\
       Professeur des Universités, Grenoble INP, Examinateur \\
     }
 

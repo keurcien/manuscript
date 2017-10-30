@@ -28,7 +28,7 @@ C'est de cette manière qu'en 1920, Edmond Barbier, dans sa notice relative à l
 
 ### L'évolution d'une théorie
 
-À la théorie néo-darwinienne est souvent opposée la théorie neutraliste développée par Motoo Kimura dans son ouvrage *The neutral theory of molecular evolution* [@kimura1983neutral], bien que ces deux théories ne soient pas incompatibles. La première suggère que les mutations apparaissent à la faveur de la sélection naturelle. La seconde affirme quant à elle que l'évolution ne serait que le résultat de mutations qui surviennent de façon tout à fait aléatoire, tout en étant sélectionnées selon le même mécanisme de sélection naturelle proposé par Darwin. 
+À la théorie néo-darwinienne est souvent opposée la théorie neutraliste développée par Motoo Kimura dans son ouvrage *The neutral theory of molecular evolution* [@kimura1983neutral], bien que ces deux théories ne soient pas incompatibles. La première suggère que les mutations apparaissent à la faveur de la sélection naturelle. La seconde affirme quant à elle que l'évolution ne serait que le résultat de mutations qui surviennent de façon tout à fait aléatoire, tout en étant sélectionnées selon le même mécanisme de sélection naturelle proposé par Darwin (Figure \@ref(fig:kimuravsdarwin)). 
 
 (ref:kimuravsdarwin-cap) Représentation schématique des probabilités d'occurrence pour chaque type de mutation pour la théorie sélectionniste de Darwin et pour la théorie neutraliste de Kimura [@bromham2003modern]. Selon la théorie de Darwin, la plupart des mutations sont délétères et le reste des mutations confère un avantage sélectif. Selon la théorie de Kimura, une partie des mutations qui apparaissent n'ont pas d'effet sur la valeur sélective. Ces mutations sont dites neutres.
 
@@ -141,9 +141,9 @@ data.frame(Species = species, Rates = rates) %>%
 ```
 
 
-#### Le flux de gène {-}
+#### Le flux de gènes {-}
 
-Le flux de gène est généralement le résultat d'évènements migratoires initiés par des individus appartenant à une population donnée, vers une seconde population dont les fréquences d'allèles diffèrent éventuellement de la population d'origine. Le flux de gène influe sur la diversité génétique initialement présente si par exemple, parmi les allèles *migrants* figurent des allèles qui n'existaient pas dans la population receveuse.
+Le flux de gènes est généralement le résultat d'évènements migratoires initiés par des individus appartenant à une population donnée, vers une seconde population dont les fréquences d'allèles diffèrent éventuellement de la population d'origine. Le flux de gènes influe sur la diversité génétique initialement présente si par exemple, parmi les allèles *migrants* figurent des allèles qui n'existaient pas dans la population receveuse.
 
 #### La sélection naturelle {-}
 
@@ -153,9 +153,9 @@ En biologie évolutive, la sélection naturelle est la force qui tend à préser
 
 #### Principe
 
-La diversité climatique et la diversité géologique terrestre ont naturellement façonné des environnements aux constitutions physiques et chimiques variées. À celles-ci viennent s'ajouter des caractéristiques écologiques résultant des interactions entre l'environnement et les organismes qui y évoluent *lato sensu*. La valeur sélective de ces organismes, désignant leur capacité de survie et de reproduction, peut être impactée par les caractéristiques environnementales auxquelles ils sont exposés. Si cette valeur sélective est associée à un trait phénotypique, on dit que ce trait confère un avantage adaptatif et on parle dans ce cas d'*adaptation locale*. Une population sera ainsi dite adaptée à son environnement si elle développe, par le biais de la sélection naturelle, un ou plusieurs allèles associés à un trait adaptatif augmentant la valeur sélective des individus la constituant. Ceci en réponse aux pressions environnementales auxquelles ces individus sont soumis. À titre d'exemple, nous pouvons citer l'adaptation des populations tibétaines et andines à la haute altitude [@beall2007two].
+La diversité climatique et la diversité géologique terrestre ont naturellement façonné des environnements aux constitutions physiques et chimiques variées. À celles-ci viennent s'ajouter des caractéristiques écologiques résultant des interactions entre l'environnement et les organismes qui y évoluent *lato sensu*. La valeur sélective de ces organismes, désignant leur capacité de survie et de reproduction, peut être impactée par les caractéristiques environnementales auxquelles ils sont exposés. Si cette valeur sélective est associée à un trait phénotypique, on dit que ce trait confère un avantage adaptatif et on parle dans ce cas d'*adaptation locale*. Une population sera ainsi dite adaptée à son environnement si elle développe, par le biais de la sélection naturelle, un ou plusieurs allèles associés à un trait adaptatif augmentant la valeur sélective des individus la constituant. Ceci en réponse aux pressions environnementales auxquelles ces individus sont soumis. À titre d'exemple, nous pouvons citer l'adaptation des populations tibétaines et andines à la haute altitude (Table \@ref(tab:andeanvstibetan)).
 
-(ref:andeanvstibetan-cap) Exemples de phénotypes liés à l'adaptation à la haute altitude distinguant les populations andines des populations tibétaines [@jeong2014adaptations].
+(ref:andeanvstibetan-cap) Exemples de phénotypes liés à l'adaptation à la haute altitude distinguant les populations andines des populations tibétaines [@jeong2014adaptations; @beall2007two].
 
 ```{r andeanvstibetan, results='asis', message=FALSE}
 tibetan <- c("à partir de 4000m d'altitude",
@@ -179,7 +179,7 @@ data.frame(Traits = traits, Andean = andean, Tibetan = tibetan) %>%
 
 Chez l'Homme moderne, les habitudes alimentaires et les modes de vie constituent également des caractéristiques environnementales importantes. L'agriculture et le pastoralisme^[Le pastoralisme décrit la relation interdépendante entre les éleveurs, leurs troupeaux et les milieux exploités.] ont notamment participé à la diversification des environnements humains [@jeong2014adaptations]. En Europe, l'adaptation biologique à ces nouveaux modes de vie s'est par ailleurs manifesté par la sélection du phénotype *LP*, dit de *persistence de la lactase*, caractérisant l'aptitude à digérer le lactose à l'âge adulte [@itan2009origins].
 
-#### L'hybridation et le flux de gène comme sources d'adaptation
+#### L'hybridation et le flux de gènes comme sources d'adaptation
 
 Un caractère (un variant allélique par exemple) peut être sélectionné au sein d'une population de différentes manières : 
 
@@ -187,11 +187,11 @@ Un caractère (un variant allélique par exemple) peut être sélectionné au se
 
 - le caractère y apparaît à la suite d'une mutation spontanée (*de novo mutations*).
 
-- le caractère est hérité d'une autre population par flux de gène (*adaptive introgression*).
+- le caractère est hérité d'une autre population par flux de gènes (*adaptive introgression*).
 
-Cette dernière possibilité est d'ailleurs très intéressante pour une espèce d'un point de vue de la diversité génétique. Pour enrichir le catalogue d'allèles, nous avons vu plus haut que le flux de gène constituait un processus clé. La reproduction sexuée est connue pour jouer un rôle important dans la sélection naturelle, offrant aux individus la possibilité, par le biais du brassage allélique, d'hériter des "meilleurs allèles" que possèdent leurs parents. Augmenter la diversité génétique augmente ainsi les chances de voir se transmettre des allèles favorables.
+Cette dernière possibilité est d'ailleurs très intéressante pour une espèce d'un point de vue de la diversité génétique. Pour enrichir le catalogue d'allèles, nous avons vu plus haut que le flux de gènes constituait un processus clé. La reproduction sexuée est connue pour jouer un rôle important dans la sélection naturelle, offrant aux individus la possibilité, par le biais du brassage allélique, d'hériter des "meilleurs allèles" que possèdent leurs parents. Augmenter la diversité génétique augmente ainsi les chances de voir se transmettre des allèles favorables.
 
-Nous parlons d'hybridation ou de métissage lorsque deux individus, appartenant à deux populations différentes, se reproduisent entre eux. Pour ce qui est de la distinction de populations, nous nous en tiendrons à la suggestion faite par @harrison1990hybrid, considérant que deux individus issus de populations différentes doivent chacun posséder des traits héritables qui les différencient. Ainsi, l'hybridation constitue un excellent moyen pour permettre à une espèce d'intégrer de nouveaux allèles [@stevison2008hybridization]. Bien que l'hybridation conduise fréquemment à la naissance d'individus à la valeur sélective hautement diminuée voire d'individus non fertiles, il arrive que certains descendants aient tout de même la capacité de se reproduire et ainsi être à l'origine de l'apparition de nouveaux allèles. La sélection de tels allèles transmis par flux de gène ou par hybridation correspond à ce que l'on appelle *l'introgression adaptative*. Des exemples d'introgression sont observés à la fois dans la nature (*introgression naturelle*) et à la fois chez des espèces domestiquées (*introgression délibérée*). Nous pouvons citer l'exemple de la souris domestique, *Mus musculus domesticus*, qui a hérité d'un gène de résistance à la coumadine (communément appelée « mort aux rats ») en s'hybridant avec une espèce sauvage, *Mus spretus* [@song2011adaptive]. Ce gène de résistance est localisé sur le chromosome 7 de la souris domestique et appartient à une région qui a été identifiée comme provenant effectivement de la souris sauvage.
+Nous parlons d'hybridation ou de métissage lorsque deux individus, appartenant à deux populations différentes, se reproduisent entre eux. Pour ce qui est de la distinction de populations, nous nous en tiendrons à la suggestion faite par @harrison1990hybrid, considérant que deux individus issus de populations différentes doivent chacun posséder des traits héritables qui les différencient. Ainsi, l'hybridation constitue un excellent moyen pour permettre à une espèce d'intégrer de nouveaux allèles [@stevison2008hybridization]. Bien que l'hybridation conduise fréquemment à la naissance d'individus à la valeur sélective hautement diminuée voire d'individus non fertiles, il arrive que certains descendants aient tout de même la capacité de se reproduire et ainsi être à l'origine de l'apparition de nouveaux allèles. La sélection de tels allèles transmis par flux de gènes ou par hybridation correspond à ce que l'on appelle *l'introgression adaptative*. Des exemples d'introgression sont observés à la fois dans la nature (*introgression naturelle*) et à la fois chez des espèces domestiquées (*introgression délibérée*). Nous pouvons citer l'exemple de la souris domestique, *Mus musculus domesticus*, qui a hérité d'un gène de résistance à la coumadine (communément appelée « mort aux rats ») en s'hybridant avec une espèce sauvage, *Mus spretus* [@song2011adaptive]. Ce gène de résistance est localisé sur le chromosome 7 de la souris domestique et appartient à une région qui a été identifiée comme provenant effectivement de la souris sauvage.
 
 
 L'identification des mutations génétiques responsables de l'adaptation est particulièrement cruciale pour la compréhension des processus évolutifs et plus spécifiquement ceux liés à la spéciation^[épisode de divergence d'une espèce ayant conduit à la formation d'au moins une nouvelle espèce.]. L'introgression adaptative permet quant à elle de comprendre l'adaptation rapide de certaines espèces et en quoi l'hybridation constitue un vecteur important pour l'adaptation [@hufford2013genomic]. Bien que l'étude de l'adaptation locale puisse être menée de façon expérimentale par le biais de la *transplantation réciproque* [@kawecki2004conceptual], nous proposons ici d'exploiter les génotypes de populations naturelles.
@@ -648,23 +648,24 @@ Les matrices de génotypes seront généralement notées $G$ et seront considér
   \tilde{G}_{.,j} = \frac{G_{.,j} - 2f_j}{\sqrt{2f_j(1-f_j)}}
 \end{equation}
 
+\newpage
+
 ## Les motivations de la thèse
 
-La production de données génétiques, volumineuses par la quantité d'information qu'elles renferment, laisse présager le meilleur pour les domaines de la médecine clinique et de la biologie évolutive. En génétique des populations, leur acquisition offre de nombreuses perspectives d'étude, notamment concernant la mise en évidence de gènes impliqués dans les processus évolutifs ou de gènes associés à certains phénotypes. Les méthodes répondant à cette problématique portent le nom de *scans génomiques*. Les scans génomiques pour la sélection, destinés à isoler des locus sous sélection, se sont largement répandus au cours des dernières années, principalement grâce au développement fulgurant qu'ont connu les technologies NGS. Pour illustrer le principe des scans génomiques, nous reprenons l'exemple de l'adaptation à l'altitude pour les Tibétains. 
+La production de données génétiques, volumineuses par la quantité d'information qu'elles renferment, laisse présager le meilleur pour les domaines de la médecine clinique et de la biologie évolutive. En génétique des populations, leur acquisition offre de nombreuses perspectives d'étude, notamment concernant la mise en évidence de gènes impliqués dans les processus évolutifs ou de gènes associés à certains phénotypes. Les méthodes répondant à cette problématique portent le nom de *scans génomiques*. Les scans génomiques pour la sélection, destinés à isoler des locus sous sélection, se sont largement répandus au cours des dernières années, principalement grâce au développement fulgurant qu'ont connu les technologies NGS. Pour illustrer le principe des scans génomiques, nous reprenons l'exemple de l'adaptation à l'altitude des populations tibétaines. 
 
 Pour détecter les gènes responsables de cette adaptation, @xu2010genome ont réalisé un scan génomique en analysant la différenciation génétique entre une population constituée de tibétains et une autre constituée de Hans. Le résultat de ce scan génomique^[se présente généralement sous la forme d'un graphique, appelé *Manhattan plot*, représentant la statistique de test utilisée en fonction de l'emplacement chromosomique.] est présenté en figure \@ref(fig:tibetan-scan). 
 
-Les SNPs qui ont la différenciation la plus élevée se trouvent dans le facteur de transcription EPAS1 qui est un facteur de transcription activé en condition d'hypoxie. À la suite de ces scans de différenciation, il a été montré en utilisant la statistique $D$ (Table \@ref(tab:tibetan-introgression)) que les variants adaptatifs sur EPAS1 ont été transmis grâce à l'introgression issue de l'Homme de Denisova [@hu2017evolutionary].
-
-\newpage
-
 (ref:tibetan-scan-cap) Scan génomique réalisé sur des populations de tibétains et de Hans utilisant la $F_{ST}$ (mesure de différenciation génétique de référence que nous introduirons dans le chapitre suivant). Deux régions génomiques présentant des valeurs de $F_{ST}$ significativement élevées ont été identifiées sur les chromosomes 1 et 2 [@xu2010genome].
 
-```{r tibetan-scan, results='asis', fig.cap='(ref:tibetan-scan-cap)', out.width="75%"}
+```{r tibetan-scan, results='asis', fig.cap='(ref:tibetan-scan-cap)'}
 include_graphics("figure/tibetan_fst.png")
 ```
 
-(ref:tibetan-introgression-cap) Scan génomique pour l'introgression chez les tibétains utilisant la statistique $D$ ($D^{*}$ correspond à la normalisation de la statistique $D$ que nous introduirons dans le chapitre. Nous retrouvons bien EPAS1 dans la liste des gènes hérités de l'Homme de Denisova) [@hu2017evolutionary].
+
+Les SNPs présentant la différenciation la plus élevée sont localisés sur le facteur de transcription EPAS1 connu pour être activé en condition d'hypoxie. À la suite de ces scans de différenciation, il a été montré à l'aide de la statistique $D$ (Table \@ref(tab:tibetan-introgression)) que les variants adaptatifs sur EPAS1 ont été transmis grâce à l'introgression issue de l'Homme de Denisova [@hu2017evolutionary].
+
+(ref:tibetan-introgression-cap) Scan génomique pour l'introgression chez les tibétains réalisé par @hu2017evolutionary utilisant la statistique $D$ ($D^{*}$ correspond à la normalisation de la statistique $D$ que nous introduirons dans le chapitre 3). La colonne de droite contient le nom des gènes potentiellement hérités de l'Homme de Denisova. Nous retrouvons dans cette liste le gène EPAS1 [@hu2017evolutionary].
 
 ```{r tibetan-introgression, results='asis', message=FALSE}
 Chr <- c(7, 2, 2, 5, 12, 4)
@@ -678,10 +679,10 @@ data.frame(Chr = Chr,
            D = D,
            Genes = Genes) %>%
   knitr::kable(col.names = c("Chr",
-                             "start",
-                             "end",
+                             "début",
+                             "fin",
                              "$D^{*}$",
-                             "Genes in the regions"),
+                             "Gènes"),
                caption = '(ref:tibetan-introgression-cap)',
                booktabs = TRUE,
                escape = FALSE) %>%
@@ -773,7 +774,7 @@ Toutefois, certains outils statistiques ayant été développés ne sont plus ad
 
 ### Résultats principaux et organisation du manuscript
 
-Sur la base du travail de thèse de Nicolas Duforet-Frebourg [@duforet2014statistiques], nous avons cherché dans un premier temps à améliorer la méthodologie statistique implémentée dans le logiciel PCAdapt, ainsi que les performances computationnelles, afin de garantir la possibilité de l'utiliser sur des génômes plus denses et disposant d'une plus grande résolution. Afin de permettre la publication de l'article [@duforet2015detecting], j'ai réalisé des simulations de modèles en îles et de divergence afin de valider l'approche basée sur la communalité pour réaliser des scans à sélection. J'ai ensuite développé la librairie R pcadapt et proposé une statistique de scan à sélection plus puissante que la communalité qui est . Ce travail correspond à la publication [@luu2017pcadapt]. La dernière contribution principale de ma thèse correspond au développement d'une méthode statistique basée sur l'ACP qui permet d'identifier les régions du génôme impliquée dans les évènement d'introgression adaptive. Ce travail correspond au manuscript *Scanning genomes for adaptive introgression using principal component analysis* et fera l'objet d'une soumission prochainement.
+Sur la base du travail de thèse de Nicolas Duforet-Frebourg [@duforet2014statistiques], nous avons cherché dans un premier temps à améliorer la méthodologie statistique implémentée dans le logiciel PCAdapt, ainsi que les performances computationnelles, afin de garantir la possibilité de l'utiliser sur des génômes plus denses et disposant d'une plus grande résolution. Afin de permettre la publication de l'article [@duforet2015detecting], j'ai réalisé des simulations de modèles en îles et de divergence afin de valider l'approche basée sur la communalité pour réaliser des scans à sélection. J'ai ensuite développé la librairie R pcadapt et proposé une statistique de scan à sélection plus puissante que la communalité qui est la distance robuste de Mahalanobis. Ce travail correspond à la publication [@luu2017pcadapt]. La dernière contribution principale de ma thèse correspond au développement d'une méthode statistique basée sur l'ACP qui permet d'identifier les régions du génôme impliquées dans les évènements d'introgression adaptative. Ce travail correspond au manuscript *Scanning genomes for adaptive introgression using principal component analysis* et fera l'objet d'une soumission prochainement.
 
 Dans le chapitre 2, nous commençons par décrire les différents modèles, historiques et contemporains, utilisés pour réaliser des scans génomiques pour la sélection. Ce premier chapitre rappelle ensuite quelle est l'utilisation de l'Analyse en Composantes Principales en génétique des populations. La fin du chapitre 2 rappelle les résultats obtenus avec la communalité et la distance de Mahalanobis, qui sont implémentées dans la librairie pcadapt, et qui correspondent aux publications [@duforet2015detecting; @luu2017pcadapt]. Le chapitre 3 traite de l'introgression adaptative. Les chapitres 2 et 3 montrent comment l'ACP peut être exploitée de façon à détecter des signaux de sélection ainsi que des régions d'introgression adaptative. Enfin, nous terminerons avec les aspects computationnels et numériques qui nous ont préoccupé tout au long de la thèse, en présentant quelques comparatifs de performances réalisés avec divers algorithmes.
 

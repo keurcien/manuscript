@@ -18,7 +18,7 @@ Afin de mieux comprendre l'heuristique des méthodes de scan génomique présent
 
 #### Modèle en îles
 
-Dans un modèle en îles, les différentes populations échangent entre elles des individus au cours du temps (Figure \@ref(fig:demographic-models)). La proportion d'individus échangée est appelée taux de migration. De forts taux de migration vont avoir tendance à homogénéiser les variations génétiques entre les populations. Des faibles taux de migration vont en revanche conduire à une différenciation plus forte. Les différences de taux de migration peuvent par exemple être expliquées par l'existence de barrières naturelles [@landguth2010relationships].
+Dans un modèle en îles, les différentes populations échangent entre elles des individus au cours du temps (Figure \@ref(fig:demographic-models)). La proportion d'individus échangés est appelée taux de migration. De forts taux de migration vont avoir tendance à homogénéiser les variations génétiques entre les populations. Des faibles taux de migration vont en revanche conduire à une différenciation plus forte. Les différences de taux de migration peuvent par exemple être expliquées par l'existence de barrières naturelles [@landguth2010relationships].
 
 #### Modèle *star-like*
 
@@ -26,7 +26,7 @@ Le modèle *star-like* suppose l'existence d'une population ancestrale de laquel
 
 ------
 
-(ref:demographic-models-cap) Modèles démographiques. **A.** Représentation schématique d'un modèle en îles à trois populations. **B.** Représentation schématique d'un modèle *star-like* à trois populations. Les longueurs de branches correspondent à la dérive génétique depuis la divergence initiale et sont ici différentes entre les trois branches. Dans un modèle de divergence, la quantité de dérive est proportionnelle au temps de divergence divisé par la taille efficace de la sous-population. **C.** Représentation schématique d'un modèle *star-like* instantanée à trois populations où les trois branches ont subi la même quantité de dérive génétique. **D.** Représentation schématique d'un modèle de divergence présentant une structure hiérarchique.
+(ref:demographic-models-cap) Modèles démographiques. **A.** Représentation schématique d'un modèle en îles à trois populations. **B.** Représentation schématique d'un modèle *star-like* à trois populations. Les longueurs de branches correspondent à la dérive génétique depuis la divergence initiale et sont ici différentes les unes des autres. Dans un modèle de divergence, la quantité de dérive est proportionnelle au temps de divergence divisé par la taille efficace de la sous-population. **C.** Représentation schématique d'un modèle *star-like* à trois populations où les trois branches ont subi la même quantité de dérive génétique. **D.** Représentation schématique d'un modèle de divergence présentant une structure hiérarchique.
 
 ```{r demographic-models, fig.cap='(ref:demographic-models-cap)'}
 circleFun <- function(center = c(0, 0),
@@ -206,7 +206,7 @@ où $\bar{p} = \frac{1}{N-1}\sum_{i = 1}^N p_i$.
 ```
 
 
-Dans l'expression de la $F_{ST}$ donnée en \@ref(def:fst), le numérateur correspond à la variance génétique interpopulationnelle tandis que le dénominateur correspond à la variance génétique mesurée à l'échelle de la *métapopulation*^[ensemble de populations d'individus appartenant à la même espèce.]. La $F_{ST}$ peut être vue comme la réduction de variance génétique due à la structure de population. Autrement dit, on regarde si le fait de grouper les individus dans des populations a une incidence ou non sur la variance génétique.
+Dans l'expression de la $F_{ST}$ donnée en \@ref(def:fst), le numérateur correspond à la variance génétique interpopulationnelle tandis que le dénominateur correspond à la variance génétique mesurée à l'échelle de la *métapopulation*^[ensemble de populations d'individus appartenant à la même espèce.]. La $F_{ST}$ peut être vue comme la réduction de variance génétique due à la structure de populations. Autrement dit, on regarde si le fait de grouper les individus dans des populations a une incidence ou non sur la variance génétique.
 
 ### Test de Lewontin-Krakauer
 
@@ -223,14 +223,14 @@ Notant $N$ le nombre de populations, la statistique de test introduite par @lewo
 ```
 
 
-Dans un scénario de divergence instantanée (Figure \@ref(fig:demographic-models)), sous l'hypothèse que les fréquences alléliques sont distribuées selon une loi normale ou binomiale, $T_{LK}$ suit une loi du $\chi^2$ à $N-1$ degrés de libertés [@lewontin1973distribution]. En effet, en utilisant la définition \@ref(def:fst) de la $F_{ST}$ et en remarquant que :
+Dans un scénario de divergence instantanée (Figure \@ref(fig:demographic-models)), sous l'hypothèse que les fréquences alléliques sont distribuées selon une loi normale ou binomiale, $T_{LK}$ suit une loi du $\chi^2$ à $N-1$ degrés de libertés [@lewontin1973distribution]. En effet, notant $p = (p_1, p_2, \dots, p_N)$, en utilisant la définition \@ref(def:fst) de la $F_{ST}$ et en remarquant que :
 
 \begin{equation}
-  (N-1)F_{ST} = \frac{1}{\bar{p}(1 - \bar{p})}\sum_{i = 1}^N (p_i - \bar{p})^2 = \left(\frac{\boldsymbol{p} - \bar{p}}{\sqrt{\bar{p}(1-\bar{p})}}\right) \left(\frac{\boldsymbol{p} - \bar{p}}{\sqrt{\bar{p}(1-\bar{p})}}\right) ^T
+  (N-1)F_{ST} = \frac{1}{\bar{p}(1 - \bar{p})}\sum_{i = 1}^N (p_i - \bar{p})^2 = \left(\frac{p - \bar{p}}{\sqrt{\bar{p}(1-\bar{p})}}\right) \left(\frac{p - \bar{p}}{\sqrt{\bar{p}(1-\bar{p})}}\right)^T,
   (\#eq:LK-chi2)
 \end{equation}
 
-il est possible de réécrire $T_{LK}$ sous la forme d'une somme quadratique de lois normales. Cependant, les contraintes sur le modèle démographique sous-jacent sont extrêmement fortes et dans certaines situations elles se seront vérifiées. Par exemple, dans les exemples de la figure \@ref(fig:demographic-models), l'approximation $\chi^2$ est correcte pour le modèle en îles du panel A et pour le modèle star-like du panel C. En revanche pour le panel C où les longueurs des branches sont différentes, l'approximation $\chi^2$ n'est plus correcte parce que les variances des quantités $p_i - \bar{p}$ ne sont pas identiques pour différentes valeurs de $i$. Des variantes de ce test ont donc été proposées pour s'adapter à des modèles de structure de populations plus flexibles [@excoffier2009detecting; @bonhomme2010detecting; @whitlock2015reliable].
+il est possible de réécrire $T_{LK}$ sous la forme d'une somme quadratique de lois normales. Cependant, les contraintes sur le modèle démographique sous-jacent sont extrêmement fortes et dans certaines situations elles ne seront pas vérifiées. Par exemple, dans les exemples de la figure \@ref(fig:demographic-models), l'approximation $\chi^2$ est correcte pour le modèle en îles (Figure \@ref(fig:demographic-models), panel A) et pour le modèle *star-like* (Figure \@ref(fig:demographic-models), panel C). En revanche, pour le panel C où la longueur des branches est différente, l'approximation $\chi^2$ n'est plus correcte parce que les variances des quantités $p_i - \bar{p}$ ne sont pas identiques pour différentes valeurs de $i$. Des variantes de ce test ont donc été proposées pour s'adapter à des modèles de structure de populations plus flexibles [@excoffier2009detecting; @bonhomme2010detecting; @whitlock2015reliable].
 
 #### Estimation du nombre de degrés de liberté effectif
 
@@ -245,12 +245,12 @@ L'estimation de $\text{df}$ se fait en maximisant la fonction de log-vraisemblan
 
 #### Dérivation du test de Lewontin-Krakauer dans le cas de populations structurées
 
-Dans le cas de structure hiérarchique (panel D de la figure \@ref(fig:demographic-models)), les quantités $p_i - \bar{p}$ ne sont plus indépendantes entre elles, ce qui remet en cause l'approximation $\chi^2$. Pour tenir compte de la structure hiérarchique, @bonhomme2010detecting proposent de corriger la statistique $T_{LK}$ pour l'apparentement génétique des populations, modélisé par une matrice $\mathcal{F} = (f_{ij})_{1 \leq i,j \leq N} \in M_N(\mathbb{R})$, où $f_{ij}$ mesure la corrélation entre $p_i$ et $p_j$ et peut être interprétée comme la probabilité qu'un individu de la population $i$ et un individu de la population $j$ aient hérité de cet allèle d'un même ancêtre commun.
+Dans le cas de structure hiérarchique (Figure \@ref(fig:demographic-models), panel D), les quantités $p_i - \bar{p}$ ne sont plus indépendantes entre elles, ce qui remet en cause l'approximation $\chi^2$. Pour tenir compte de la structure hiérarchique, @bonhomme2010detecting proposent de corriger la statistique $T_{LK}$ pour l'apparentement génétique des populations, modélisé par une matrice $\mathcal{F} = (f_{ij})_{1 \leq i,j \leq N} \in \mathcal{M}_N(\mathbb{R})$, où $f_{ij}$ mesure la corrélation entre $p_i$ et $p_j$ et peut être interprétée comme la probabilité qu'un individu de la population $i$ et un individu de la population $j$ aient hérité de cet allèle d'un même ancêtre commun.
 
 La statistique de test $T_{F-LK}$, correspondant au test de Lewontin-Krakauer corrigé pour l'apparentement génétique $\mathcal{F}$, garde une forme analogue à celle développée en \@ref(eq:LK-chi2) :
 
 \begin{equation}
-   T_{F-LK} = \left(\frac{\boldsymbol{p} - \hat{p}_0}{\sqrt{\hat{p}_0(1-\hat{p}_0)}}\right) \mathcal{F}^{-1} \left(\frac{\boldsymbol{p} - \hat{p}_0}{\sqrt{\hat{p}_0(1-\hat{p}_0)}}\right)^T
+   T_{F-LK} = \left(\frac{p - \hat{p}_0}{\sqrt{\hat{p}_0(1-\hat{p}_0)}}\right) \mathcal{F}^{-1} \left(\frac{p - \hat{p}_0}{\sqrt{\hat{p}_0(1-\hat{p}_0)}}\right)^T
   (\#eq:flk-statistic)
 \end{equation}
 
@@ -259,25 +259,25 @@ Dans le cas où les locus sont soumis uniquement à la dérive génétique, $T_{
 
 ### Le modèle $F$
 
-Une autre idée consiste à affirmer qu'en l'absence de sélection, dans un modèle en îles \@ref(fig:demographic-models), la proportion d'allèles immigrants^[venant d'une autre population.] doit être la même pour tous les locus [@beaumont2004identifying]. Cette proportion d'allèles immigrants mesure la dérive génétique subie par la population qui intègre ces allèles [@villemereuil2015new]. En effet, une population échangeant moins d'allèles avec les autres populations se retrouverait alors plus différenciée. Les locus susceptibles d'être sous sélection sont ceux présentant une proportion d'allèles migrants anormalement basse [@petry1983effect; @bazin2010likelihood]. @beaumont2004identifying proposent alors un modèle de régression logistique pour la $F_{ST}$ [@balding2003likelihood; @balding2008handbook], en la modélisant par des effets $\alpha$ spécifiques au locus (taux de mutation, sélection) et des effets $\beta$ spécifiques à la population (taille de population efficace, taux de migration), c'est le modèle $F$ :
+Une autre idée consiste à affirmer qu'en l'absence de sélection, dans un modèle en îles (Figure \@ref(fig:demographic-models), panel A), la proportion d'allèles immigrants^[venant d'une autre population.] doit être la même pour tous les locus [@beaumont2004identifying]. Cette proportion d'allèles immigrants mesure la dérive génétique subie par la population qui intègre ces allèles [@villemereuil2015new]. En effet, une population échangeant moins d'allèles avec les autres populations se retrouverait alors plus différenciée. Les locus susceptibles d'être sous sélection sont ceux présentant une proportion d'allèles migrants anormalement basse [@petry1983effect; @bazin2010likelihood]. @beaumont2004identifying proposent alors un modèle de régression logistique pour la $F_{ST}$ [@balding2003likelihood; @balding2008handbook], en la modélisant par des effets $\alpha$ spécifiques au locus (taux de mutation, sélection) et des effets $\beta$ spécifiques à la population (taille de population efficace, taux de migration), c'est le modèle $F$ :
 
 \begin{equation}
   \log \left( \frac{F_{ST}}{1 - F_{ST}} \right) = \alpha + \beta
   (\#eq:Bayescan-statistic-implicit)
 \end{equation}
 
-La décomposition de la $F_{ST}$, en une somme d'effets locus-spécifique et population-spécifique, permet d'identifier les locus à forte $F_{ST}$ qui présentent un effet qui n'est pas partagé par les autres locus. Le modèle $F$ ne prend pas en compte la structure hiérarchique [@foll2014widespread]. Ce modèle est implémenté dans le logiciel Bayescan.
+La décomposition de la $F_{ST}$, en une somme d'effets locus-spécifique et population-spécifique, permet d'identifier les locus à forte $F_{ST}$ qui présentent un effet qui n'est pas partagé par les autres locus. L'un des défauts de ce modèle est qu'il ne prend pas en compte la structure hiérarchique [@foll2014widespread]. Le modèle $F$ est implémenté dans le logiciel Bayescan.
 
 ------
 
-La liste des méthodes présentées ici n'est pas exhaustive, mais elle met en avant plusieurs inconvénients qui sont communs à la plupart des scans génomiques. 
+La liste des méthodes présentées ici n'est pas exhaustive, mais elle met en avant plusieurs défauts qui sont communs à la plupart des méthodes de scan génomique. 
 
 Dans le cas de la $F_{ST}$, la nécessité de travailler avec des fréquences alléliques populationnelles impose de travailler à l'échelle des populations plutôt qu'à l'échelle des individus. Les conséquences directes d'une telle nécessité sont :
 
 - l'assignation arbitraire de chaque individu à une population. La présence d'individus métissés peut s'avérer problématique.
 - la supposition que la structure de populations n'est pas continue.
 
-Par ailleurs, les méthodes de scan génomique baséss sur des méthodes bayésiennes telles que Bayescan ou la première version de PCAdapt [@foll2008genome; @duforet2014genome] sont connues pour être computationnellement lourdes, et peuvent nécessiter plusieurs jours de calcul même dans le cas de jeux de données comportant seulement quelques milliers de SNPs. 
+Par ailleurs, les méthodes de scan génomique basées sur des méthodes bayésiennes telles que Bayescan ou la première version de PCAdapt [@foll2008genome; @duforet2014genome] sont connues pour être computationnellement lourdes, et peuvent nécessiter plusieurs jours de calcul même dans le cas de jeux de données comportant seulement quelques milliers de SNPs. 
 
 ## L'Analyse en Composantes Principales en génétique des populations
 
@@ -285,7 +285,7 @@ L'Analyse en Composantes Principales est un outil incontournable pour l'analyse 
 
 ### Principe de l'Analyse en Composantes Principales 
 
-L'Analyse en Composantes Principales est une méthode statistique consistant à transformer un ensemble de variables possiblement corrélées en un nouvel ensemble de variables orthogonales et donc non corrélées appelées *composantes principales*. De plus, elle est définie de telle sorte que la première composante principale maximise la variance, ce qui signifie que parmi toutes les droites affines de l'espace de départ, la première composante correspond à celle où la projection orthogonale des observations présente la dispersion (autrement dit la variance) la plus grande (Figure \@ref(fig:pca-definition)). De la même manière, la deuxième composante principale correspond à la droite affine maximisant la variance, sous la contraite d'être orthogonale à la composante principale précédente (Figure \@ref(fig:pca-definition)). Les composantes principales suivantes se déduisent donc des précédentes en suivant ce schéma itératif. La contrainte d'orthogonalité impose que le nombre de composantes principales soit inférieur au nombre de variables et au nombre d'observations. En pratique, le calcul des composantes principales repose sur la diagonalisation de la matrice de covariance ou de la matrice de corrélation.
+L'Analyse en Composantes Principales est une méthode statistique consistant à transformer un ensemble de variables possiblement corrélées en un nouvel ensemble de variables orthogonales et donc non corrélées appelées *composantes principales*. De plus, elle est définie de telle sorte que la première composante principale maximise la variance, ce qui signifie que parmi toutes les droites affines de l'espace de départ, la première composante correspond à celle où la projection orthogonale des observations présente la dispersion (ou la variance) la plus grande (Figure \@ref(fig:pca-definition)). De la même manière, la deuxième composante principale correspond à la droite affine maximisant la variance, sous la contraite d'être orthogonale à la composante principale précédente (Figure \@ref(fig:pca-definition)). Les composantes principales suivantes se déduisent donc des précédentes en suivant ce schéma itératif. La contrainte d'orthogonalité impose que le nombre de composantes principales soit inférieur au nombre de variables et au nombre d'observations. En pratique, le calcul des composantes principales repose sur la diagonalisation de la matrice de covariance ou de la matrice de corrélation.
 
 \newpage
 
@@ -327,11 +327,11 @@ data.frame(x = mvg[, 1], y = mvg[, 2]) %>%
 L'utilisation de l'Analyse en Composantes Principales en génétique des populations a été popularisée par Cavalli-Sforza [@menozzi1978synthetic]. En génétique des populations, l'Analyse en Composantes Principales est réalisée à partir de la diagonalisation d'une matrice de covariance particulière, appelée matrice d'apparentement génétique [@mcvean2009genealogical]. Nous avons vu un peu plus haut la notion d'apparentement génétique interpopulationnel ainsi que l'intérêt de corriger la $F_{ST}$ pour celui-ci. Depuis l'apparition des données génomiques, il est possible de définir des mesures de similarité génétique à l'échelle de l'individu à partir des données de génotype, contrairement à l'apparentement génétique interpopulationnel qui est défini à partir des fréquences alléliques. La figure \@ref(fig:correlogram) compare les deux matrices d'apparentement pour une même simulation d'un modèle démographique à trois populations, et met en évidence le fait que l'apparentement génétique peut s'apprécier à une échelle plus fine. Il existe cependant différentes définitions de l'apparentement génétique interindividuel [@speed2015relatedness]. Nous utiliserons la définition basée sur la corrélation allélique, retenue par @galinsky2016fast et @chen2016eigengwas, auquel cas l'apparentement génétique entre l'individu $i$ et l'individu $j$ est donnée par la quantité suivante :
 
 \begin{equation}
-  GRM_{ij} = \frac{1}{p} \sum_{k = 1}^p \frac{(G_{ki} - 2p_k) \times (G_{kj} - 2p_k)}{2p_i(1-p_i)}
+  G_{RM, ij} = \frac{1}{p} \sum_{k = 1}^p \frac{(G_{ki} - 2p_k) \times (G_{kj} - 2p_k)}{2p_k(1-p_k)}
   (\#eq:GRM)
 \end{equation}
 
-(ref:correlogram-cap) À gauche une matrice d'apparentement génétique interpopulationnelle calculée à partir de la simulation d'un modèle en îles à trois populations. À droite une matrice d'apparentement génétique interindividuelle. Ces matrices d'apparentement ont été estimées à partir d'une simulation d'un modèle en îles à trois populations.
+(ref:correlogram-cap) À gauche une matrice d'apparentement génétique interpopulationnelle. À droite une matrice d'apparentement génétique interindividuelle. Ces matrices d'apparentement ont été estimées à partir d'une simulation d'un modèle en îles à trois populations.
 
 ```{r correlogram, fig.cap='(ref:correlogram-cap)'}
 G <- readRDS("data/isl.rds")
@@ -443,11 +443,11 @@ ggplot(ggdf, aes(x = PC2, y = PC1, fill = pop)) +
 
 #### Ascendance génétique {-}
 
-Une autre particularité de l'ACP réside dans la possibilité d'inférer les *coefficients de métissage* ou *coefficients d'ascendance* à partir des composantes principales [@mcvean2009genealogical; @ma2012principal]. Un coefficient de métissage quantifie pour un individu donné la proportion du génôme provenant d'un groupe génétique spécifique (appelé aussi population source ou population ancestrale). L'un des premiers articles à établir un lien entre l'ACP et les coefficients de métissage global fut sur l'interprétation généalogique de l'ACP de @mcvean2009genealogical (Figure \@ref(fig:mcvean)). Nous reviendrons sur cette notion dans le chapitre consacré à l'introgression.
+Une autre particularité de l'ACP réside dans la possibilité d'inférer les *coefficients de métissage* ou *coefficients d'ascendance* à partir des composantes principales [@mcvean2009genealogical; @ma2012principal]. Un coefficient de métissage quantifie pour un individu donné la proportion de son génôme provenant d'un groupe génétique spécifique (appelé aussi population source ou population ancestrale). L'un des premiers articles à établir un lien entre l'ACP et les coefficients de métissage global fut sur l'interprétation généalogique de l'ACP par @mcvean2009genealogical (Figure \@ref(fig:mcvean)). Nous reviendrons sur cette notion dans le chapitre consacré à l'introgression.
 
 \newpage
 
-(ref:mcvean-cap) Coefficients de métissage et ACP [@mcvean2009genealogical]. **A.** Chaque ligne de la figure correspond à un chromosome. Chacune de ces lignes représente la projection des individus issus des populations CEU, ASW et YRI sur la première composante principale. **B.** Chaque point représente un individu correspondant à la moyenne des projections précédentes, ramenées à l'intervalle $[0, 1]$ avec une transformation affine. 
+(ref:mcvean-cap) Coefficients de métissage et ACP [@mcvean2009genealogical]. **A.** Chaque ligne de la figure correspond à un chromosome. Chacune de ces lignes représente la projection des individus issus des populations CEU, ASW et YRI sur la première composante principale. **B.** Chaque point représente un individu correspondant à la moyenne des projections précédentes, ramenées à l'intervalle $[0, 1]$ à l'aide d'une transformation affine. 
 
 ```{r mcvean, results = 'asis', fig.cap = '(ref:mcvean-cap)', out.width = '300px'}
 include_graphics("figure/mcvean.png")
@@ -461,11 +461,11 @@ Malgré l'importance et la popularité de l'Analyse Composantes Principales en g
 
 Nous présentons dans cette partie des statistiques basées sur l'Analyse en Composantes Principales dans le cadre des scans génomiques. Les raisons pour lesquelles nous nous sommes intéressés à l'ACP sont multiples. Tout d'abord, l'ACP est particulièrement adaptée au traitement de données en grande dimension, justement parce qu'elle permet de les résumer à l'aide d'un nombre réduit de variables. De plus, comme expliqué précédemment, l'ACP permet de retrouver la structure génétique de façon non paramétrique et sans prior sur l'appartenance individuelle. Grâce à cette propriété, nous montrons la possibilité d'étendre la $F_{ST}$ au cas de populations structurées sans information populationnelle a priori. L'idée de notre démarche repose sur l'hypothèse que les axes principaux reflètent la structure génétique et que les marqueurs génétiques les plus corrélés à ces axes sont des candidats crédibles pour l'adaptation locale. Cette partie sera dédiée à la présentation des méthodes statistiques développées à partir de cette hypothèse de travail. Leur présentation sera accompagnée de validations numériques conduites sur des simulations ainsi que de justifications théoriques quant aux similarités qu'elles présentent avec les méthodes classiques de scan génomique. 
 
-Dans l'article 1 [@duforet2015detecting], nous introduisons la communalité en tant que statistique de test pour la détection de signaux d'adaptation locale. La communalité est une notion empruntée à l'analyse factorielle et s'interprète comme la proportion de variance expliquée par le modèle à facteurs. Le but de notre approche est de proposer une statistique Nous justifierons également d'un point de vue théorique les observations établissant la correspondance entre l'indice de fixation et la communalité. Pour ce faire, nous montrerons dans le cas de deux populations que la communalité peut s'écrire sous une forme analytique semblable à celle de la $F_{ST}$, nous invitant de ce fait à considérer la communalité comme une extension de la $F_{ST}$ à l'échelle individuelle. Cette généralisation est particulièrement intéressante lorsqu'il est difficile de définir des populations de façon claire comme cela peut être le cas en présence d'individus métissés. Cependant, de la même manière que la $F_{ST}$, la communalité n'est pas adaptée au cas de populations structurées. 
+Dans l'article 1 [@duforet2015detecting], nous introduisons la communalité en tant que statistique de test pour la détection de signaux d'adaptation locale. La communalité est une notion empruntée à l'analyse factorielle et s'interprète comme la proportion de variance expliquée par le modèle à facteurs. Nous justifierons également d'un point de vue théorique les observations établissant la correspondance entre l'indice de fixation et la communalité. Pour ce faire, nous montrerons que la $F_{ST}$ peut se réécrire sous la forme d'une statistique de communalité pour un modèle à facteurs discrets, nous invitant de ce fait à considérer la communalité comme une extension de la $F_{ST}$ au cas continu. Cette généralisation est particulièrement intéressante lorsqu'il est difficile de définir des populations de façon claire comme cela peut être le cas en présence d'individus métissés. Cependant, de la même manière que la $F_{ST}$, la communalité n'est pas adaptée au cas de populations structurées. 
 
 L'article 2 présente une nouvelle statistique de test basée sur la distance robuste de Mahalanobis pour pallier au problème de la structure de populations [@luu2017pcadapt]. Enfin nous établirons le lien entre cette nouvelle statistique et le test de Lewontin-Krakauer corrigé pour l'apparentement génétique \@ref(eq:flk-statistic), ce qui permettra de conclure quant à la généralisation de la statistique de test $T_{F-LK}$ par cette nouvelle statistique.
 
-Ce travail a notamment abouti sur le développement d'un module R implémentant ces statistiques, appelé pcadapt [@duforet2015detecting; @luu2017pcadapt]. L'aspect computationnel de ces méthodes sera cependant traité dans le chapitre correspondant, et permettra notamment de discuter des problématiques liées à la présence de données manquantes ainsi que de la complexité algorithmique.
+Ce travail a notamment abouti sur le développement d'une librairie R implémentant ces statistiques, appelée pcadapt [@duforet2015detecting; @luu2017pcadapt]. L'aspect computationnel de ces méthodes sera cependant traité dans le chapitre correspondant, et permettra notamment de discuter des problématiques liées à la présence de données manquantes ainsi que de la complexité algorithmique.
 
 ### La communalité
 
@@ -477,10 +477,10 @@ La première approche présentée repose sur la corrélation des locus avec chaq
 
 ```{definition, corr, name="Corrélation à un axe principal", echo=TRUE}
 
-Soit $G \in \mathcal{M}_{np}(\{0, 1, 2\})$, où $n$ désigne le nombre d'individus et $p$ le nombre de locus. Soit $U \Sigma V^T$ la décomposition en valeurs singulières de rang $K$ de $\tilde{G}$. Notant $\sqrt{\lambda_1}, \dots, \sqrt{\lambda_K}$ les élements diagonaux de $\Sigma$, la corrélation $\rho_{jk}$ du locus $j \in [|1, p|]$ avec le $k$-ième axe principal est donné par la formule ci-dessous [@cadima1995loading] :
+Soit $G \in \mathcal{M}_{np}(\{0, 1, 2\})$, où $n$ désigne le nombre d'individus et $p$ le nombre de locus. Soit $U \Sigma V^T$ la décomposition en valeurs singulières de rang $K$ de $\tilde{G}$. Notant $\sqrt{\lambda_1}, \dots, \sqrt{\lambda_K}$ les élements diagonaux de $\Sigma$, la corrélation $\rho_{jk}$ du locus $j \in [|1, p|]$ avec le $k$-ième axe principal est donnée par la formule ci-dessous [@cadima1995loading] :
 
 \begin{equation}
-  \rho_{jk} = \frac{\sqrt{\lambda_{k}}V_{jk}}{\sqrt{n-1}}
+  \rho_{jk} = \frac{\sqrt{\lambda_{k}}V_{jk}}{\sqrt{n-1}}.
 \end{equation}
 
 ```
@@ -496,7 +496,7 @@ Reprenant les notations de la définition \@ref(def:corr), la communalité $h^2$
   \begin{split}
     h_j^2 &= \sum_{k=1}^K \rho_{jk}^2 \\
     &= \frac{1}{n-1}\sum_{k=1}^K\sqrt{\lambda_{k}}V_{jk} \\
-    &\simeq ||\tilde{G}_{.,j}^TU||_2^2
+    &\simeq ||\tilde{G}_{.,j}^TU||_2^2.
   \end{split}
 \end{equation}
 ```
@@ -507,10 +507,10 @@ Le choix de cette statistique est fondé sur l'interprétation usuelle de la com
 #### Résultats {-}
 
 **La $F_{ST}$ peut être interprétée comme une proportion de variance expliquée.**
-Pour chacun des scénarios démographiques étudiés (modèle en île et modèle de divergence à 3 et 4 populations), nous avons montré numériquement que la $F_{ST}$ et la communalité sont corrélées à plus de $90\%$ [@duforet2015detecting]. Dans la suite de ce manuscript, nous explicitons un modèle à facteurs où la $F_{ST}$ correspond à la proportion de variance expliquée, ce qui permet de réécrire la $F_{ST}$ sous une forme analytique analogue à celle de la communalité $h^2$.
+Pour chacun des scénarios démographiques étudiés (modèle en île et modèle de divergence à 3 populations), nous avons montré numériquement que la $F_{ST}$ et la communalité sont corrélées à plus de $90\%$ [@duforet2015detecting]. Dans la suite de ce manuscript, nous explicitons un modèle à facteurs où la $F_{ST}$ correspond à la proportion de variance expliquée, ce qui permet de réécrire la $F_{ST}$ sous une forme analytique analogue à celle de la communalité $h^2$.
 
 ```{proposition, udelta, echo=TRUE}
-Soient $N$ le nombre de populations, $n_j$ le nombre d'individus appartenant à la $j$-ème population, $n$ le nombre total d'individus et $\delta_{ji}$ le symbole de Kronecker tel que $\delta_{ji} = 1$ si l'individu $i$ appartient à la $j$-ème population et $0$ sinon. Notant $U_{\delta} = \left(\frac{\delta_{ji}}{\sqrt{2(N-1)}n_j}\right)_{1 \leq i \leq n, \; 1\leq j \leq N} \in \mathcal{M}_{n, N}(\mathbb{R})$, il existe une matrice $L \in \mathcal{M}_{Np}(\mathbb{R})$ telle que :
+Soient $N$ le nombre de populations, $n_j$ le nombre d'individus appartenant à la $j$-ème population, $n$ le nombre total d'individus et $\delta_{ji}$ le symbole de Kronecker tel que $\delta_{ji} = 1$ si l'individu $i$ appartient à la $j$-ème population et $0$ sinon. Notant $U_{\delta} = \left(\frac{\delta_{ji}}{\sqrt{2(N-1)}n_j}\right)_{1 \leq i \leq n, \; 1\leq j \leq N} \in \mathcal{M}_{nN}(\mathbb{R})$, il existe une matrice $L \in \mathcal{M}_{Np}(\mathbb{R})$ telle que :
 
 $$\tilde{G} = U_{\delta}L.$$
 ```
@@ -533,7 +533,7 @@ $$F_{ST} = ||\tilde{G}_{.,j}^T U_{\delta}||_2^2.$$
 
 
 ```{proof, echo=TRUE}
-En reprenant les notations de la proposition \@ref(prp:udelta) et en rappelant que $p_k = \frac{\sum_{i=1}^n \delta_{ki} G_{ij}}{\sum_{i=1}^n 2\delta_{ki}}$,
+En reprenant les notations de la proposition \@ref(prp:udelta) et en observant que $p_k = \frac{\sum_{i=1}^n \delta_{ki} G_{ij}}{\sum_{i=1}^n 2\delta_{ki}}$,
 \begin{equation}
   \begin{split}
   F_{ST} & = \frac{1}{N-1}\frac{\sum_{k=1}^N (p_k - \bar{p})^2}{\bar{p}(1-\bar{p})} \\
@@ -554,10 +554,10 @@ Or $\tilde{G}_{ij} = \frac{G_{ij} - 2\bar{p}}{\sqrt{2\bar{p}(1-\bar{p})}}$ :
 ```
 
 
-La proposition \@ref(prp:fst-communality) permet d'identifier la $F_{ST}$ comme une statistique de communalité dans le cas particulier où les facteurs $U_{\delta}$ sont discrets. La statistique $h^2$ utilise les scores continus de l'ACP en guise de facteurs, ce qui suggère l'utilisation de la communalité en tant que généralisation de la $F_{ST}$. En réalité, ceci ne nous permet pas tout à fait de conclure puisque les matrices $U$ et $U_{\delta}$ peuvent en principe être bien différentes. Dans le cas de deux populations, nous montrons en annexe que $U = U_{\delta}$ à une rotation près, ce qui prouve que la $F_{ST}$ est égale à la communalité si les scores de l'ACP sont estimés de manière correcte.
+La proposition \@ref(prp:fst-communality) permet d'identifier la $F_{ST}$ comme une statistique de communalité dans le cas particulier où les facteurs $U_{\delta}$ sont discrets. La statistique $h^2$ utilise les scores continus de l'ACP en guise de facteurs, ce qui suggère l'utilisation de la communalité en tant que généralisation de la $F_{ST}$. En réalité, ceci ne nous permet pas tout à fait de conclure puisque les matrices $U$ et $U_{\delta}$ peuvent en principe être bien différentes. Dans le cas de deux populations, nous montrons en annexe que la matrice $U$ peut être assimilée à $U_{\delta}$, ce qui permet d'établir le lien entre la $F_{ST}$ et la communalité.
 
 **L'approche basée sur l'ACP permet de retrouver des signaux d'adaptation connus.**
-Les statistiques de corrélation et de communalité ont été calculées sur deux jeux de données humaines présentant une structure de populations discrète (1000 Genomes) et une structure de populations continue (POPRES)). Les approches basées sur l'ACP permettent de s'affranchir des considérations liées au caractère continu ou discret de la structure de populations, et par la même occasion de la difficulté de définir des populations. L'analyse de ces jeux de données a permis la détection de différentes régions du génôme connues pour être impliquées dans des processus d'adaptation locale (Figure \@ref(fig:popres-communality)), achevant de valider l'utilisation de l'ACP en tant qu'outil statistique pour les scans à sélection.
+Les statistiques de corrélation et de communalité ont été calculées sur deux jeux de données humaines présentant une structure de populations discrète (1000 Genomes) et une structure de populations continue (POPRES). Les approches basées sur l'ACP permettent de s'affranchir des considérations liées au caractère continu ou discret de la structure de populations, et par la même occasion de la difficulté de définir des populations. L'analyse de ces jeux de données a permis la détection de différentes régions du génôme connues pour être impliquées dans des processus d'adaptation locale (Figure \@ref(fig:popres-communality)), achevant de valider l'utilisation de l'ACP en tant qu'outil statistique pour les scans à sélection.
 
 (ref:popres-communality-cap) Analyse du jeu données POPRES réalisée avec pcadapt en utilisant la statistique de la communalité. Les points rouges correspondent aux 100 locus ayant les valeurs de communalité les plus élevées.
 
@@ -603,30 +603,30 @@ De par sa définition, la communalité est dépendante de la proportion de varia
 
 (ref:levelplot-cap) À gauche les lignes de niveau de la communalité avec $\lambda_1 = 2\lambda_2$ où l'axe des abscisse et l'axe des ordonnées correspondent aux loadings de chaque composante principale. À droite les lignes de niveau de la distance de Mahalanobis.
 
-```{r, levelplot, fig.cap='(ref:levelplot-cap)'}
-x <- seq(-5, 5, length.out = 1000)
-df.1 <- expand.grid(X = x, Y = x) %>%
-  mutate(Z = floor((2 * X^2 + Y^2) / 10),
-         stat = "Communalité")
-
-df.2 <- expand.grid(X = x, Y = x) %>%
-  mutate(Z = floor((X^2 + Y^2) / 10),
-         stat = "Mahalanobis")
-
-rbind(df.1, df.2) %>%
-  ggplot(aes(X, Y, z = Z)) +
-    facet_wrap(~stat, nrow = 1) +
-    geom_tile(aes(fill = Z)) +
-    xlab("X") +
-    ylab("Y") +
-    scale_fill_continuous(guide = "none") +
-    coord_fixed() +
-    theme_bw() 
-
+```{r levelplot, results='asis', fig.cap='(ref:levelplot-cap)'}
+include_graphics("figure/levelplot.png")
+# x <- seq(-5, 5, length.out = 1000)
+# df.1 <- expand.grid(X = x, Y = x) %>%
+#   mutate(Z = floor((2 * X^2 + Y^2) / 10),
+#          stat = "Communalité")
+# 
+# df.2 <- expand.grid(X = x, Y = x) %>%
+#   mutate(Z = floor((X^2 + Y^2) / 10),
+#          stat = "Mahalanobis")
+# 
+# rbind(df.1, df.2) %>%
+#   ggplot(aes(X, Y, z = Z)) +
+#     facet_wrap(~stat, nrow = 1) +
+#     geom_tile(aes(fill = Z)) +
+#     xlab("X") +
+#     ylab("Y") +
+#     scale_fill_continuous(guide = "none") +
+#     coord_fixed() +
+#     theme_bw() 
+# ggsave("figure/levelplot", device = "png")
 ```
 
 L'interprétation de la $F_{ST}$ en termes de proportion de variance expliquée fait de la communalité une statistique de test intéressante d'un point de vue conceptuel, permettant de considérer la communalité comme une extension de la $F_{ST}$. Cependant, elle garde de la $F_{ST}$ les défauts liés à la non-prise en compte de l'apparentement génétique interpopulationnel (cf. équation \@ref(eq:LK-chi2) [@bonhomme2010detecting]). Afin de remédier à ce problème, nous proposons une statistique de test basée sur la distance robuste de Mahalanobis.
-
 
 ### La distance robuste de Mahalanobis
 
@@ -634,13 +634,13 @@ Ce paragraphe résume de façon détaillée les résultats obtenus dans l'articl
 
 #### Définition {-}
 
-Nous avons décidé d'utiliser les coefficients de régression standardisés plutôt que les loadings pour calculer la distance de Mahalanobis.
+Nous choisissons d'utiliser les coefficients de régression standardisés plutôt que les loadings pour calculer la distance de Mahalanobis. Ce choix sera discuté dans la suite de ce paragraphe.
 
 ```{definition, zscores, name="Coefficients de régression standardisés", echo=TRUE}
 Soit $U \Sigma V^T$ la décomposition en valeurs singulières de rang $K$ de $\tilde{G}$. Notant $\epsilon = \tilde{G} - U \Sigma V^T \in \mathcal{M}_{np}(\mathbb{R})$, les coefficients de régression standardisés $z$, appelés encore $z$-scores, sont définis pour chaque locus $j$ par la relation ci-dessous [@saporta2006probabilites] :
 
 \begin{equation}
-  z_j = \frac{U^TG_{.,j}}{\sqrt{\frac{||\epsilon_{.,j}||_2^2}{n - K - 1}}}
+  z_j = \frac{U^TG_{.,j}}{\sqrt{\frac{||\epsilon_{.,j}||_2^2}{n - K - 1}}}.
 \end{equation}
 
 ```
@@ -656,7 +656,7 @@ Soit $z \in \mathbb{R}^K$, et $Z = (z_1, \dots, z_p) \in \mathcal{M}_{pK}(\mathb
 
 où $\bar{z}$ (resp. $\Sigma$) désigne la moyenne des $z$-scores (resp. la matrice de covariance).
 
-Si les $z$-scores $z_i$ sont distribués selon une loi normale multidimensionnelle d'espérance $\bar{z}$ et de matrice de covariance $\Sigma$ définie positive, alors $D^2 \sim \chi_K^2$. En pratique, nous utilisons le facteur d'inflation génomique $\lambda = \text{median}(D^2) / \text{median}(\chi^2_K)$ et approchons $D^2 / \lambda$ par un $\chi^2$ à $K$ degrés de liberté [@franccois2016controlling].
+Si les $z$-scores $z_i$ sont distribués selon une loi normale multidimensionnelle de moyenne $\bar{z}$ et de matrice de covariance $\Sigma$ définie positive, alors $D^2 \sim \chi_K^2$. En pratique, nous utilisons le facteur d'inflation génomique $\lambda = \text{median}(D^2) / \text{median}(\chi^2_K)$ et approchons $D^2 / \lambda$ par un $\chi^2$ à $K$ degrés de liberté [@franccois2016controlling].
 
 ```
 
@@ -670,7 +670,7 @@ La statistique de test $T_{F-LK}$ de @bonhomme2010detecting et la $F_{ST}$ gén�
 
 - les matrices de covariance ainsi estimées sont ensuites représentées par des ellipses relativement à un niveau de confiance fixé ici à $95\%$, signifiant que les ellipses de covariance (Figure \@ref(fig:ogk-mcd)) sont censées recouvrir $95\%$ des observations neutres. 
 
-- nous regardons ensuite quelle ellipse contient le moins d'observations aberrantes, tout en contenant au moins $95\%$ des locus neutres. 
+- nous regardons ensuite quelle ellipse contient le moins d'observations aberrantes, tout en couvrant au moins $95\%$ des locus neutres. 
 
 La figure \@ref(fig:ogk-mcd) montre que l'utilisation d'une méthode d'estimation robuste est nécessaire, même pour des jeux de données présentant moins de $10\%$ de données aberrantes. Quant à la comparaison entre l'estimateur OGK et l'estimateur MCD, les deux méthodes semblent effectivement tenir compte de la présence de données aberrantes pour ajuster le calcul de la matrice de covariance. Nous notons néanmoins que l'estimateur OGK retient moins de données aberrantes tout en recouvrant une proportion de locus neutres visiblement supérieure à $95\%$ au sein de son ellipse de confiance à $95\%$. Notre choix d'estimateur s'est donc porté sur l'estimateur OGK et a été réimplémenté dans la librairie pcadapt.
 
@@ -788,7 +788,7 @@ Nous justifions ici de façon empirique l'utilisation des coefficients de régre
 
 - la distance de Mahalanobis et les $p$-valeurs associées sont calculées à partir des loadings et des coefficients de régression standardisés. 
 
-- pour chacun des seuils de significativité (ici $5\%$, $10\%$ et $20\%$), nous déterminons l'ensemble des SNPs présentant une $p$-valeur ajustée^[nous utilisons en réalité la $q$-valeur associée.] inférieure à ce seuil et calculons le taux de fausses de découvertes et le rappel relativement à cet ensemble.
+- pour chacun des seuils de significativité (ici $5\%$, $10\%$ et $20\%$), nous déterminons l'ensemble des SNPs présentant une $p$-valeur ajustée^[nous utilisons en réalité la $q$-valeur associée.] inférieure à ce seuil et calculons le taux de fausses de découvertes et la puissance relativement à cet ensemble.
 
 Cette procédure de comparaison nous permet par exemple d'évaluer si le taux de fausses découvertes est bien contrôlé ou encore si une méthode est trop conservative ou non. En figure \@ref(fig:loadings-zscores), nous constatons que les deux statistiques sont bien contrôlées, c'est-à-dire que pour chacun des seuils de significativité, aucune des deux statistiques ne présentent un taux de fausses découvertes supérieur à ce seuil. La figure \@ref(fig:loadings-zscores) met en évidence le côté relativement conservatif de la distance de Mahalanobis calculée à partir des loadings, ce qui a pour effet de diminuer la puissance du test.
 
@@ -820,10 +820,10 @@ rbind(x, y) %>%
 #### Rappel des résultats principaux de l'article 2 {-}
 
 **Nous avons développé une méthode de scan à sélection valable pour différentes structures de populations, aussi bien adaptée au cas de populations discrètes qu'au cas de populations continues.**
-À l'aide de simulations reproduisant différents scénarios démographiques, exhibant des structures de populations discrètes et continues, nous montrons que l'utilisation de la distance robuste de Mahalanobis permet de pallier aux défauts de la communalité. En termes de sensibilité statistique et de contrôle du taux de fausses découvertes, notre méthode affiche des résultats meilleurs en comparaison à d'autres méthodes de scan à sélection (OutFLANK, Bayescan, FLK), quelque soit les modèles démographiques sous-jacents. L'exception est le modèle en îles où les performances sont équivalentes. Nous étudions également l'impact du caractère discret ou continu de la structure de populations sur les méthodes de scan à sélection et montrons que notre méthode est moins sensible à la présence d'individus métissés, contrairement aux méthodes basées sur la $F_{ST}$.
+À l'aide de simulations reproduisant différents scénarios démographiques, exhibant des structures de populations discrètes et continues, nous montrons que l'utilisation de la distance robuste de Mahalanobis permet de pallier aux défauts de la communalité. En termes de sensibilité statistique et de contrôle du taux de fausses découvertes, notre méthode affiche de meilleurs résultats en comparaison à d'autres méthodes de scan à sélection (OutFLANK, Bayescan, FLK), quelque soit le modèle démographique sous-jacent, à l'exception du modèle en îles où les performances sont équivalentes. Nous étudions également l'impact du caractère discret ou continu de la structure de populations sur les méthodes de scan à sélection et montrons que notre méthode est moins sensible à la présence d'individus métissés, contrairement aux méthodes basées sur la $F_{ST}$.
 
 **Une généralisation de $T_{F-LK}$.** 
-La similarité des résultats numériques produits par pcadapt et FLK suggèrent l'existence d'un lien entre les deux méthodes et nous justifions ce résultat en annexe. C'est une généralisation du test de $T_{F-LK}$ puisque pcadapt peut s'appliquer dans le cas de populations continues.
+La similarité des résultats numériques produits par pcadapt et FLK suggèrent l'existence d'un lien entre les deux méthodes et nous justifions ce résultat en annexe. La distance robuste de Mahalanobis calculée à partir de l'ACP généralise la statistique de test $T_{F-LK}$ car elle peut être utilisée dans le cas de populations continues.
 
 \newpage
 
@@ -893,13 +893,13 @@ To compare the performance of different PCA-based summary statistics, we simulat
 
 (ref:ndf-fig1-cap) Repartition of the 1% top-ranked SNPs for each PCA-based statistic under a divergence model with two types of adaptive constraints. Thicker and colored lineages correspond to lineages where adaptation took place. The squared loadings with PC1 $\rho_{j1}^2$ pick a large proportion of SNPs involved in selection in population $A$ whereas the squared loadings with PC2 $\rho_{j2}^2$ pick SNPs involved in selection in population $B_1$. This difference is reflected in the different repartition of the top-ranked SNPs for the communality $h^2$ and the statistic ${h^{\prime}}^2$.
 
-```{r ndf-fig1, results='asis', fig.cap='(ref:ndf-fig1-cap)', out.width="50%"}
+```{r ndf-fig1, results='asis', fig.cap='(ref:ndf-fig1-cap)', out.width="70%"}
 include_graphics("figure/ndf-fig1.png")
 ```
 
 (ref:ndf-fig2-cap) Repartition of the 1% top-ranked SNPs of each PCA-based statistic under a divergence model with four types of adaptive constraints. Thicker and colored lineages correspond to lineages where adaptation occurred. The different types of SNPs picked by the squared loadings $\rho_{j1}^2$ and $\rho_{j2}^2$ are also found when comparing the communality $h^2$ and the statistic ${h^{\prime}}^2$.
 
-```{r ndf-fig2, results='asis', fig.cap='(ref:ndf-fig2-cap)', out.width="50%"}
+```{r ndf-fig2, results='asis', fig.cap='(ref:ndf-fig2-cap)', out.width="70%"}
 include_graphics("figure/ndf-fig2.png")
 ```
 
@@ -939,17 +939,29 @@ When performing a genome scan with PCA, there are different choices of statistic
 
 The two Manhattan plots based on the squared loadings for PC1 and PC2 are displayed in figures \@ref(fig:ndf-fig4) and \@ref(fig:ndf-fig5). Because of linkage disequilibrium (LD), Manhattan plots generally produce clustered outliers. To investigate if the top 0.1% outliers are clustered in the genome, we count--for various window sizes--the proportion of contiguous windows containing at least one outlier. We find that outlier SNPs correlated with PC1 or with PC2 are more clustered than expected if they would have been uniformly distributed among the 36,536,154 variants (supplementary fig. \@ref(fig:ndf-figS12)). Additionally, the clustering is larger for the outliers related to the second PC as they cluster in fewer windows (supplementary fig. \@ref(fig:ndf-figS12)). As the genome scan for PC2 captures more recent adaptive events, it reveals larger genomic windows that experienced fewer recombination events.
 
+
+\newpage
+
+
 (ref:ndf-fig4-cap) Manhattan plot for the 1000 Genomes data of the squared loadings $\rho_{j1}^2$ with the first principal component. For sake of presentation, only the top-ranked SNPs (top 0.1%) are displayed and the 100 top-ranked SNPs are colored in red.
 
-```{r ndf-fig4, results='asis', fig.cap='(ref:ndf-fig4-cap)', out.width="50%"}
+```{r ndf-fig4, results='asis', fig.cap='(ref:ndf-fig4-cap)', out.width='\\textwidth'}
 include_graphics("figure/ndf-fig4.png")
 ```
 
+
+\newpage
+
+
 (ref:ndf-fig5-cap) Manhattan plot for the 1000 Genomes data of the squared loadings $\rho_{j2}^2$ with the second principal component. For sake of presentation, only the top-ranked SNPs (top 0.1%) are displayed and the 100 top-ranked SNPs are colored in red.
 
-```{r ndf-fig5, results='asis', fig.cap='(ref:ndf-fig5-cap)', out.width="50%"}
+```{r ndf-fig5, results='asis', fig.cap='(ref:ndf-fig5-cap)', out.width='\\textwidth'}
 include_graphics("figure/ndf-fig5.png")
 ```
+
+
+\newpage
+
 
 The 1000 Genome data contain many low-frequency SNPs; 82% of the SNPs have a minor allele frequency smaller than 5%. However, these low-frequency variants are not found among outlier SNPs. There are no SNP with a minor allele frequency smaller than 5% among the 0.1% of the SNPs most correlated with PC1 or with PC2.
 
@@ -1020,13 +1032,15 @@ To provide an example of genome scans based on PCA when there are no clusters of
 
 (ref:ndf-fig6-cap) PCA with $K = 2$ applied to the POPRES data.
 
-```{r ndf-fig6, results='asis', fig.cap='(ref:ndf-fig6-cap)', out.width="50%"}
+```{r ndf-fig6, results='asis', fig.cap='(ref:ndf-fig6-cap)', out.width='\\textwidth'}
 include_graphics("figure/ndf-fig6.png")
 ```
 
+\newpage
+
 (ref:ndf-fig7-cap) Manhattan plot for the POPRES data of the squared loadings $\rho_{j1}^2$ with the first principal component. For sake of presentation, only the top-ranked SNPs (top 5%) are displayed and the 100 top-ranked SNPs are colored in red.
 
-```{r ndf-fig7, results='asis', fig.cap='(ref:ndf-fig7-cap)', out.width="50%"}
+```{r ndf-fig7, results='asis', fig.cap='(ref:ndf-fig7-cap)', out.width='\\textwidth'}
 include_graphics("figure/ndf-fig7.png")
 ```
 
@@ -1388,7 +1402,7 @@ gridExtra::grid.arrange(p.I, p.D, p.R, ncol = 1)
 
 To provide an example of results, we apply *pcadapt* with $K = 6$ in the model of range expansion. Population structure captured by the first two principal components is displayed in Fig. \@ref(fig:scanex). $P$-values are well calibrated because they are distributed as a mixture of a uniform distribution and of a peaky distribution around 0, which corresponds to outlier loci (Fig. \@ref(fig:scanex)). Using a FDR threshold of 10% with the *qvalue* package, we find 122 outliers among 10 000 SNPs, resulting in 23% actual false discoveries and a power of 95%.
 
-(ref:scanex-cap) Population structure (first 2 principal components) and distribution of $p$-values obtained with *pcadapt* for a simulation of range expansion. $P$-values are well calibrated because they are distributed as a mixture of a uniform distribution and of a peaky distribution around 0, which corresponds to outlier loci. In the left panel, each colour corresponds to individuals sampled from the same population.
+(ref:scanex-cap) Population structure (first 2 principal components) and distribution of $P$-values obtained with *pcadapt* for a simulation of range expansion. $P$-values are well calibrated because they are distributed as a mixture of a uniform distribution and of a peaky distribution around 0, which corresponds to outlier loci. In the left panel, each colour corresponds to individuals sampled from the same population.
 
 ```{r scanex, fig.cap='(ref:scanex-cap)', fig.height=5, out.width='\\textwidth'}
 res.R <- pcadapt(x.R$geno, K = 6, min.maf = 0)
@@ -1469,7 +1483,7 @@ tmp %>% arrange(alpha, model, filename, software) %>%
         legend.direction = "vertical")
 ```
 
-We then evaluate the proportion of false discoveries obtained with *BayeScan*, *hapflk*, *OutFLANK* and *sNMF* (Fig. \@ref(fig:jitter)). We find that *hapflk* is the most conservative approach (FDR = 6%) followed by *OutFLANK* and *pcadapt* (FDR = 11%). The computer program *sNMF* is more liberal (FDR = 19%) and *BayeScan* generates the largest proportion of false discoveries (FDR = 41%). When not recalibrating the p-values of *hapflk*, we find that the test is even more conservative (results not shown). For all programs, the range expansion scenario is the one that generates the largest proportion of false discoveries. Proportion of false discoveries under range expansion ranges from 22% (*OutFLANK*) to 93% (*BayeScan*).
+We then evaluate the proportion of false discoveries obtained with *BayeScan*, *hapflk*, *OutFLANK* and *sNMF* (Fig. \@ref(fig:jitter)). We find that *hapflk* is the most conservative approach (FDR = 6%) followed by *OutFLANK* and *pcadapt* (FDR = 11%). The computer program *sNMF* is more liberal (FDR = 19%) and *BayeScan* generates the largest proportion of false discoveries (FDR = 41%). When not recalibrating the *P*-values of *hapflk*, we find that the test is even more conservative (results not shown). For all programs, the range expansion scenario is the one that generates the largest proportion of false discoveries. Proportion of false discoveries under range expansion ranges from 22% (*OutFLANK*) to 93% (*BayeScan*).
 
 #### Statistical power {-}
 
@@ -1588,7 +1602,7 @@ Last, we compare running times. The characteristics of the computer we used to p
 
 The R package *pcadapt* implements a fast method to perform genome scans with next-generation sequencing data. It can handle data sets where population structure is continuous or data sets containing admixed individuals. It can handle missing data as well as pooled sequencing data. The 2.0 and later versions of the R package implements a robust Mahalanobis distance as a test statistic. When hierarchical population structure occurs, Mahalanobis distance provides more powerful genome scans compared with the communality statistic that was implemented in the first version of the package [@duforet2015detecting]. In the divergence model, adaptation occurs along an external branch of the divergence tree that corresponds to the second principal component. When outlier SNPs are not related to the first principal component, the Mahalanobis distance provides a better ranking of the SNPs compared with the communality statistic.
 
-Simulations show that the R package *pcadapt* compares favourably to other computer programs for genome scans. When data were simulated under an island model, population structure is not hierarchical because genetic differentiation is the same for all pairs of populations. Statistical power and control of the FDR were similar for all computer programs. In the presence of hierarchical population structure (divergence model) where genetic differentiation varies between pairs of populations, the ranking of the SNPs depends on the computer program. *pcadapt* and *hapflk* provide the most powerful scans whether or not simulations include admixed individuals. *OutFLANK* implements a $F_{ST}$ statistic and because adaptation does not correspond to the most differentiated populations, it fails to capture adaptive SNPs (Fig. \@ref(fig:power-div)) [@bonhomme2010detecting; @duforet2015detecting]. *BayeScan* does not assume equal differentiation between all pairs of populations, which may explain why it has a good statistical power for the divergence model. However, its statistical power is severely impacted by the presence of admixed individuals because its power decreases from 24% to 6% (Fig. \@ref(fig:power-div)). Understanding why *BayeScan* is severely impacted by admixture is out of the scope of this study. In the range expansion model, *BayeScan* returns many null q-values (between 376 and 809 SNPs of 9899 neutral and 100 adaptive SNPs) such that the observed FDR is always larger than 50%. Overall, we find that *pcadapt* and *hapflk* provide comparable statistical power. They provide optimal or near optimal ranking of the SNPs in different scenarios including hierarchical population structure and admixed individuals. The main difference between the two computer programs concerns the control of the FDR because hapflk is found to be more conservative.
+Simulations show that the R package *pcadapt* compares favourably to other computer programs for genome scans. When data were simulated under an island model, population structure is not hierarchical because genetic differentiation is the same for all pairs of populations. Statistical power and control of the FDR were similar for all computer programs. In the presence of hierarchical population structure (divergence model) where genetic differentiation varies between pairs of populations, the ranking of the SNPs depends on the computer program. *pcadapt* and *hapflk* provide the most powerful scans whether or not simulations include admixed individuals. *OutFLANK* implements a $F_{ST}$ statistic and because adaptation does not correspond to the most differentiated populations, it fails to capture adaptive SNPs (Fig. \@ref(fig:power-div)) [@bonhomme2010detecting; @duforet2015detecting]. *BayeScan* does not assume equal differentiation between all pairs of populations, which may explain why it has a good statistical power for the divergence model. However, its statistical power is severely impacted by the presence of admixed individuals because its power decreases from 24% to 6% (Fig. \@ref(fig:power-div)). Understanding why *BayeScan* is severely impacted by admixture is out of the scope of this study. In the range expansion model, *BayeScan* returns many null $q$-values (between 376 and 809 SNPs of 9899 neutral and 100 adaptive SNPs) such that the observed FDR is always larger than 50%. Overall, we find that *pcadapt* and *hapflk* provide comparable statistical power. They provide optimal or near optimal ranking of the SNPs in different scenarios including hierarchical population structure and admixed individuals. The main difference between the two computer programs concerns the control of the FDR because hapflk is found to be more conservative.
 
 Because NGS data become more and more massive, careful numerical implementation is crucial. There are different options to implement PCA and *pcadapt* uses a numerical routine based on the computation of the covariance matrix $\Omega$. The algorithmic complexity to compute the covariance matrix is proportional to $pn^2$ where $p$ is the number of markers and $n$ is the number of individuals. The computation of the first $K$ eigenvectors of the covariance matrix $\Omega$ has a complexity proportional to $n^3$. This second step is usually more rapid than the computation of the covariance because the number of markers is usually large compared with the number of individuals. In brief, computing the covariance matrix $\Omega$ is by far the most costly operation when computing principal components. Although we have implemented PCA in C to obtain fast computations, an improvement in speed could be envisioned for future versions. When the number of individuals becomes large (e.g. $n \geq 10 000$), there are faster algorithms to compute principal components [@halko2011finding; @abraham2014fast]. In addition to running time, numerical implementations also impact the effect of missing data on principal components [@dray2015principal]. Achieving a good trade-off between fast computations and accurate evaluation of population structure in the face of large amount of missing data is a challenge for modern numerical methods in molecular ecology.
 

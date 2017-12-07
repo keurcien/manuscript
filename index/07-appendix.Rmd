@@ -781,7 +781,7 @@ plot(x, option = "scores", pop = pop)
 
 Nous adaptons une version du script Python utilisé dans [@roux2012recent], basé sur le module de simulation simuPOP [@peng2005simupop].
 
-```{python simuPOP, cache = TRUE, echo = TRUE}
+```{python simuPOP, cache = TRUE, echo = TRUE, eval = FALSE}
 #!/usr/bin/env python
 from __future__ import division
 import simuOpt, types, os, sys, time

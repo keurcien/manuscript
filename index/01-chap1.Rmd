@@ -389,6 +389,7 @@ En génétique des populations, l'ACP est devenu un outil de visualisation extr�
 
 ```{r hapmap, fig.cap = '(ref:hapmap-cap)', out.width='\\textwidth'}
 obj.hapmap <- readRDS("data/hapmap.rds")
+obj.popres <- readRDS("data/popres.rds")
 
 ggdf <- data.frame(PC1 = obj.hapmap$u[, 1],
                    PC2 = obj.hapmap$u[, 2],
